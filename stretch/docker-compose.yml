@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  test:
+    build: .
+    working_dir: /root
+    command: >-
+      bash -c "set -eu &&
+
+      git clone -b develop --depth 1 https://github.com/movabletype/movabletype &&
+      cd movabletype &&
+
+      prove -j4 -PMySQLPool=MT::Test::Env -It/lib t plugins/*/t && phpunit"
+
