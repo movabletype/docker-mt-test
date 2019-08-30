@@ -9,7 +9,7 @@ RUN apt-get update &&\
   php php-cli php-mysql php-gd php-memcache phpunit\
   git make gcc wget curl unzip bzip2\
   perl perlmagick\
-  libssl1.0-dev libgmp-dev libgd-dev libpng-dev libgif-dev libjpeg-dev netpbm libxml2-dev libmysql++-dev libgif-dev libdb-dev &&\
+  libssl-dev libgmp-dev libgd-dev libpng-dev libgif-dev libjpeg-dev netpbm libxml2-dev libmysql++-dev libgif-dev libdb-dev &&\
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
