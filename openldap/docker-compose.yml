@@ -1,0 +1,6 @@
+version: '3'
+services:
+  openldap:
+    build: .
+    command: slapd -d 1
+
