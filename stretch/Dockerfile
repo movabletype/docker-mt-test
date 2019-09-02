@@ -23,7 +23,7 @@ RUN apt-get update &&\
  wget https://raw.githubusercontent.com/movabletype/movabletype/5e636cc16c7c3f96215c8f52d2715cfd835e5584/t/cpanfile &&\
  cpm install -g --test JSON::XS TAP::Harness::Env Test::Base &&\
  cpm install -g --test &&\
- rm -rf cpanfile /root/.cpm/
+ rm -rf cpanfile /root/.perl-cpm/
 
 RUN apt-get update &&\
 \
