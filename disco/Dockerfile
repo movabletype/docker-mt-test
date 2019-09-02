@@ -15,7 +15,7 @@ RUN apt-get update &&\
 RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
  tar jxf phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
  cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/ &&\
- rm -rf /phantomjs-1.9.8-linux-x86_64*
+ rm -rf phantomjs-1.9.8-linux-x86_64*
 
 # https://github.com/ajgb/crypt-curve25519/issues/9
 RUN curl -O -- https://cpan.metacpan.org/authors/id/A/AJ/AJGB/Crypt-Curve25519-0.06.tar.gz\

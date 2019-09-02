@@ -15,7 +15,7 @@ RUN apt-get update &&\
   wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
   tar jxf phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
   cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/ &&\
-  rm -rf /phantomjs-1.9.8-linux-x86_64* &&\
+  rm -rf phantomjs-1.9.8-linux-x86_64* &&\
 \
  curl -L https://cpanmin.us | perl - App::cpanminus &&\
  cpanm XMLRPC::Transport::HTTP -v &&\
