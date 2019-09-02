@@ -6,7 +6,7 @@ RUN apt-get update &&\
 \
  apt-get -y install\
   apache2\
-  php php-cli php-mysql php-gd php-memcache phpunit\
+  php php-cli php-mysql php-gd php-memcache php-mbstring phpunit\
   git make gcc wget curl unzip bzip2\
   perl perlmagick libcrypt-ssleay-perl\
   libssl-dev libgmp-dev libgd2-xpm-dev libpng-dev libgif-dev libjpeg-dev netpbm libxml2-dev libmysql++-dev libgif-dev libdb-dev &&\
