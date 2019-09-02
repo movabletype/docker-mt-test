@@ -15,7 +15,7 @@ RUN apt-get update &&\
   wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
   tar jxf phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
   cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/ &&\
-  rm -rf /phantomjs-1.9.8-linux-x86_64* &&\
+  rm -rf phantomjs-1.9.8-linux-x86_64* &&\
 \
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
@@ -23,7 +23,7 @@ RUN apt-get update &&\
  wget https://raw.githubusercontent.com/movabletype/movabletype/5e636cc16c7c3f96215c8f52d2715cfd835e5584/t/cpanfile &&\
  cpm install -g --test JSON::XS TAP::Harness::Env Test::Base &&\
  cpm install -g --test &&\
- rm -rf cpanfile /root/.cpm/
+ rm -rf cpanfile /root/.perl-cpm/
 
 RUN apt-get update &&\
 \
