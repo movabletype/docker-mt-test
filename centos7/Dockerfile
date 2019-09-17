@@ -6,6 +6,7 @@ RUN yum -y install\
  make gcc curl bzip2\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ mariadb mariadb-server mariadb-devel memcached\
 # NetPBM driver
  netpbm-progs\
 # for Archive::Zip
@@ -45,12 +46,6 @@ RUN yum -y install\
   Capture::Tiny Text::Diff &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm
-
-RUN yum install -y mysql-server memcached &&\
- yum clean all &&\
- service mysqld start &&\
- mysql -e "create database mt_test character set utf8;" &&\
- mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

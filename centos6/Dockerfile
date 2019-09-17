@@ -6,6 +6,7 @@ RUN yum -y install\
  gcc curl\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ mysql-server mysql-client memcached\
 # NetPBM driver
  netpbm-progs\
 # for Archive::Zip
@@ -50,12 +51,6 @@ RUN yum -y install\
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\
  mv phpunit /usr/local/bin/
-
-RUN yum install -y mysql-server memcached &&\
- yum clean all &&\
- service mysqld start &&\
- mysql -e "create database mt_test character set utf8;" &&\
- mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
