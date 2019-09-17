@@ -30,23 +30,19 @@ RUN yum -y install\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
- curl -L http://cpanmin.us | perl - App::cpanminus &&\
- curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/5e636cc16c7c3f96215c8f52d2715cfd835e5584/t/cpanfile &&\
- cpanm\
-# for Perl::Critic
-  PPI@1.246\
-# Installing Devel::GlobalPhase@0.003000 fails
-  Devel::GlobalPhase@0.002004\
+ curl -sL --compressed https://git.io/cpm > cpm &&\
+ chmod +x cpm &&\
+ mv cpm /usr/local/bin/ &&\
+# a test for XMLRPC::Lite has been too fragile
+ cpm install -g XMLRPC::Lite &&\
+ cpm install -g --test\
+# for speed
   JSON::XS\
-  TAP::Harness::Env\
-  Test::Base\
 # for SQL::Translator
-  DBD::SQLite\
-# for Test::Differences
-  Capture::Tiny Text::Diff &&\
- cpanm --notest LWP::UserAgent &&\
- cpanm --installdeps . &&\
- rm -rf cpanfile /root/.cpm /root/.perl-cpm /root/.cpanm /root/.qws &&\
+  DBD::SQLite &&\
+ curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ cpm install -g --test &&\
+ rm -rf cpanfile /root/.perl-cpm /root/.qws &&\
 # latest PHPUnit that supports both PHPUnit\Framework\TestCase namespace and PHP 5.3
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\
