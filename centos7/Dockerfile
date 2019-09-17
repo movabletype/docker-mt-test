@@ -23,6 +23,8 @@ RUN yum -y install\
  libxml2-devel\
 # for XML::SAX::ExpatXS
  expat-devel\
+# for Test::mysqld and mysqld_safe
+ which\
  php php-mysql php-gd php-pecl-memcache\
  epel-release &&\
  yum -y install phpunit &&\
