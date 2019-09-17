@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-service mysqld start
+chown -R mysql:mysql /var/lib/mysql
+service mysql start
 service memcached start
 
 mysql -e "create database mt_test character set utf8;"

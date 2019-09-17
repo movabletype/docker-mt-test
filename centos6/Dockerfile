@@ -6,6 +6,7 @@ RUN yum -y install\
  gcc curl\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ mysql-server mysql-client memcached\
 # NetPBM driver
  netpbm-progs\
 # for Archive::Zip
@@ -28,39 +29,24 @@ RUN yum -y install\
  yum clean all &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
-# PhantomJS
- curl -sLO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
- tar jxf phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
- cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/ &&\
- rm -rf phantomjs-1.9.8-linux-x86_64* &&\
 # CPAN modules
- curl -L http://cpanmin.us | perl - App::cpanminus &&\
- curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/5e636cc16c7c3f96215c8f52d2715cfd835e5584/t/cpanfile &&\
- cpanm\
-# for Perl::Critic
-  PPI@1.246\
-# Installing Devel::GlobalPhase@0.003000 fails
-  Devel::GlobalPhase@0.002004\
+ curl -sL --compressed https://git.io/cpm > cpm &&\
+ chmod +x cpm &&\
+ mv cpm /usr/local/bin/ &&\
+# a test for XMLRPC::Lite has been too fragile
+ cpm install -g XMLRPC::Lite &&\
+ cpm install -g --test\
+# for speed
   JSON::XS\
-  TAP::Harness::Env\
-  Test::Base\
 # for SQL::Translator
-  DBD::SQLite\
-# for Test::Differences
-  Capture::Tiny Text::Diff &&\
- cpanm --notest LWP::UserAgent &&\
- cpanm --installdeps . &&\
- rm -rf cpanfile /root/.cpm /root/.perl-cpm /root/.cpanm /root/.qws &&\
+  DBD::SQLite &&\
+ curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ cpm install -g --test &&\
+ rm -rf cpanfile /root/.perl-cpm /root/.qws &&\
 # latest PHPUnit that supports both PHPUnit\Framework\TestCase namespace and PHP 5.3
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\
  mv phpunit /usr/local/bin/
-
-RUN yum install -y mysql-server memcached &&\
- yum clean all &&\
- service mysqld start &&\
- mysql -e "create database mt_test character set utf8;" &&\
- mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -3,7 +3,7 @@ set -e
 
 mysql_install_db --user=mysql --skip-name-resolve >/dev/null
 
-bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
+bash -c "cd /usr; mysqld_safe --datadir='/var/lib/mysql' &"
 sleep 1
 until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
@@ -21,3 +21,4 @@ if [ -f t/cpanfile ]; then
 fi
 
 exec "$@"
+
