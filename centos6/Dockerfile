@@ -28,11 +28,6 @@ RUN yum -y install\
  yum clean all &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
-# PhantomJS
- curl -sLO https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
- tar jxf phantomjs-1.9.8-linux-x86_64.tar.bz2 &&\
- cp phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin/ &&\
- rm -rf phantomjs-1.9.8-linux-x86_64* &&\
 # CPAN modules
  curl -L http://cpanmin.us | perl - App::cpanminus &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/5e636cc16c7c3f96215c8f52d2715cfd835e5584/t/cpanfile &&\
