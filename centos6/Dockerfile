@@ -50,6 +50,11 @@ RUN yum -y install\
  chmod +x phpunit &&\
  mv phpunit /usr/local/bin/
 
+RUN service mysqld start &&\
+service memcached start &&\
+mysql -e "create database if not exists mt_test character set utf8;" &&\
+mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
