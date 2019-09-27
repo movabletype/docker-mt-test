@@ -36,6 +36,8 @@ RUN yum -y install\
 # a test for XMLRPC::Lite has been too fragile
  cpm install -g XMLRPC::Lite &&\
  cpm install -g --test\
+# for compat
+  App::cpanminus\
 # for speed
   JSON::XS\
 # for SQL::Translator
