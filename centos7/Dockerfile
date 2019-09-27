@@ -44,7 +44,11 @@ RUN yum -y install\
   TAP::Harness::Env &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm
+ rm -rf cpanfile /root/.perl-cpm &&\
+# latest PHPUnit that supports both PHPUnit\Framework\TestCase namespace and PHP 5.3
+ curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
+ chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -14,6 +14,8 @@ RUN apt-get update &&\
   memcached\
   libssl-dev libgmp-dev libgd2-xpm-dev libpng-dev libgif-dev libjpeg-dev libxml2-dev libmysql++-dev &&\
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
+ curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit && chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
