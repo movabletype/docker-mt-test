@@ -40,6 +40,8 @@ RUN yum -y install\
   App::cpanminus\
 # for speed
   JSON::XS\
+# cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+  Archive::Zip@1.65\
 # for SQL::Translator
   DBD::SQLite &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

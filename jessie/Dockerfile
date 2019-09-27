@@ -20,6 +20,8 @@ RUN apt-get update &&\
 # a test for XMLRPC::Lite has been too fragile
  cpm install -g XMLRPC::Lite &&\
  cpm install -g\
+# cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+  Archive::Zip@1.65\
 # for speed
   JSON::XS &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

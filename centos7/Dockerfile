@@ -39,6 +39,8 @@ RUN yum -y install\
  cpm install -g XMLRPC::Lite &&\
  cpm install -g --test\
   JSON::XS\
+# cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+  Archive::Zip@1.65\
   TAP::Harness::Env &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\

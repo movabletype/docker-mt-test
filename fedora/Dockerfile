@@ -39,6 +39,8 @@ RUN dnf -y install\
  cpm install -g --test\
 # for speed
   JSON::XS\
+# cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+  Archive::Zip@1.65\
 # Net::SFTP
   Crypt::Curve25519@0.05 &&\
   curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
