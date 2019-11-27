@@ -4,7 +4,7 @@ WORKDIR /root
 
 RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive\
- apt-get -y install\
+ apt-get --no-install-recommends -y install\
   git make gcc curl\
   perl perlmagick\
   unzip bzip2\
