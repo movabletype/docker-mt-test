@@ -1,10 +1,11 @@
-FROM debian:jessie
+FROM debian:jessie-slim
 
 WORKDIR /root
 
 RUN apt-get update &&\
- DEBIAN_FRONTEND=noninteractive\
- apt-get -y install\
+ DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
+ apt-get --no-install-recommends -y install\
+  ca-certificates netbase\
   git make gcc curl\
   perl perlmagick\
   unzip bzip2\
