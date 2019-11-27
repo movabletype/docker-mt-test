@@ -5,14 +5,19 @@ WORKDIR /root
 RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
+  ca-certificates netbase\
   git make gcc curl\
   perl perlmagick\
   unzip bzip2\
   netpbm\
   php php-cli php-mysqlnd php-gd php-memcache phpunit\
   mariadb-server mariadb-client\
+# unfortunately DBD::mysql 4.050 has a bug that has been fixed only in the repo
+  libdbd-mysql-perl\
+# for App::Prove::Plugin::MySQL
+  procps\
   memcached\
-  libssl-dev libgmp-dev libgd-dev libpng-dev libgif-dev libjpeg-dev libxml2-dev libmariadb-dev &&\
+  libssl-dev libgmp-dev libgd-dev libpng-dev libgif-dev libjpeg-dev libxml2-dev &&\
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

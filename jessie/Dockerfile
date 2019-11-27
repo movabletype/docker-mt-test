@@ -5,6 +5,7 @@ WORKDIR /root
 RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
+  ca-certificates netbase\
   git make gcc curl\
   perl perlmagick\
   unzip bzip2\
