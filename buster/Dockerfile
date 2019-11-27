@@ -24,7 +24,7 @@ RUN apt-get update &&\
  mv cpm /usr/local/bin/ &&\
 # a test for XMLRPC::Lite has been too fragile
  cpm install -g XMLRPC::Lite &&\
- cpm install -g\
+ cpm install -g --test\
 # for speed
   JSON::XS\
 # cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
