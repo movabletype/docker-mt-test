@@ -3,7 +3,8 @@ set -e
 
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
-bash -c "cd /usr; mysqld_safe --datadir='/var/lib/mysql' &"
+bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
 sleep 1
 until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
