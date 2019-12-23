@@ -28,6 +28,8 @@ RUN dnf -y install\
  community-mysql-server memcached\
  phpunit &&\
  dnf clean all &&\
+# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
+ setcap -r /usr/libexec/mysqld &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
