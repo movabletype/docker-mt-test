@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-mysql_install_db --user=mysql --skip-name-resolve >/dev/null
+mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
 bash -c "cd /usr; mysqld_safe --datadir='/var/lib/mysql' &"
 sleep 1
