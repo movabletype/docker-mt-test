@@ -17,7 +17,7 @@ Dockerfile to test MT.
 |buster|debian:buster|5.28.1|7.3.9-1|MariaDB 10.3.17|1.5.6|
 |bionic|ubuntu:bionic|5.26.1|7.2.3|5.7.12|1.5.6|
 |disco|ubuntu:disco|5.28.1|7.2.11|5.7.26|1.5.10|
-|fedora|fedora:31|5.30.0|7.3.9|MariaDB 10.3.17|1.5.16|
+|fedora|fedora:31|5.30.0|7.3.13|8.0.18d|1.5.16|
 
 ## Special images
 

@@ -11,7 +11,7 @@ RUN dnf -y install\
 # for Archive::Zip
  zip unzip\
 # for DBD::mysql
- mysql-devel\
+ community-mysql-devel\
 # for Imager
  giflib-devel libpng-devel libjpeg-devel\
 # for Math::GMP
@@ -25,9 +25,11 @@ RUN dnf -y install\
  php php-mysqlnd php-gd php-pecl-memcache\
 # for Test::mysqld and mysqld_safe
  which hostname perl-Unix-Process\
- mysql-server memcached\
+ community-mysql-server memcached\
  phpunit &&\
  dnf clean all &&\
+# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
+ setcap -r /usr/libexec/mysqld &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
