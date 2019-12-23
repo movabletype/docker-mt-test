@@ -12,7 +12,7 @@ until mysqladmin ping -h localhost --silent; do
 done
 
 mysql -e "create database mt_test character set utf8;"
-mysql -e "create user mt@localhost"
+mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 memcached -d -u root
