@@ -11,7 +11,7 @@ RUN dnf -y install\
 # for Archive::Zip
  zip unzip\
 # for DBD::mysql
- mysql-devel\
+ community-mysql-devel\
 # for Imager
  giflib-devel libpng-devel libjpeg-devel\
 # for Math::GMP
@@ -25,7 +25,7 @@ RUN dnf -y install\
  php php-mysqlnd php-gd php-pecl-memcache\
 # for Test::mysqld and mysqld_safe
  which hostname perl-Unix-Process\
- mysql-server memcached\
+ community-mysql-server memcached\
  phpunit &&\
  dnf clean all &&\
 # PHP setting
