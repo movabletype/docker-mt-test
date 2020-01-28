@@ -6,7 +6,7 @@ RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
   ca-certificates netbase\
-  git make gcc curl\
+  git make gcc curl ssh\
   perl perlmagick\
   unzip bzip2\
   netpbm\

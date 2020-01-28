@@ -3,7 +3,7 @@ FROM centos:6
 WORKDIR /root
 
 RUN yum -y install\
- gcc curl\
+ gcc curl openssh-clients\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
  mysql-server mysql-client memcached\
