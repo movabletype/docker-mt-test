@@ -23,7 +23,7 @@ RUN apt-get update &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
 # a test for XMLRPC::Lite has been too fragile
- cpm install -g XMLRPC::Lite &&\
+ cpm install -g XMLRPC::Lite XML::Atom &&\
  cpm install -g --test\
 # for speed
   JSON::XS\
