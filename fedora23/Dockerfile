@@ -1,9 +1,9 @@
-FROM fedora:31
+FROM fedora:23
 
 WORKDIR /root
 
 RUN dnf -y install\
- make gcc curl bzip2 glibc-langpack-en\
+ make gcc bzip2\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
 # NetPBM driver
@@ -24,16 +24,15 @@ RUN dnf -y install\
  expat-devel\
  php php-mysqlnd php-gd php-pecl-memcache\
 # for Test::mysqld and mysqld_safe
- which hostname perl-Unix-Process\
+ which hostname procps\
  community-mysql-server memcached\
  phpunit &&\
  dnf clean all &&\
-# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
- setcap -r /usr/libexec/mysqld &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
  curl -sL --compressed https://git.io/cpm > cpm &&\
+# curl -kL http://cpanmin.us | perl - -v App::Prove::Plugin::MySQLPool &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
 # tests for XMLRPC::Lite and XML::Atom have been too fragile

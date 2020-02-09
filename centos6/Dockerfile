@@ -27,13 +27,14 @@ RUN yum -y install\
  epel-release &&\
  yum -y install phpunit &&\
  yum clean all &&\
+ localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
-# a test for XMLRPC::Lite and XML::Atom has been too fragile
+# tests for XMLRPC::Lite and XML::Atom have been too fragile
  cpm install -g XMLRPC::Lite XML::Atom &&\
  cpm install -g --test\
 # for compat
@@ -56,6 +57,9 @@ RUN service mysqld start &&\
 service memcached start &&\
 mysql -e "create database if not exists mt_test character set utf8;" &&\
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -29,14 +29,15 @@ RUN yum -y install\
  epel-release &&\
  yum -y install phpunit &&\
  yum clean all &&\
+ localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- # a test for XMLRPC::Lite has been too fragile
- cpm install -g XMLRPC::Lite &&\
+ # tests for XMLRPC::Lite and XML::Atom have been too fragile
+ cpm install -g XMLRPC::Lite XML::Atom &&\
  cpm install -g --test\
   JSON::XS\
 # cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
@@ -49,6 +50,9 @@ RUN yum -y install\
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\
  mv phpunit /usr/local/bin/
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
