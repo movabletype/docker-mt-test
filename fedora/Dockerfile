@@ -3,7 +3,7 @@ FROM fedora:31
 WORKDIR /root
 
 RUN dnf -y install\
- make gcc curl bzip2\
+ make gcc curl bzip2 glibc-langpack-en\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
 # NetPBM driver
@@ -48,6 +48,9 @@ RUN dnf -y install\
   curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
   cpm install -g --test &&\
   rm -rf cpanfile /root/.perl-cpm
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]

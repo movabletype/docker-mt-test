@@ -29,6 +29,7 @@ RUN yum -y install\
  epel-release &&\
  yum -y install phpunit &&\
  yum clean all &&\
+ localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
 # PHP setting
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # CPAN modules
@@ -49,6 +50,9 @@ RUN yum -y install\
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\
  mv phpunit /usr/local/bin/
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
