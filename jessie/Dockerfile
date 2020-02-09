@@ -22,7 +22,7 @@ RUN apt-get update &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
 # tests for XMLRPC::Lite and XML::Atom have been too fragile
- cpm install -g XMLRPC::Lite XML::Atom &&\
+ cpm install -g XMLRPC::Lite XML::Atom YAML::Syck@1.31 &&\
  cpm install -g\
 # cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
   Archive::Zip@1.65\
