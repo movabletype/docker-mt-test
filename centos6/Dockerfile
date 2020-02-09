@@ -34,7 +34,7 @@ RUN yum -y install\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
-# a test for XMLRPC::Lite and XML::Atom has been too fragile
+# tests for XMLRPC::Lite and XML::Atom have been too fragile
  cpm install -g XMLRPC::Lite XML::Atom &&\
  cpm install -g --test\
 # for compat
