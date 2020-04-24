@@ -6,6 +6,7 @@ RUN dnf -y install\
  make gcc bzip2\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ GraphicsMagick-perl\
 # NetPBM driver
  netpbm-progs\
 # for Archive::Zip

@@ -8,6 +8,7 @@ RUN dnf -y install epel-release &&\
  make gcc curl bzip2 glibc-langpack-en\
  perl perl-core git\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ GraphicsMagick-perl\
 # NetPBM driver
  netpbm-progs\
 # for Archive::Zip

@@ -8,7 +8,7 @@ RUN apt-get update &&\
   ca-certificates netbase\
   php php-cli php-mysql php-gd php-memcache phpunit\
   git make gcc ssh curl unzip bzip2 locales\
-  perl perlmagick\
+  perl perlmagick libgraphics-magick-perl\
   libssl-dev libgmp-dev libgd-dev libpng-dev libgif-dev libjpeg-dev netpbm libxml2-dev libgif-dev\
   mysql-server mysql-client libmysqlclient-dev\
   memcached procps &&\
