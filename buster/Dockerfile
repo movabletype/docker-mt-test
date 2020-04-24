@@ -8,6 +8,7 @@ RUN apt-get update &&\
   ca-certificates netbase\
   git make gcc curl ssh locales\
   perl perlmagick\
+  libgraphics-magick-perl\
   unzip bzip2\
   netpbm\
   php php-cli php-mysqlnd php-gd php-memcache phpunit\

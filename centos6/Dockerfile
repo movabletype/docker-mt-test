@@ -6,6 +6,7 @@ RUN yum -y install\
  gcc curl openssh-clients\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ GraphicsMagick-perl\
  mysql-server mysql-client memcached\
 # NetPBM driver
  netpbm-progs\
@@ -46,8 +47,10 @@ RUN yum -y install\
 # for SQL::Translator
   DBD::SQLite &&\
  curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm /root/.qws &&\
+# cpm stalls for unknown reasons
+# cpm install -g --test &&\
+ cpanm --installdeps . &&\
+ rm -rf cpanfile /root/.perl-cpm /root/.qws /root/.cpanm &&\
 # latest PHPUnit that supports both PHPUnit\Framework\TestCase namespace and PHP 5.3
  curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit &&\
  chmod +x phpunit &&\

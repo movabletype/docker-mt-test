@@ -6,6 +6,7 @@ RUN amazon-linux-extras install epel && yum -y install\
  make gcc curl bzip2\
  perl perl-core\
  ImageMagick-perl perl-GD perl-XML-Parser\
+ GraphicsMagick-perl\
  mariadb mariadb-server mariadb-devel memcached\
 # NetPBM driver
  netpbm-progs\
