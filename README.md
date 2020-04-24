@@ -24,6 +24,7 @@ Dockerfile to test MT.
 |trusty|ubuntu:trusty|5.18.2|*5.5.9*|5.5.58|2019-04|
 |stretch|debian:stretch|5.24.1|*7.0.19-1*|*MariaDB 10.1.26*|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|*5.7.29*|2023-04|
+|focal|ubuntu:focal|5.30.0|7.4.3|8.0.19|2025-04|
 |amazonlinux|amazonlinux:2|5.16.3|5.4.16|MariaDB 5.5.64|-|
 
 ## Special images
