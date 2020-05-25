@@ -2,50 +2,37 @@ FROM amazonlinux:2
 
 WORKDIR /root
 
-RUN amazon-linux-extras install epel && yum -y install\
- make gcc curl bzip2\
- perl perl-core\
- ImageMagick-perl perl-GD perl-XML-Parser\
- GraphicsMagick-perl\
- mariadb mariadb-server mariadb-devel memcached\
-# NetPBM driver
- netpbm-progs\
-# for Archive::Zip
- zip unzip\
-# for DBD::mysql
- mariadb-devel\
-# for Imager
- giflib-devel libpng-devel libjpeg-devel\
-# for Math::GMP
- gmp-devel\
-# for Net::SSLeay
- openssl openssl-devel\
-# for XML::LibXML
- libxml2-devel\
-# for XML::SAX::ExpatXS
- expat-devel\
-# for Test::mysqld and mysqld_safe
- which procps\
- php php-mysql php-gd php-pecl-memcache phpunit &&\
-# PHP setting
+RUN amazon-linux-extras install epel &&\
+ yum -y  install \
+ which git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
+ mariadb-devel mariadb-server\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
+ libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ php php-mysqlnd php-gd php-pecl-memcache phpunit\
+ httpd mod_ssl vsftpd ftp memcached\
+ && yum clean all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
-# CPAN modules
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- # tests for XMLRPC::Lite and XML::Atom have been too fragile
- cpm install -g XMLRPC::Lite XML::Atom &&\
- cpm install -g --test\
-  JSON::XS\
-# cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-  Archive::Zip@1.65 &&\
- curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm
+ cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
+ cpm install -g --test Net::LDAP Linux::Pid\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ JSON::XS Starman\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
+ rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
 
-ENV LANG=en_US.UTF8
-ENV LC_ALL=en_US.UTF8
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+RUN set -ex &&\
+  perl -i -pe \
+    's{AllowOverride None}{AllowOverride All}g' \
+    /etc/httpd/conf/httpd.conf
+
+RUN cd /etc/pki/tls/certs/ && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
+  perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \
+  /etc/httpd/conf.d/ssl.conf && cd $WORKDIR
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
