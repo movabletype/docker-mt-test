@@ -1,0 +1,22 @@
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+log-error       = /var/log/mysql/mysql.error
+symbolic-links=0
+sql_mode = TRADITIONAL,NO_AUTO_VALUE_ON_ZERO
+
+skip-character-set-client-handshake
+character-set-server=utf8mb4
+collation-server=utf8mb4_general_ci
+innodb-file-format=Barracuda
+innodb-file-format_max=Barracuda
+innodb-file-per-table=1
+innodb-large-prefix=1
+slow-query-log=1
+slow-query-log-file=/var/log/mysql/slow.query
+long-query-time=2
+log-queries-not-using-indexes
+
+[client]
+default-character-set=utf8mb4

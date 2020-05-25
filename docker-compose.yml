@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+    mt:
+        image: movabletype/test:${MT_IMAGE}
+        hostname: mt_test
+        ports:
+            - ${WWW_PORT}:80
+            - ${SSL_PORT}:443
+        volumes:
+            - ${MT_HOME}:/var/www/cgi-bin
+            - ${MT_HOME}/mt-static:/var/www/html/mt-static
+            - ./conf/mt/mt-config.cgi:/var/www/cgi-bin/mt-config.cgi
+        read_only: false
+        entrypoint: /docker-entrypoint.sh httpd -D FOREGROUND
+    mysql:
+        image: ${MYSQL_IMAGE}
+        environment:
+            MYSQL_ROOT_PASSWORD: test
+            MYSQL_USER: mt
+            MYSQL_PASSWORD: test
+            MYSQL_DATABASE: mt
+            TZ: "Asia/Tokyo"
+        ports:
+            - ${MYSQL_PORT}:3306
+        volumes:
+            - ./conf/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+        tty: true
+        stdin_open: true
+        restart: always
