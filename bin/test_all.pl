@@ -34,7 +34,7 @@ for my $name (@targets) {
                $res = $ua->get("http://mt:$port/mt-static/mt.js");
             ok $res->is_success, "$name: http mt-static" or append_log($test_log, $res);
             if ($test_mt) {
-                ok eval { !system("docker-compose exec mt bash -c 'cd /var/www/cgi-bin/; prove -j4 -It/lib -lr -PMySQLPool=MT::Test::Env t plugins/*/t' 2>&1 | tee $test_log"); };
+                ok eval { !system("docker-compose exec mt bash -c 'cd /var/www/cgi-bin/; prove -j4 -It/lib -lr -PMySQLPool=MT::Test::Env t plugins/*/t && phpunit' 2>&1 | tee $test_log"); };
             }
             system("docker-compose down");
         }
