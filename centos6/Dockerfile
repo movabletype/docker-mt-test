@@ -12,6 +12,8 @@ RUN yum -y install epel-release &&\
  mod_ssl vsftpd ftp memcached\
  && yum clean all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
+ curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
