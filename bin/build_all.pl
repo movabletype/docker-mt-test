@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 use Parallel::ForkManager;
-use Getopt::Long;
+use Getopt::Long qw/:config pass_through/;
 
 GetOptions(
     'no_cache|no-cache' => \my $no_cache,
@@ -18,7 +18,7 @@ for my $name (@targets) {
     next unless -f "$name/Dockerfile";
     say $name;
     my $pid = $pm->start and next;
-    my $res = system("docker build $name --tag movabletype/test:$name" . ($no_cache ? "--no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+    my $res = system("docker build $name --tag movabletype/test:$name" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
     $pm->finish;
 }
 $pm->wait_all_children;
