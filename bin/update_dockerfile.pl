@@ -253,12 +253,12 @@ my $templates = get_data_section();
 
 my @targets = @ARGV ? @ARGV : glob "*";
 for my $name (@targets) {
-    my $template   = $templates->{$name} or next;
+    my $template = $templates->{$name} || $templates->{$Conf{$name}{base} // ''} or next;
     say $name;
     my $conf       = merge_conf($name);
     my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
     open my $fh, '>', "$name/Dockerfile";
-    say $fh $dockerfile;
+    print $fh $dockerfile;
 }
 
 sub merge_conf {
