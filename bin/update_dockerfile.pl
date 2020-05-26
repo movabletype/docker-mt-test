@@ -89,7 +89,7 @@ my %Conf = (
         apache => {
             enmod => [qw( php5 )],
         },
-        requires_old_phpunit => 1,
+        phpunit => 4,
     },
     stretch => {
         from => 'debian:stretch-slim',
@@ -107,7 +107,7 @@ my %Conf = (
         apache => {
             enmod => [qw( php7.0 )],
         },
-        requires_old_phpunit => 1,
+        phpunit => 6,
     },
     focal => {
         from => 'ubuntu:focal',
@@ -151,7 +151,7 @@ my %Conf = (
         apache => {
             enmod => [qw( php5 )],
         },
-        requires_old_phpunit => 1,
+        phpunit => 4,
     },
     fedora => {
         from => 'fedora:31',
@@ -182,6 +182,7 @@ my %Conf = (
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
+        phpunit => 4,
     },
     centos6 => {
         from => 'centos:6',
@@ -196,6 +197,7 @@ my %Conf = (
             missing => [qw( App::cpanminus DBD::SQLite )],
         },
         use_cpanm => 1,
+        phpunit => 4,
     },
     centos7 => {
         from => 'centos:7',
@@ -210,6 +212,7 @@ my %Conf = (
         cpan => {
             missing => [qw( TAP::Harness::Env )],
         },
+        phpunit => 4,
     },
     centos8 => {
         from => 'centos:8',
@@ -226,8 +229,8 @@ my %Conf = (
         enablerepo              => [qw( PowerTools )],    ## for giflib-devel
         installer               => 'dnf',
         setcap                  => 1,
-        requires_latest_phpunit => 1,
         make_dummy_cert => '/usr/bin',
+        phpunit => 8,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -242,6 +245,7 @@ my %Conf = (
             server => [qw( httpd )], ## for mod_ssl
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
+        phpunit => 4,
     },
 );
 
@@ -296,8 +300,8 @@ RUN apt-get update &&\\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
-% if ($conf->{requires_old_phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit-4.8.36.phar > phpunit && chmod +x phpunit &&\\
+% if ($conf->{phpunit}) {
+ curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
  curl -sL --compressed https://git.io/cpm > cpm &&\\
@@ -356,8 +360,8 @@ RUN\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\\
 % }
-% if ($conf->{requires_old_phpunit} or $conf->{requires_latest_phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit<%= $conf->{requires_old_phpunit} ? "-4.8.36" : '' %>.phar > phpunit && chmod +x phpunit &&\\
+% if ($conf->{phpunit}) {
+ curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
  curl -sL --compressed https://git.io/cpm > cpm &&\\
