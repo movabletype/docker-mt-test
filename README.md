@@ -26,6 +26,9 @@ Dockerfile to test MT.
 |bionic|ubuntu:bionic|5.26.1|7.2.24|*5.7.29*|2023-04|
 |focal|ubuntu:focal|5.30.0|7.4.3|8.0.19|2025-04|
 |amazonlinux|amazonlinux:2|5.16.3|5.4.16|MariaDB 5.5.64|-|
+|oracle|oraclelinux:7-slim|5.16.3 (\*1)|5.4.16|MariaDB 5.5.65|-|
+
+\*1 DBD::Oracle 1.80 + OracleInstantClient 19.6
 
 ## Special images
 
