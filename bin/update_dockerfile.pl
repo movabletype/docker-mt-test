@@ -247,6 +247,25 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
     },
+    oracle => {
+        from => 'oraclelinux:7-slim',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql-server'      => 'mariadb-server',
+                'mysql-client'      => 'mariadb',
+                'mysql-devel'       => 'mariadb-devel',
+            },
+            base   => [qw( which )],
+            server => [qw( httpd )],
+        },
+        cpan => {
+            missing => [qw( DBD::Oracle )],
+        },
+        make_dummy_cert => '/etc/pki/tls/certs/',
+        phpunit => 4,
+        release => 19.6,
+    },
 );
 
 my $templates = get_data_section();
@@ -347,6 +366,9 @@ WORKDIR /root
 RUN\
 % if ($type eq 'amazonlinux') {
  amazon-linux-extras install epel &&\\
+% } elsif ($type eq 'oracle') {
+ yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
+ yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
 % } elsif ($type =~ /centos/) {
  <%= $conf->{installer} // 'yum' %> -y install epel-release &&\\
 % }
