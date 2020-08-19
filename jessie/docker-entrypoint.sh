@@ -13,4 +13,3 @@ if [ -f t/cpanfile ]; then
 fi
 
 exec "$@"
-

@@ -7,6 +7,7 @@ use Getopt::Long;
 use LWP::UserAgent;
 use Test::More;
 use Test::TCP;
+use Mojo::File qw/path/;
 
 GetOptions(
     'mt_home|mt=s' => \my $mt_home,
@@ -16,10 +17,14 @@ GetOptions(
 my @targets = @ARGV ? @ARGV : glob "*";
 
 for my $name (@targets) {
+    my $dockerfile = path("$name/Dockerfile");
+    next unless -f $dockerfile;
+    next if $dockerfile->slurp =~ /EXPOSE/;
     diag "testing $name";
     test_tcp(
         server => sub {
             my $port = shift;
+            $ENV{MT_HOME} = $mt_home if $mt_home;
             exec "MT_IMAGE=$name WWW_PORT=$port SSL_PORT=10443 docker-compose up";
         },
         client => sub {

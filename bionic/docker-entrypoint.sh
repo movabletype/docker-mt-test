@@ -10,7 +10,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --test --cpanfile=t/cpanfile
+    cpm install -g --cpanfile=t/cpanfile
 fi
 
 exec "$@"
