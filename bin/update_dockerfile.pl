@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Data::Section::Simple qw/get_data_section/;
 use Mojo::Template;
+use Mojo::File qw/path/;
 
 my %Conf = (
     debian => {
@@ -287,12 +288,20 @@ my $templates = get_data_section();
 
 my @targets = @ARGV ? @ARGV : glob "*";
 for my $name (@targets) {
-    my $template = $templates->{$name} || $templates->{$Conf{$name}{base} // ''} or next;
+    if (!exists $Conf{$name}) {
+        say "unknown target: $name";
+        next;
+    }
+    my $base = $Conf{$name}{base};
+    my $template    = $templates->{$name} || $templates->{$base};
+    my $ep_template = $templates->{"$name-entrypoint"} || $templates->{"$base-entrypoint"};
     say $name;
+    mkdir $name unless -d $name;
     my $conf       = merge_conf($name);
     my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
-    open my $fh, '>', "$name/Dockerfile";
-    print $fh $dockerfile;
+    my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
+    path("$name/Dockerfile")->spurt($dockerfile);
+    path("$name/docker-entrypoint.sh")->spurt($entrypoint)->chmod(0755);
 }
 
 sub merge_conf {
@@ -434,3 +443,76 @@ RUN cd <%= $conf->{make_dummy_cert} %> && ./make-dummy-cert /etc/pki/tls/certs/l
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+@@ debian-entrypoint
+% my ($type, $conf) = @_;
+#!/bin/bash
+set -e
+
+% if ($type =~ /^(?:trusty|focal|bionic)$/) {
+find /var/lib/mysql -type f | xargs touch
+% } elsif ($type =~ /^(?:buster|jessie)$/) {
+chown -R mysql:mysql /var/lib/mysql
+% }
+service mysql start
+service memcached start
+
+mysql -e "create database mt_test character set utf8;"
+% if ($type !~ /^(?:trusty|jessie)$/) {
+mysql -e "create user mt@localhost;"
+% }
+mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+
+if [ -f t/cpanfile ]; then
+    cpm install -g --cpanfile=t/cpanfile
+fi
+
+exec "$@"
+
+@@ centos-entrypoint
+% my ($type, $conf) = @_;
+#!/bin/bash
+set -e
+
+% if ($type eq 'centos6') {
+service mysqld start
+service memcached start
+% } elsif ($type =~ /^(?:centos7|fedora23|oracle|amazonlinux)$/) {
+mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
+
+bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
+sleep 1
+until mysqladmin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
+% } elsif ($type =~ /^(?:centos8|fedora|fedora31)$/) {  ## MySQL 8.*
+echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
+mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
+
+bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
+sleep 1
+until mysqladmin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
+% }
+
+% if ($type eq 'centos6') {
+mysql -e "create database if not exists mt_test character set utf8;"
+% } else {
+mysql -e "create database mt_test character set utf8;"
+% }
+% if ($type ne 'centos6') {
+mysql -e "create user mt@localhost;"
+% }
+mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+
+memcached -d -u root
+
+if [ -f t/cpanfile ]; then
+    cpm install -g --cpanfile=t/cpanfile
+fi
+
+exec "$@"
