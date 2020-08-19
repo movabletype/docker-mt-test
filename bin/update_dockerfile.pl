@@ -154,6 +154,21 @@ my %Conf = (
         phpunit => 4,
     },
     fedora => {
+        from => 'fedora:32',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql-server' => 'community-mysql-server',
+                'mysql-client' => 'community-mysql-client',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+            },
+        },
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+    },
+    fedora31 => {
         from => 'fedora:31',
         base => 'centos',
         yum  => {
