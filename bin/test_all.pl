@@ -24,6 +24,7 @@ for my $name (@targets) {
     test_tcp(
         server => sub {
             my $port = shift;
+            $ENV{MT_HOME} = $mt_home if $mt_home;
             exec "MT_IMAGE=$name WWW_PORT=$port SSL_PORT=10443 docker-compose up";
         },
         client => sub {
