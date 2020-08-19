@@ -286,7 +286,7 @@ my %Conf = (
 
 my $templates = get_data_section();
 
-my @targets = @ARGV ? @ARGV : glob "*";
+my @targets = @ARGV ? @ARGV : grep $Conf{$_}{base}, sort keys %Conf;
 for my $name (@targets) {
     if (!exists $Conf{$name}) {
         say "unknown target: $name";

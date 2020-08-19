@@ -7,6 +7,7 @@ use Getopt::Long;
 use LWP::UserAgent;
 use Test::More;
 use Test::TCP;
+use Mojo::File qw/path/;
 
 GetOptions(
     'mt_home|mt=s' => \my $mt_home,
@@ -16,6 +17,9 @@ GetOptions(
 my @targets = @ARGV ? @ARGV : glob "*";
 
 for my $name (@targets) {
+    my $dockerfile = path("$name/Dockerfile");
+    next unless -f $dockerfile;
+    next if $dockerfile->slurp =~ /EXPOSE/;
     diag "testing $name";
     test_tcp(
         server => sub {
