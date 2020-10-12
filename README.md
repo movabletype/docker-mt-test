@@ -12,7 +12,8 @@ Dockerfile to test MT.
 |centos6|centos:6|*5.10.1*|*5.3.3*|*5.1.73*|2020-11|
 |jessie|debian:jessie|5.20.2|*5.6.40*|*5.5.62*|2020-06 (LTS)|
 |buster|debian:buster|*5.28.1*|*7.3.14-1*|*MariaDB 10.3.22*|2022-01|
-|fedora|fedora:32|*5.30.3*|*7.4.8*|*8.0.21*|-|
+|fedora|fedora:32|*5.30.3*|7.4.8|*8.0.21*|-|
+|archlinux|archlinux|*5.32.0*|*7.4.11*|*MariaDB 10.5.6*|-|
 
 ## Environment list (only for manual testing)
 
