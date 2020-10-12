@@ -282,6 +282,32 @@ my %Conf = (
         phpunit => 4,
         release => 19.6,
     },
+    archlinux => {
+        from => 'archlinux',
+        pacman => {
+            base => [qw(
+                ca-certificates git make gcc curl openssh perl
+                unzip bzip2 pkgconf which
+            )],
+            images => [qw(
+                imagemagick graphicsmagick netpbm
+                gd libpng giflib libjpeg-turbo
+            )],
+            server => [qw( apache vsftpd memcached )],
+            db     => [qw( mariadb )],
+            libs   => [qw( libxml2 gmp openssl )],
+            php    => [qw( php php-gd php-memcached )],
+        },
+        cpan => {
+            ## fragile tests, or broken by other modules (Atom, Pulp)
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
+            ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
+            extra   => [qw( JSON::XS Starman )],
+            addons  => [qw( Net::LDAP Linux::Pid )],
+        },
+        phpunit => 9,
+    },
 );
 
 my $templates = get_data_section();
@@ -510,6 +536,79 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 memcached -d -u root
+
+if [ -f t/cpanfile ]; then
+    cpm install -g --cpanfile=t/cpanfile
+fi
+
+exec "$@"
+
+@@ archlinux
+% my ($type, $conf) = @_;
+FROM <%= $conf->{from} %>
+
+WORKDIR /root
+
+RUN pacman -Syu --noconfirm \\
+% for my $key (sort keys %{ $conf->{pacman} }) {
+ <%= join " ", @{$conf->{pacman}{$key}} %>\\
+% }
+ && pacman -Scc --noconfirm &&\\
+% if ($conf->{phpunit}) {
+ curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ mv phpunit /usr/local/bin/ &&\\
+% }
+ curl -sL --compressed https://git.io/cpm > cpm &&\\
+ chmod +x cpm &&\\
+ mv cpm /usr/local/bin/ &&\\
+ cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g\\
+% for my $key (sort keys %{ $conf->{cpan} }) {
+ <%= join " ", @{ $conf->{cpan}{$key} } %>\\
+% }
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ cpm install -g --test &&\\
+ rm -rf cpanfile /root/.perl-cpm/
+
+RUN set -ex &&\\
+ mkdir /var/www &&\\
+ find /etc/httpd/ | grep '\.conf' | xargs perl -i -pe \\
+   's!AllowOverride None!AllowOverride All!g; s!/srv/http!/var/www!g'
+
+ENV LANG=en_US.UTF-8 \\
+    LC_ALL=en_US.UTF-8
+
+COPY ./docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+@@ archlinux-entrypoint
+% my ($type, $conf) = @_;
+#!/bin/bash
+set -e
+
+memcached -u root&
+
+mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql --auth-root-authentication-method=normal --skip-name-resolve --force >/dev/null
+
+bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
+sleep 1
+until mysqladmin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
+
+mysql -e "create database mt_test character set utf8;"
+mysql -e "create user mt@localhost;"
+mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+
+PATH=$PATH:/usr/bin/site_perl:/usr/bin/core_perl
+
+cat <<PHP >> /etc/php/conf.d/mt.ini
+extension=gd
+extension=mysqli
+extension=pdo_mysql
+PHP
 
 if [ -f t/cpanfile ]; then
     cpm install -g --cpanfile=t/cpanfile
