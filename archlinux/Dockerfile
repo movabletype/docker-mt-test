@@ -9,7 +9,7 @@ RUN pacman -Syu --noconfirm \
  libxml2 gmp openssl\
  php php-gd php-memcached\
  apache vsftpd memcached\
- && pacman -Scc --noconfirm &&\
+ && yes | pacman -Scc &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\

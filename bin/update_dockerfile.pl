@@ -553,7 +553,7 @@ RUN pacman -Syu --noconfirm \\
 % for my $key (sort keys %{ $conf->{pacman} }) {
  <%= join " ", @{$conf->{pacman}{$key}} %>\\
 % }
- && pacman -Scc --noconfirm &&\\
+ && yes | pacman -Scc &&\\
 % if ($conf->{phpunit}) {
  curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
