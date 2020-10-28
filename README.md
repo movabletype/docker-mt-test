@@ -37,5 +37,5 @@ Dockerfile to test MT.
 |image name|base image|extra packages|
 |-|-|-|
 |addons|movabletype/test:buster|vsftpd 3.0.3-12|
-|chromedriver|debian:buster|chromium-driver 79.0.3945.130-1~deb10u1|
+|chromedriver|fedora:32|chromium-driver 85.0.4183.121|
 |openldap|centos:6|openldap 2.4.40|
