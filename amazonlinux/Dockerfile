@@ -19,7 +19,7 @@ RUN amazon-linux-extras install epel &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
  cpm install -g --test Net::LDAP Linux::Pid\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02\
  JSON::XS Starman\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
