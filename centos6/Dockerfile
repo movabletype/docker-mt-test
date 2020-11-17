@@ -19,7 +19,7 @@ RUN yum -y install epel-release &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
  cpm install -g --test Net::LDAP Linux::Pid\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02\
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpanm --installdeps . &&\
