@@ -27,7 +27,7 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02 )],
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
@@ -51,7 +51,7 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02 )],
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
@@ -302,7 +302,7 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02 )],
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
