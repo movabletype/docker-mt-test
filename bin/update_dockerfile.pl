@@ -56,6 +56,25 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
     },
+    sid => {
+        from => 'debian:sid-slim',
+        base => 'debian',
+        apt  => {
+            _replace => {
+                'mysql-server'       => 'mariadb-server',
+                'mysql-client'       => 'mariadb-client',
+                'libmysqlclient-dev' => '',
+                'php'                => 'php8.0',
+                'php-cli'            => 'php8.0-cli',
+                'php-mysqlnd'        => 'php8.0-mysql',
+                'php-gd'             => 'php8.0-gd',
+                'php-memcache'       => '',
+                'phpunit'            => '',
+            },
+            db => [qw( libdbd-mysql-perl )],
+        },
+        phpunit => 9,
+    },
     buster => {
         from => 'debian:buster-slim',
         base => 'debian',
@@ -387,7 +406,7 @@ RUN apt-get update &&\\
 
 RUN set -ex &&\\
  a2dismod mpm_event &&\\
- a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} } %> &&\\
+ a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} || [] } %> &&\\
  a2enconf serve-cgi-bin &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
@@ -480,7 +499,11 @@ find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
+% if ($type eq 'sid') {
+service mariadb start
+% } else {
 service mysql start
+% }
 service memcached start
 
 mysql -e "create database mt_test character set utf8;"
