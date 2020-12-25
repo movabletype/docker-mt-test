@@ -22,12 +22,13 @@ my %Conf = (
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
             libs   => [qw( libxml2-dev libgmp-dev libssl-dev )],
             php    => [qw( php php-cli php-mysqlnd php-gd php-memcache phpunit )],
+            editor => [qw( vim nano )],
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85 )],
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
@@ -46,12 +47,13 @@ my %Conf = (
             db     => [qw( mysql-devel mysql-server )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-pecl-memcache phpunit )],
+            editor => [qw( vim nano )],
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85 )],
+            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid )],
         },
@@ -433,6 +435,10 @@ FROM <%= $conf->{from} %>
 WORKDIR /root
 
 RUN\
+% if ($type eq 'centos6') {
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
+% }
 % if ($type eq 'amazonlinux') {
  amazon-linux-extras install epel &&\\
 % } elsif ($type eq 'oracle') {
@@ -469,7 +475,7 @@ RUN\
 % } else {
  cpm install -g --test &&\\
 % }
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8

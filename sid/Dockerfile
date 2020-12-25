@@ -7,6 +7,7 @@ RUN apt-get update &&\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl unzip bzip2 procps ssl-cert\
  libdbd-mysql-perl mariadb-server mariadb-client\
+ vim nano\
  perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev\
  libxml2-dev libgmp-dev libssl-dev\
  php8.0 php8.0-cli php8.0-mysql php8.0-gd\
@@ -19,10 +20,10 @@ RUN apt-get update &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
+ cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
  cpm install -g\
  Net::LDAP Linux::Pid\
- Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.89_02\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
