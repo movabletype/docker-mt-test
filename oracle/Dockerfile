@@ -19,9 +19,9 @@ RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
+ cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
  cpm install -g --test Net::LDAP Linux::Pid\
- Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  DBD::Oracle\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
