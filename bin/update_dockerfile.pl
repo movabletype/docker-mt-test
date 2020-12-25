@@ -435,6 +435,10 @@ FROM <%= $conf->{from} %>
 WORKDIR /root
 
 RUN\
+% if ($type eq 'centos6') {
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
+% }
 % if ($type eq 'amazonlinux') {
  amazon-linux-extras install epel &&\\
 % } elsif ($type eq 'oracle') {

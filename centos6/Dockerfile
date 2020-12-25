@@ -2,7 +2,9 @@ FROM centos:6
 
 WORKDIR /root
 
-RUN yum -y install epel-release &&\
+RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
+ yum -y install epel-release &&\
  yum -y  install \
  git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
  mysql-devel mysql-server\
