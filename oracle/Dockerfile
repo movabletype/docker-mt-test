@@ -7,6 +7,7 @@ RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_
  yum -y  install \
  which git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
  mariadb-devel mariadb-server\
+ vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-pecl-memcache phpunit\

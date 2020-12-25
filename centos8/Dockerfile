@@ -6,6 +6,7 @@ RUN dnf -y install epel-release &&\
  dnf -y --enablerepo=PowerTools install \
  git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
  mysql-devel mysql-server\
+ vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php-json php-mbstring php-pdo php-xml php php-mysqlnd php-gd\

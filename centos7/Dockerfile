@@ -6,6 +6,7 @@ RUN yum -y install epel-release &&\
  yum -y  install \
  git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
  mariadb-devel mariadb-server\
+ vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-pecl-memcache phpunit\

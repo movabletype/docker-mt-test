@@ -7,6 +7,7 @@ RUN apt-get update &&\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl unzip bzip2 procps ssl-cert\
  mysql-server mysql-client libmysql++-dev\
+ vim nano\
  perlmagick libgraphics-magick-perl netpbm libgd2-xpm-dev libpng-dev libgif-dev libjpeg-dev\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php php-cli php-mysqlnd php-gd php-memcache phpunit\

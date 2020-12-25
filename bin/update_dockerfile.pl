@@ -22,6 +22,7 @@ my %Conf = (
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
             libs   => [qw( libxml2-dev libgmp-dev libssl-dev )],
             php    => [qw( php php-cli php-mysqlnd php-gd php-memcache phpunit )],
+            editor => [qw( vim nano )],
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
@@ -46,6 +47,7 @@ my %Conf = (
             db     => [qw( mysql-devel mysql-server )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-pecl-memcache phpunit )],
+            editor => [qw( vim nano )],
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)

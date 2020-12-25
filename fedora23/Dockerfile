@@ -5,6 +5,7 @@ WORKDIR /root
 RUN dnf -y  install \
  hostname git make gcc curl perl perl-core zip unzip bzip2 which procps\
  community-mysql-devel community-mysql-server\
+ vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-pecl-memcache phpunit\
