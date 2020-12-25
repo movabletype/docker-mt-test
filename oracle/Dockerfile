@@ -25,7 +25,7 @@ RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_
  JSON::XS Starman\
  DBD::Oracle\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8

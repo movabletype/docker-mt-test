@@ -471,7 +471,7 @@ RUN\
 % } else {
  cpm install -g --test &&\\
 % }
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8

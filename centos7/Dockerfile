@@ -24,7 +24,7 @@ RUN yum -y install epel-release &&\
  JSON::XS Starman\
  TAP::Harness::Env\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8

@@ -24,7 +24,7 @@ RUN yum -y install epel-release &&\
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpanm --installdeps . &&\
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8

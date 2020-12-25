@@ -25,7 +25,7 @@ RUN dnf -y install epel-release &&\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm /root.cpanm /root/.qws
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
