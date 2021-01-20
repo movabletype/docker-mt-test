@@ -191,22 +191,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
     },
-    fedora31 => {
-        from => 'fedora:31',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql' => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-            },
-            base => [qw( glibc-langpack-en )],
-        },
-        make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        setcap    => 1,
-    },
     fedora23 => {
         from => 'fedora:23',
         base => 'centos',
