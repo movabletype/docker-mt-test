@@ -296,6 +296,92 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 8,
     },
+    cloud6 => {
+        from => 'centos:7',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'perl-GD' => '',
+                'ImageMagick-perl' => '',
+                'GraphicsMagick-perl' => '',
+            },
+        },
+        cpan => {
+            missing => [qw( App::cpanminus TAP::Harness::Env )],
+        },
+        phpunit => 4,
+        make => {
+            perl => '5.28.2',
+            ImageMagick => '7.0.8-68',
+            GraphicsMagick => '1.3.35',
+        },
+        repo => {
+            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
+            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+        },
+        remi => {
+            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php73',
+            php_version => 'php73',
+        },
+        'mysql57-community' => {
+            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+        },
+        cloud_prereqs => 'conf/cloud_prereqs6',
+        use_cpanm => 1,
+    },
+    cloud7 => {
+        from => 'centos:7',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'perl-GD' => '',
+                'ImageMagick-perl' => '',
+                'GraphicsMagick-perl' => '',
+            },
+        },
+        cpan => {
+            missing => [qw( App::cpanminus TAP::Harness::Env )],
+        },
+        phpunit => 4,
+        make => {
+            perl => '5.28.2',
+            ImageMagick => '7.0.8-68',
+            GraphicsMagick => '1.3.35',
+        },
+        repo => {
+            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
+            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+        },
+        remi => {
+            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php73',
+            php_version => 'php73',
+        },
+        'mysql57-community' => {
+            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+        },
+        cloud_prereqs => 'conf/cloud_prereqs7',
+        use_cpanm => 1,
+    },
     amazonlinux => {
         from => 'amazonlinux:2',
         base => 'centos',
@@ -416,6 +502,14 @@ sub merge_conf {
         }
     }
     \%conf;
+}
+
+sub load_prereqs {
+    my $file = shift;
+    my @dists = grep {defined $_ && $_ ne '' && !/^#/} split /\n/, path($file)->slurp;
+    # Use cpan.metacpan.org explicitly as it is actually a backpan
+    # (CDN-based) www.cpan.org does not serve some of the older prereqs anymore (which should be updated anyway)
+    return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_} @dists;
 }
 
 __DATA__
@@ -543,6 +637,13 @@ RUN\
 % } else {
  cpm install -g --test &&\\
 % }
+% if ($conf->{cloud_prereqs}) {
+%   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
+# use cpanm to avoid strong caching of cpm
+%   for my $prereq (@cloud_prereqs) {
+ cpanm -nf <%= $prereq %> &&\\
+%   }
+% }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \\
@@ -609,7 +710,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:centos8|fedora|fedora31)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora31)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
