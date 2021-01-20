@@ -578,7 +578,8 @@ FROM <%= $conf->{from} %>
 
 WORKDIR /root
 
-RUN pacman -Syu --noconfirm \\
+RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --refresh --keyserver hkp://keys.gnupg.net &&\\
+ pacman -Syu --noconfirm \\
 % for my $key (sort keys %{ $conf->{pacman} }) {
  <%= join " ", @{$conf->{pacman}{$key}} %>\\
 % }
