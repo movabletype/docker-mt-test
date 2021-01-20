@@ -17,7 +17,7 @@ Dockerfile to test MT.
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.3.26*|*5.7.33*|1.0.2k|-|
 |cloud7 (\*1)|centos:7|*5.28.2*|*7.3.26*|*5.7.33*|1.0.2k|-|
 
-\*1 These images are not used in the MT cloud, but the well-known modules should have the same version (except for those only used in tests).
+\*1 These images are not used in the MT cloud, but the well-known modules should have the same version (except for those used only in tests).
 
 ## Environment list (only for manual testing)
 
@@ -26,7 +26,6 @@ Dockerfile to test MT.
 |centos7|centos:7|5.16.3|*5.4.16*|*MariaDB 5.5.68*|1.0.2k|2024-06|
 |centos8|centos:8|5.26.3|*7.2.24*|8.0.21|1.1.1g|2029-03|
 |fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
-|fedora31|fedora:31|5.30.3|7.3.24|8.0.22|1.1.1g|-|
 |trusty|ubuntu:trusty|5.18.2|*5.5.9*|5.5.62|1.0.1f|2019-04|
 |stretch|debian:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.47*|1.1.0l|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|*5.7.32*|1.1.1|2023-04|
