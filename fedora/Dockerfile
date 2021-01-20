@@ -2,11 +2,11 @@ FROM fedora:32
 
 WORKDIR /root
 
-RUN dnf -y  install \
- git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which perl-Unix-Process\
- community-mysql-devel community-mysql-server\
+RUN dnf -y install\
+ glibc-langpack-en git make gcc curl perl perl-core zip unzip bzip2 which perl-Unix-Process\
+ community-mysql-devel community-mysql-server community-mysql\
  vim nano\
- ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-pecl-memcache phpunit\
  mod_ssl vsftpd ftp memcached\
@@ -18,10 +18,12 @@ RUN dnf -y  install \
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
- cpm install -g --test Net::LDAP Linux::Pid\
+ cpm install -g --test\
+ Net::LDAP Linux::Pid\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \

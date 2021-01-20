@@ -2,17 +2,24 @@ FROM oraclelinux:7-slim
 
 WORKDIR /root
 
-RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\
- yum -y install oracle-instantclient19.6-basic oracle-instantclient19.6-devel oracle-instantclient19.6-sqlplus &&\
- yum -y  install \
- which git make gcc curl perl perl-core glibc-langpack-en zip unzip bzip2 which procps\
- mariadb-devel mariadb-server\
+RUN yum -y install\
+ which git make gcc curl perl perl-core zip unzip bzip2 which procps\
+ mariadb-devel mariadb-server mariadb\
  vim nano\
- ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel\
+ ImageMagick-perl perl-GD netpbm-progs libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-pecl-memcache phpunit\
+ php php-gd php-pecl-memcache\
  httpd mod_ssl vsftpd ftp memcached\
  && yum clean all &&\
+ yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\
+ yum -y install oracle-instantclient19.6-basic oracle-instantclient19.6-devel oracle-instantclient19.6-sqlplus &&\
+ yum -y install oracle-epel-release-el7 &&\
+    yum -y --enablerepo=ol7_developer_EPEL install\
+ GraphicsMagick-perl\
+ && yum clean --enablerepo=ol7_developer_EPEL all &&\
+    yum -y --enablerepo=ol7_optional_latest install\
+ gd-devel giflib-devel php-mysqlnd\
+ && yum clean --enablerepo=ol7_optional_latest all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
@@ -20,11 +27,13 @@ RUN yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
- cpm install -g --test Net::LDAP Linux::Pid\
+ cpm install -g --test\
+ Net::LDAP Linux::Pid\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  DBD::Oracle\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile && cpm install -g --test &&\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
