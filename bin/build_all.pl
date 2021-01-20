@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Parallel::ForkManager;
 use Getopt::Long qw/:config pass_through/;
+use Mojo::File qw/path/;
 
 GetOptions(
     'no_cache|no-cache' => \my $no_cache,
@@ -39,7 +40,18 @@ for my $name (@targets) {
     for my $t (@{$aliases_rev{$name} || []}) {
         $tags .= " --tag movabletype/test:$t";
     }
-    my $res = system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+    system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+    my $log = path("log/build_$name.log")->slurp;
+    if ($log =~ /Successfully built/) {
+        if ($log =~ /No package (.+) available/) {
+            rename "log/build_$name.log" => "log/build_warn_$name.log";
+        } else {
+            unlink "log/build_warn_$name.log"
+        }
+        unlink "log/build_error_$name.log"
+    } else {
+        rename "log/build_$name.log" => "log/build_error_$name.log";
+    }
     $pm->finish;
 }
 $pm->wait_all_children;
