@@ -2,7 +2,8 @@ FROM archlinux
 
 WORKDIR /root
 
-RUN pacman -Syu --noconfirm \
+RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --refresh --keyserver hkp://keys.gnupg.net &&\
+ pacman -Syu --noconfirm \
  ca-certificates git make gcc curl openssh perl unzip bzip2 pkgconf which\
  mariadb\
  imagemagick graphicsmagick netpbm gd libpng giflib libjpeg-turbo\
@@ -18,7 +19,7 @@ RUN pacman -Syu --noconfirm \
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp &&\
  cpm install -g\
  Net::LDAP Linux::Pid\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65 Crypt::Curve25519@0.05 Net::SSLeay@1.85\
  JSON::XS Starman\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\

@@ -36,15 +36,15 @@ my %Conf = (
     centos => {
         yum => {
             base => [qw(
-                git make gcc curl perl perl-core glibc-langpack-en
+                git make gcc curl perl perl-core
                 zip unzip bzip2 which procps
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
-                giflib-devel libpng-devel libjpeg-devel
+                giflib-devel libpng-devel libjpeg-devel gd-devel
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
-            db     => [qw( mysql-devel mysql-server )],
+            db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-pecl-memcache phpunit )],
             editor => [qw( vim nano )],
@@ -180,11 +180,12 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
+                'mysql' => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
-                'mysql-client' => 'community-mysql-client',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
             },
+            base => [qw( glibc-langpack-en )],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -195,11 +196,12 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
+                'mysql' => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
-                'mysql-client' => 'community-mysql-client',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
             },
+            base => [qw( glibc-langpack-en )],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -210,10 +212,9 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
+                'mysql' => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
-                'mysql-client' => 'community-mysql-client',
                 'mysql-devel'  => 'community-mysql-devel',
-                'glibc-langpack-en' => '',
             },
             base => [qw( hostname )],
         },
@@ -227,8 +228,16 @@ my %Conf = (
         yum  => {
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
+                'GraphicsMagick-perl' => '',
+                'phpunit' => '',
             },
             libs => [qw( perl-XML-Parser )],
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl )],
+        },
+        epel => {
+            rpm => 'epel-release',
         },
         cpan => {
             missing => [qw( App::cpanminus DBD::SQLite )],
@@ -241,10 +250,18 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
+                'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
-                'mysql-client' => 'mariadb',
                 'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick-perl' => '',
+                'phpunit' => '',
             },
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl )],
+        },
+        epel => {
+            rpm => 'epel-release',
         },
         cpan => {
             missing => [qw( TAP::Harness::Env )],
@@ -260,26 +277,127 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit'           => '',
                 'ssh'               => '',
+                'GraphicsMagick-perl' => '',
+                'ImageMagick-perl' => '',
+                'perl-GD' => '',
+                'giflib-devel' => '',
             },
             php => [qw/ php-json php-mbstring php-pdo php-xml /],
         },
-        enablerepo              => [qw( PowerTools )],    ## for giflib-devel
+        epel => {
+            rpm => 'epel-release',
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD )],
+            PowerTools => [qw/ giflib-devel /],
+        },
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 8,
+    },
+    cloud6 => {
+        from => 'centos:7',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'perl-GD' => '',
+                'ImageMagick-perl' => '',
+                'GraphicsMagick-perl' => '',
+            },
+        },
+        cpan => {
+            missing => [qw( App::cpanminus TAP::Harness::Env )],
+        },
+        phpunit => 4,
+        make => {
+            perl => '5.28.2',
+            ImageMagick => '7.0.8-68',
+            GraphicsMagick => '1.3.35',
+        },
+        repo => {
+            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
+            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+        },
+        remi => {
+            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php73',
+            php_version => 'php73',
+        },
+        'mysql57-community' => {
+            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+        },
+        cloud_prereqs => 'conf/cloud_prereqs6',
+        use_cpanm => 1,
+    },
+    cloud7 => {
+        from => 'centos:7',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'perl-GD' => '',
+                'ImageMagick-perl' => '',
+                'GraphicsMagick-perl' => '',
+            },
+        },
+        cpan => {
+            missing => [qw( App::cpanminus TAP::Harness::Env )],
+        },
+        phpunit => 4,
+        make => {
+            perl => '5.28.2',
+            ImageMagick => '7.0.8-68',
+            GraphicsMagick => '1.3.35',
+        },
+        repo => {
+            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
+            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+        },
+        remi => {
+            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php73',
+            php_version => 'php73',
+        },
+        'mysql57-community' => {
+            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+        },
+        cloud_prereqs => 'conf/cloud_prereqs7',
+        use_cpanm => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql-server'      => 'mariadb-server',
-                'mysql-client'      => 'mariadb',
-                'mysql-devel'       => 'mariadb-devel',
+                'mysql' => 'mariadb',
+                'mysql-server' => 'mariadb-server',
+                'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick-perl' => '',
+                'phpunit' => '',
             },
-            base   => [qw( which )],
+            base   => [qw( which hostname )],
             server => [qw( httpd )], ## for mod_ssl
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl urw-base35-fonts-legacy )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
@@ -289,12 +407,25 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql-server'      => 'mariadb-server',
-                'mysql-client'      => 'mariadb',
-                'mysql-devel'       => 'mariadb-devel',
+                'mysql' => 'mariadb',
+                'mysql-server' => 'mariadb-server',
+                'mysql-devel'  => 'mariadb-devel',
+                'php-mysqlnd' => '',
+                'phpunit' => '',
+                'giflib-devel' => '',
+                'gd-devel' => '',
+                'GraphicsMagick-perl' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
+        },
+        epel => {
+            rpm => 'oracle-epel-release-el7',
+            enable => 'ol7_developer_EPEL',
+        },
+        repo => {
+            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd )],
+            epel => [qw( GraphicsMagick-perl )],
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
@@ -373,6 +504,14 @@ sub merge_conf {
     \%conf;
 }
 
+sub load_prereqs {
+    my $file = shift;
+    my @dists = grep {defined $_ && $_ ne '' && !/^#/} split /\n/, path($file)->slurp;
+    # Use cpan.metacpan.org explicitly as it is actually a backpan
+    # (CDN-based) www.cpan.org does not serve some of the older prereqs anymore (which should be updated anyway)
+    return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_} @dists;
+}
+
 __DATA__
 
 @@ debian
@@ -439,20 +578,43 @@ RUN\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
 % }
-% if ($type eq 'amazonlinux') {
- amazon-linux-extras install epel &&\\
-% } elsif ($type eq 'oracle') {
- yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
- yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
-% } elsif ($type =~ /centos/) {
- <%= $conf->{installer} // 'yum' %> -y install epel-release &&\\
-% }
- <%= $conf->{installer} // 'yum' %> -y <%= join " ", map {"--enablerepo=$_"} @{ $conf->{enablerepo} || [] } %> install \\
+ <%= $conf->{installer} // 'yum' %> -y install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  && <%= $conf->{installer} // 'yum' %> clean all &&\\
+% if ($type eq 'oracle') {
+ yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
+ yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
+% }
+% for my $repo (sort keys %{$conf->{repo} || {}}) {
+%   if ($repo eq 'epel' && $type eq 'amazonlinux') {
+ amazon-linux-extras install epel &&\\
+%   } elsif ($conf->{$repo}{rpm}) {
+ <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%   }
+    <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+ <%= join " ", @{$conf->{repo}{$repo}} %>\\
+ && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
+% }
+% if ($conf->{make}) {
+ mkdir src && cd src &&\\
+ curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
+ cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
+ tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
+ ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
+ tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
+ ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ cd .. && rm -rf src &&\\
+% }
+% if ($conf->{remi}) {
+ sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
+ ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
+% } else {
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
+% }
 % if ($conf->{setcap}) {
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\\
@@ -465,15 +627,22 @@ RUN\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test\
+ cpm install -g --test\\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps . &&\\
 % } else {
  cpm install -g --test &&\\
+% }
+% if ($conf->{cloud_prereqs}) {
+%   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
+# use cpanm to avoid strong caching of cpm
+%   for my $prereq (@cloud_prereqs) {
+ cpanm -nf <%= $prereq %> &&\\
+%   }
 % }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
@@ -541,7 +710,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:centos8|fedora|fedora31)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora31)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
