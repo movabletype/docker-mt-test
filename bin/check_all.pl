@@ -22,6 +22,7 @@ for my $name (@targets) {
     } else {
         if ($log =~ /Failed \(TODO\)/) {
             rename "log/check_$name.log" => "log/check_warn_$name.log";
+            unlink "log/check_error_$name.log";
         } else {
             unlink "log/check_error_$name.log";
             unlink "log/check_warn_$name.log";
