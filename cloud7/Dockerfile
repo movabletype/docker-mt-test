@@ -15,7 +15,7 @@ RUN yum -y install\
  && yum clean --enablerepo=mysql57-community all &&\
  yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php73 install\
- php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache\
+ php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache\
  && yum clean --enablerepo=remi,remi-php73 all &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
@@ -26,7 +26,7 @@ RUN yum -y install\
  curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- cd .. && rm -rf src &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/php73/php.ini &&\
  ln -s /usr/bin/php73 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\

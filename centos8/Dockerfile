@@ -8,7 +8,7 @@ RUN dnf -y install\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php-json php-mbstring php-pdo php-xml php php-mysqlnd php-gd\
+ php-json php-pdo php-xml php php-mysqlnd php-gd php-mbstring\
  mod_ssl vsftpd ftp memcached\
  && dnf clean all &&\
     dnf -y --enablerepo=PowerTools install\
