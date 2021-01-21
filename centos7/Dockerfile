@@ -8,7 +8,7 @@ RUN yum -y install\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-pecl-memcache\
+ php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
  && yum clean all &&\
  yum -y install epel-release &&\

@@ -18,7 +18,7 @@ RUN yum -y install\
  GraphicsMagick-perl\
  && yum clean --enablerepo=ol7_developer_EPEL all &&\
     yum -y --enablerepo=ol7_optional_latest install\
- gd-devel giflib-devel php-mysqlnd\
+ gd-devel giflib-devel php-mysqlnd php-mbstring\
  && yum clean --enablerepo=ol7_optional_latest all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\

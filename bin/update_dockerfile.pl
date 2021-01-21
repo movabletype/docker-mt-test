@@ -46,7 +46,7 @@ my %Conf = (
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
-            php    => [qw( php php-mysqlnd php-gd php-pecl-memcache phpunit )],
+            php    => [qw( php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -74,6 +74,7 @@ my %Conf = (
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
+            php => [qw( php8.0-mbstring )],
         },
         phpunit => 9,
     },
@@ -266,7 +267,7 @@ my %Conf = (
                 'perl-GD' => '',
                 'giflib-devel' => '',
             },
-            php => [qw/ php-json php-mbstring php-pdo php-xml /],
+            php => [qw/ php-json php-pdo php-xml /],
         },
         epel => {
             rpm => 'epel-release',
@@ -291,6 +292,7 @@ my %Conf = (
                 'php' => '',
                 'php-cli' => '',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'php-gd' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
@@ -310,7 +312,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -334,6 +336,7 @@ my %Conf = (
                 'php' => '',
                 'php-cli' => '',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'php-gd' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
@@ -353,7 +356,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -381,7 +384,7 @@ my %Conf = (
             server => [qw( httpd )], ## for mod_ssl
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl urw-base35-fonts-legacy )],
+            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
@@ -395,6 +398,7 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
@@ -408,7 +412,7 @@ my %Conf = (
             enable => 'ol7_developer_EPEL',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
             epel => [qw( GraphicsMagick-perl )],
         },
         cpan => {
@@ -572,14 +576,17 @@ RUN\
  yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
 % }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
-%   if ($repo eq 'epel' && $type eq 'amazonlinux') {
- amazon-linux-extras install epel &&\\
+%   if ($type eq 'amazonlinux') {
+ amazon-linux-extras install <%= $repo %> &&\\
+    <%= $conf->{installer} // 'yum' %> -y install\\
+ <%= join " ", @{$conf->{repo}{$repo}} %>\\
+ && <%= $conf->{installer} // 'yum' %> clean all &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
-%   }
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
+%   }
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -591,7 +598,7 @@ RUN\
  curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
- cd .. && rm -rf src &&\\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{remi}) {
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
