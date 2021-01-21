@@ -46,7 +46,7 @@ my %Conf = (
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
-            php    => [qw( php php-mysqlnd php-gd php-pecl-memcache phpunit )],
+            php    => [qw( php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -74,6 +74,7 @@ my %Conf = (
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
+            php => [qw( php8.0-mbstring )],
         },
         phpunit => 9,
     },
@@ -266,7 +267,7 @@ my %Conf = (
                 'perl-GD' => '',
                 'giflib-devel' => '',
             },
-            php => [qw/ php-json php-mbstring php-pdo php-xml /],
+            php => [qw/ php-json php-pdo php-xml /],
         },
         epel => {
             rpm => 'epel-release',
@@ -291,6 +292,7 @@ my %Conf = (
                 'php' => '',
                 'php-cli' => '',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'php-gd' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
@@ -310,7 +312,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -334,6 +336,7 @@ my %Conf = (
                 'php' => '',
                 'php-cli' => '',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'php-gd' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
@@ -353,7 +356,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -395,6 +398,7 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'php-mysqlnd' => '',
+                'php-mbstring' => '',
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
@@ -408,7 +412,7 @@ my %Conf = (
             enable => 'ol7_developer_EPEL',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
             epel => [qw( GraphicsMagick-perl )],
         },
         cpan => {
