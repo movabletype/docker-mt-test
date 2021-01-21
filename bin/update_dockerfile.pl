@@ -384,7 +384,7 @@ my %Conf = (
             server => [qw( httpd )], ## for mod_ssl
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl urw-base35-fonts-legacy )],
+            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
