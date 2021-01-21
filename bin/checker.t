@@ -46,16 +46,35 @@ for my $module (sort keys %prereqs) {
     }
 }
 
-my %supported = map {$_ => 1} Imager->read_types;
-ok $supported{gif}, "GIF support";
-ok $supported{png}, "PNGf support";
-ok $supported{jpeg}, "JPEG support";
-
 my ($perl_version) = `perl -v` =~ /v(5\.\d+\.\d+)/;
 ok $perl_version, "Perl exists ($perl_version)";
 
+my %imager_supports = map {$_ => 1} Imager->read_types;
+ok $imager_supports{gif}, "Imager supports GIF";
+ok $imager_supports{png}, "Imager supports PNG";
+ok $imager_supports{jpeg}, "Imager supports JPEG";
+
+my %imagemagick_supports = map {$_ => 1} Image::Magick->QueryFormat;
+ok $imagemagick_supports{gif}, "ImageMagick supports GIF";
+ok $imagemagick_supports{png}, "ImageMagick supports PNG";
+ok $imagemagick_supports{jpeg}, "ImageMagick supports JPEG";
+
+my %graphicsmagick_supports = map {$_ => 1} Graphics::Magick->QueryFormat;
+ok $graphicsmagick_supports{gif}, "GraphicsMagick supports GIF";
+ok $graphicsmagick_supports{png}, "GraphicsMagick supports PNG";
+ok $graphicsmagick_supports{jpeg}, "GraphicsMagick supports JPEG";
+
 my ($php_version) = `php --version` =~ /PHP (\d\.\d+\.\d+)/;
 ok $php_version, "PHP exists ($php_version)";
+
+my $phpinfo = `php -i`;
+ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "PHP has mbstring";
+ok $phpinfo =~ /PDO drivers => .*?mysql/, "PHP has PDO mysql driver";
+ok $phpinfo =~ /GD Support => enabled/, "PHP has GD";
+ok $phpinfo =~ /GIF Read Support => enabled/, "PHP supports GIF read";
+ok $phpinfo =~ /GIF Create Support => enabled/, "PHP supports GIF create";
+ok $phpinfo =~ /JPEG Support => enabled/, "PHP supports JPEG";
+ok $phpinfo =~ /PNG Support => enabled/, "PHP supports PNG";
 
 my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
 my $mysql = $is_maria ? "MariaDB" : "MySQL";
