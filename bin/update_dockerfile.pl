@@ -576,14 +576,17 @@ RUN\
  yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
 % }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
-%   if ($repo eq 'epel' && $type eq 'amazonlinux') {
- amazon-linux-extras install epel &&\\
+%   if ($type eq 'amazonlinux') {
+ amazon-linux-extras install <%= $repo %> &&\\
+    <%= $conf->{installer} // 'yum' %> -y install\\
+ <%= join " ", @{$conf->{repo}{$repo}} %>\\
+ && <%= $conf->{installer} // 'yum' %> clean all &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
-%   }
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
+%   }
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
