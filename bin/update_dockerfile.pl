@@ -132,18 +132,6 @@ my %Conf = (
         },
         phpunit => 6,
     },
-    focal => {
-        from => 'ubuntu:focal',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'php-mysqlnd' => 'php-mysql',
-            },
-        },
-        apache => {
-            enmod => [qw( php7.4 )],
-        },
-    },
     bionic => {
         from => 'ubuntu:bionic',
         base => 'debian',
@@ -670,7 +658,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #!/bin/bash
 set -e
 
-% if ($type =~ /^(?:trusty|focal|bionic)$/) {
+% if ($type =~ /^(?:trusty|bionic)$/) {
 find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
 chown -R mysql:mysql /var/lib/mysql
@@ -711,7 +699,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora31)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
