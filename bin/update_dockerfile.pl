@@ -379,13 +379,25 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'GraphicsMagick-perl' => '',
+                'php' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-mbstring' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
             },
             base   => [qw( which hostname )],
             server => [qw( httpd )], ## for mod_ssl
         },
+        'GraphicsMagick1.3' => {
+            enable => 'amzn2extra-GraphicsMagick1.3',
+        },
+        'php7.3' => {
+            enable => 'amzn2extra-php7.3',
+        },
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
+            'php7.3' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
@@ -579,15 +591,12 @@ RUN\
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
 %   if ($type eq 'amazonlinux') {
  amazon-linux-extras install <%= $repo %> &&\\
-    <%= $conf->{installer} // 'yum' %> -y install\\
- <%= join " ", @{$conf->{repo}{$repo}} %>\\
- && <%= $conf->{installer} // 'yum' %> clean all &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%   }
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
-%   }
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
