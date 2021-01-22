@@ -15,7 +15,7 @@ RUN yum -y install\
  && yum clean --enablerepo=mysql57-community all &&\
  yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php73 install\
- php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache\
+ php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml\
  && yum clean --enablerepo=remi,remi-php73 all &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\

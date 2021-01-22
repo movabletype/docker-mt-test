@@ -10,7 +10,7 @@ RUN apt-get update &&\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev\
  libxml2-dev libgmp-dev libssl-dev\
- php8.0-mbstring php8.0 php8.0-cli php8.0-mysql php8.0-gd\
+ php8.0-mbstring php8.0-xml php8.0 php8.0-cli php8.0-mysql php8.0-gd\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
