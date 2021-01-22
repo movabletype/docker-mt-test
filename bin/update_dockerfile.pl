@@ -74,7 +74,7 @@ my %Conf = (
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
-            php => [qw( php8.0-mbstring )],
+            php => [qw( php8.0-mbstring php8.0-xml )],
         },
         phpunit => 9,
     },
@@ -217,6 +217,7 @@ my %Conf = (
                 'phpunit' => '',
             },
             libs => [qw( perl-XML-Parser )],
+            php => [qw( php-xml )],
         },
         repo => {
             epel => [qw( GraphicsMagick-perl )],
@@ -312,7 +313,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -356,7 +357,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
