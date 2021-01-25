@@ -8,13 +8,16 @@ RUN yum -y install\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  httpd mod_ssl vsftpd ftp memcached\
  && yum clean all &&\
  amazon-linux-extras install GraphicsMagick1.3 &&\
-    yum -y install\
+    yum -y --enablerepo=amzn2extra-GraphicsMagick1.3 install\
  GraphicsMagick-perl\
- && yum clean all &&\
+ && yum clean --enablerepo=amzn2extra-GraphicsMagick1.3 all &&\
+ amazon-linux-extras install php7.3 &&\
+    yum -y --enablerepo=amzn2extra-php7.3 install\
+ php php-mysqlnd php-gd php-mbstring php-xml\
+ && yum clean --enablerepo=amzn2extra-php7.3 all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

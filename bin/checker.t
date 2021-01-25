@@ -71,10 +71,14 @@ my $phpinfo = `php -i`;
 ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "PHP has mbstring";
 ok $phpinfo =~ /PDO drivers => .*?mysql/, "PHP has PDO mysql driver";
 ok $phpinfo =~ /GD Support => enabled/, "PHP has GD";
+ok $phpinfo =~ /DOM.XML => enabled/, "PHP has DOM/XML";
 ok $phpinfo =~ /GIF Read Support => enabled/, "PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/, "PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/, "PHP supports PNG";
+
+my ($phpunit) = `phpunit --version` =~ /PHPUnit (\d+\.\d+\.\d+)/;
+ok $phpunit, "phpunit exists ($phpunit)";
 
 my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
 my $mysql = $is_maria ? "MariaDB" : "MySQL";

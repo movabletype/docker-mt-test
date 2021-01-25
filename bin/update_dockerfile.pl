@@ -74,7 +74,7 @@ my %Conf = (
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
-            php => [qw( php8.0-mbstring )],
+            php => [qw( php8.0-mbstring php8.0-xml )],
         },
         phpunit => 9,
     },
@@ -131,18 +131,6 @@ my %Conf = (
             enmod => [qw( php7.0 )],
         },
         phpunit => 6,
-    },
-    focal => {
-        from => 'ubuntu:focal',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'php-mysqlnd' => 'php-mysql',
-            },
-        },
-        apache => {
-            enmod => [qw( php7.4 )],
-        },
     },
     bionic => {
         from => 'ubuntu:bionic',
@@ -217,6 +205,7 @@ my %Conf = (
                 'phpunit' => '',
             },
             libs => [qw( perl-XML-Parser )],
+            php => [qw( php-xml )],
         },
         repo => {
             epel => [qw( GraphicsMagick-perl )],
@@ -312,7 +301,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -356,7 +345,7 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache )],
+            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
@@ -378,13 +367,25 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'GraphicsMagick-perl' => '',
+                'php' => '',
+                'php-mysqlnd' => '',
+                'php-gd' => '',
+                'php-mbstring' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
             },
             base   => [qw( which hostname )],
             server => [qw( httpd )], ## for mod_ssl
         },
+        'GraphicsMagick1.3' => {
+            enable => 'amzn2extra-GraphicsMagick1.3',
+        },
+        'php7.3' => {
+            enable => 'amzn2extra-php7.3',
+        },
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
+            'php7.3' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
@@ -578,15 +579,12 @@ RUN\
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
 %   if ($type eq 'amazonlinux') {
  amazon-linux-extras install <%= $repo %> &&\\
-    <%= $conf->{installer} // 'yum' %> -y install\\
- <%= join " ", @{$conf->{repo}{$repo}} %>\\
- && <%= $conf->{installer} // 'yum' %> clean all &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%   }
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
-%   }
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -660,7 +658,7 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #!/bin/bash
 set -e
 
-% if ($type =~ /^(?:trusty|focal|bionic)$/) {
+% if ($type =~ /^(?:trusty|bionic)$/) {
 find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
 chown -R mysql:mysql /var/lib/mysql
@@ -701,7 +699,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora31)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
