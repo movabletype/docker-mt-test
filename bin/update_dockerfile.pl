@@ -78,6 +78,21 @@ my %Conf = (
         },
         phpunit => 9,
     },
+    bullseye => {
+        from => 'debian:bullseye-slim',
+        base => 'debian',
+        apt  => {
+            _replace => {
+                'mysql-server'       => 'mariadb-server',
+                'mysql-client'       => 'mariadb-client',
+                'libmysqlclient-dev' => '',
+                'phpunit'            => '',
+            },
+            db => [qw( libdbd-mysql-perl )],
+            php => [qw( php-mbstring php-xml )],
+        },
+        phpunit => 9,
+    },
     buster => {
         from => 'debian:buster-slim',
         base => 'debian',
@@ -665,7 +680,7 @@ find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
-% if ($type eq 'sid') {
+% if ($type =~ /sid|bullseye/) {
 service mariadb start
 % } else {
 service mysql start
