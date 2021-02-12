@@ -26,6 +26,7 @@ RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --refresh
  rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\
+ localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
  mkdir /var/www &&\
  find /etc/httpd/ | grep '\.conf' | xargs perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!/srv/http!/var/www!g'
