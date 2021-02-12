@@ -174,7 +174,7 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
             },
-            base => [qw( glibc-langpack-en )],
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -257,6 +257,7 @@ my %Conf = (
                 'giflib-devel' => '',
             },
             php => [qw/ php-json php-pdo php-xml /],
+            base => [qw/ glibc-langpack-ja /],
         },
         epel => {
             rpm => 'epel-release',
@@ -374,7 +375,7 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
             },
-            base   => [qw( which hostname )],
+            base   => [qw( which hostname glibc-langpack-ja )],
             server => [qw( httpd )], ## for mod_ssl
         },
         'GraphicsMagick1.3' => {
@@ -518,6 +519,7 @@ RUN apt-get update &&\\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
+ localedef -i ja_JP -f UTF-8 en_US.UTF-8 &&\\
 % if ($conf->{phpunit}) {
  curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
