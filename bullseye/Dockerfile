@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM debian:bullseye-slim
 
 WORKDIR /root
 
@@ -6,17 +6,17 @@ RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl unzip bzip2 procps ssl-cert\
- mysql-server mysql-client libmysql++-dev\
+ libdbd-mysql-perl mariadb-server mariadb-client\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm libgd2-xpm-dev libpng12-dev libgif-dev libjpeg-dev\
+ perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev\
  libxml2-dev libgmp-dev libssl-dev\
- php5 php5-cli php5-mysql php5-gd php5-memcache phpunit\
+ php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
  localedef -i ja_JP -f UTF-8 en_US.UTF-8 &&\
- curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
@@ -32,7 +32,7 @@ RUN apt-get update &&\
 
 RUN set -ex &&\
  a2dismod mpm_event &&\
- a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl php5 &&\
+ a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl  &&\
  a2enconf serve-cgi-bin &&\
  a2ensite default-ssl &&\
  make-ssl-cert generate-default-snakeoil &&\

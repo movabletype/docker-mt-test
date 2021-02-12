@@ -15,6 +15,7 @@ RUN apt-get update &&\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
+ localedef -i ja_JP -f UTF-8 en_US.UTF-8 &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\

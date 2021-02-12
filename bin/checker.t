@@ -101,4 +101,7 @@ ok $vsftpd_version, "vsftpd exists ($vsftpd_version)";
 my ($openssl_version) = Net::SSLeay::SSLeay_version() =~ /OpenSSL (\d+\.\d+\.\d+\w*)/i;
 ok $openssl_version, "openssl exists ($openssl_version)";
 
+my $locale = `locale -a`;
+ok $locale =~ /ja_JP\.utf8/, "has Japanese locale" or warn $locale;
+
 done_testing;
