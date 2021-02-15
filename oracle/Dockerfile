@@ -13,6 +13,7 @@ RUN yum -y install\
  && yum clean all &&\
  yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\
  yum -y install oracle-instantclient19.6-basic oracle-instantclient19.6-devel oracle-instantclient19.6-sqlplus &&\
+ yum -y reinstall glibc-common &&\
  yum -y install oracle-epel-release-el7 &&\
     yum -y --enablerepo=ol7_developer_EPEL install\
  GraphicsMagick-perl\

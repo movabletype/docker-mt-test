@@ -14,10 +14,10 @@ RUN yum -y install\
     yum -y --enablerepo=amzn2extra-GraphicsMagick1.3 install\
  GraphicsMagick-perl\
  && yum clean --enablerepo=amzn2extra-GraphicsMagick1.3 all &&\
- amazon-linux-extras install php7.3 &&\
-    yum -y --enablerepo=amzn2extra-php7.3 install\
+ amazon-linux-extras install php7.4 &&\
+    yum -y --enablerepo=amzn2extra-php7.4 install\
  php php-mysqlnd php-gd php-mbstring php-xml\
- && yum clean --enablerepo=amzn2extra-php7.3 all &&\
+ && yum clean --enablerepo=amzn2extra-php7.4 all &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

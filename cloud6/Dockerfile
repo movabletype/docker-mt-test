@@ -14,9 +14,9 @@ RUN yum -y install\
  mysql-community-server mysql-community-client mysql-community-devel\
  && yum clean --enablerepo=mysql57-community all &&\
  yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm &&\
-    yum -y --enablerepo=remi,remi-php73 install\
- php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml\
- && yum clean --enablerepo=remi,remi-php73 all &&\
+    yum -y --enablerepo=remi,remi-php74 install\
+ php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
+ && yum clean --enablerepo=remi,remi-php74 all &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
  cd perl-5.28.2 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
@@ -27,8 +27,8 @@ RUN yum -y install\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/php73/php.ini &&\
- ln -s /usr/bin/php73 /usr/local/bin/php &&\
+ sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/php74/php.ini &&\
+ ln -s /usr/bin/php74 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
@@ -148,6 +148,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\
+  localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
     /etc/httpd/conf/httpd.conf

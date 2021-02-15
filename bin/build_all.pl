@@ -10,6 +10,7 @@ use Mojo::File qw/path/;
 GetOptions(
     'no_cache|no-cache' => \my $no_cache,
     'workers=i'         => \my $workers,
+    'errored|errored_only|errored-only' => \my $errored_only,
 );
 
 my %aliases = qw(
@@ -34,6 +35,7 @@ my @targets = @ARGV ? @ARGV : glob "*";
 my $pm = Parallel::ForkManager->new($workers // 2);
 for my $name (@targets) {
     next unless -f "$name/Dockerfile";
+    next if $errored_only && !-f "log/build_error_$name.log";
     say $name;
     my $pid = $pm->start and next;
     my $tags = "--tag movabletype/test:$name";

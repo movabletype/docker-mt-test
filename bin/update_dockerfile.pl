@@ -179,6 +179,22 @@ my %Conf = (
         },
         phpunit => 4,
     },
+    fedora33 => {
+        from => 'fedora:33',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+    },
     fedora => {
         from => 'fedora:32',
         base => 'centos',
@@ -256,6 +272,7 @@ my %Conf = (
             missing => [qw( TAP::Harness::Env )],
         },
         phpunit => 4,
+        locale_def => 1,
     },
     centos8 => {
         from => 'centos:8',
@@ -317,18 +334,19 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
+            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php73',
-            php_version => 'php73',
+            enable => 'remi,remi-php74',
+            php_version => 'php74',
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
         use_cpanm => 1,
+        locale_def => 1,
     },
     cloud7 => {
         from => 'centos:7',
@@ -361,18 +379,19 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
+            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php73',
-            php_version => 'php73',
+            enable => 'remi,remi-php74',
+            php_version => 'php74',
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
         use_cpanm => 1,
+        locale_def => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -396,12 +415,12 @@ my %Conf = (
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
         },
-        'php7.3' => {
-            enable => 'amzn2extra-php7.3',
+        'php7.4' => {
+            enable => 'amzn2extra-php7.4',
         },
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
-            'php7.3' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
+            'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
@@ -533,8 +552,6 @@ RUN apt-get update &&\\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
- localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
- localedef -i ja_JP -f UTF-8 en_US.UTF-8 &&\\
 % if ($conf->{phpunit}) {
  curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
@@ -552,6 +569,8 @@ RUN apt-get update &&\\
  rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\\
+ localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
+ localedef -i ja_JP -f UTF-8 ja_JP.UTF-8 &&\\
  a2dismod mpm_event &&\\
  a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} || [] } %> &&\\
  a2enconf serve-cgi-bin &&\\
@@ -592,6 +611,7 @@ RUN\
 % if ($type eq 'oracle') {
  yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
  yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
+ yum -y reinstall glibc-common &&\\
 % }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
 %   if ($type eq 'amazonlinux') {
@@ -656,6 +676,9 @@ ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\\
+% if ($conf->{locale_def}) {
+  localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\\
+% }
   perl -i -pe \\
     's{AllowOverride None}{AllowOverride All}g' \\
     /etc/httpd/conf/httpd.conf
@@ -716,7 +739,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora33)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
