@@ -318,12 +318,12 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
+            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php73',
-            php_version => 'php73',
+            enable => 'remi,remi-php74',
+            php_version => 'php74',
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
@@ -363,12 +363,12 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php73-php php73-php-mbstring php73-php-mysqlnd php73-php-gd php73-php-pecl-memcache php73-php-xml )],
+            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
             rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php73',
-            php_version => 'php73',
+            enable => 'remi,remi-php74',
+            php_version => 'php74',
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
@@ -399,12 +399,12 @@ my %Conf = (
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
         },
-        'php7.3' => {
-            enable => 'amzn2extra-php7.3',
+        'php7.4' => {
+            enable => 'amzn2extra-php7.4',
         },
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
-            'php7.3' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
+            'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 4,
