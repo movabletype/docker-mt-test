@@ -256,6 +256,7 @@ my %Conf = (
             missing => [qw( TAP::Harness::Env )],
         },
         phpunit => 4,
+        locale_def => 1,
     },
     centos8 => {
         from => 'centos:8',
@@ -329,6 +330,7 @@ my %Conf = (
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
         use_cpanm => 1,
+        locale_def => 1,
     },
     cloud7 => {
         from => 'centos:7',
@@ -373,6 +375,7 @@ my %Conf = (
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
         use_cpanm => 1,
+        locale_def => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -533,8 +536,6 @@ RUN apt-get update &&\\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
- localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
- localedef -i ja_JP -f UTF-8 en_US.UTF-8 &&\\
 % if ($conf->{phpunit}) {
  curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
@@ -552,6 +553,8 @@ RUN apt-get update &&\\
  rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\\
+ localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
+ localedef -i ja_JP -f UTF-8 ja_JP.UTF-8 &&\\
  a2dismod mpm_event &&\\
  a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} || [] } %> &&\\
  a2enconf serve-cgi-bin &&\\
@@ -656,6 +659,9 @@ ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\\
+% if ($conf->{locale_def}) {
+  localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\\
+% }
   perl -i -pe \\
     's{AllowOverride None}{AllowOverride All}g' \\
     /etc/httpd/conf/httpd.conf
