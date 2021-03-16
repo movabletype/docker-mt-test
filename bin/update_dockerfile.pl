@@ -449,7 +449,7 @@ my %Conf = (
         },
         repo => {
             ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
