@@ -19,7 +19,7 @@ RUN apt-get update &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
  cpm install -g\
- Net::LDAP Linux::Pid\
+ Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

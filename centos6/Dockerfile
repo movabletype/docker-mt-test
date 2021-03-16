@@ -25,7 +25,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
  cpm install -g --test\
- Net::LDAP Linux::Pid\
+ Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\

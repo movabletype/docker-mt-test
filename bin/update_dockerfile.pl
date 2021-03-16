@@ -30,7 +30,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
-            addons  => [qw( Net::LDAP Linux::Pid )],
+            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
         },
     },
     centos => {
@@ -55,7 +55,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
-            addons  => [qw( Net::LDAP Linux::Pid )],
+            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
         },
     },
     sid => {
@@ -449,7 +449,7 @@ my %Conf = (
         },
         repo => {
             ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
