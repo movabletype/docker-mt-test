@@ -30,7 +30,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
-            addons  => [qw( Net::LDAP Linux::Pid )],
+            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
         },
     },
     centos => {
@@ -55,7 +55,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
-            addons  => [qw( Net::LDAP Linux::Pid )],
+            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
         },
     },
     sid => {
