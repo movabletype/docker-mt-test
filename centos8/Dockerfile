@@ -10,7 +10,7 @@ RUN dnf -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php-json php-pdo php-xml php php-mysqlnd php-gd php-mbstring\
  mod_ssl vsftpd ftp memcached\
- && dnf clean all &&\
+ &&\
     dnf -y --enablerepo=PowerTools install\
  giflib-devel\
  && dnf clean --enablerepo=PowerTools all &&\
@@ -18,6 +18,7 @@ RUN dnf -y install\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD\
  && dnf clean --enablerepo=epel all &&\
+ dnf clean all && rm -rf /var/cache/dnf &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\

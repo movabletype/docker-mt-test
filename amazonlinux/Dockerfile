@@ -9,7 +9,7 @@ RUN yum -y install\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  httpd mod_ssl vsftpd ftp memcached\
- && yum clean all &&\
+ &&\
  amazon-linux-extras install GraphicsMagick1.3 &&\
     yum -y --enablerepo=amzn2extra-GraphicsMagick1.3 install\
  GraphicsMagick-perl\
@@ -18,6 +18,7 @@ RUN yum -y install\
     yum -y --enablerepo=amzn2extra-php7.4 install\
  php php-mysqlnd php-gd php-mbstring php-xml\
  && yum clean --enablerepo=amzn2extra-php7.4 all &&\
+ yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
