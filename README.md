@@ -23,7 +23,6 @@ Dockerfile to test MT.
 
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
-|archlinux|archlinux|*5.32.0*|*7.4.14*|*MariaDB 10.5.8*|1.1.1i|-|
 |centos7|centos:7|5.16.3|*5.4.16*|*MariaDB 5.5.68*|1.0.2k|2024-06|
 |centos8|centos:8|5.26.3|*7.2.24*|8.0.21|1.1.1g|2021-12|
 |fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
