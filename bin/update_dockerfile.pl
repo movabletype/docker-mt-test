@@ -607,7 +607,7 @@ RUN\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
- && <%= $conf->{installer} // 'yum' %> clean all &&\\
+ &&\\
 % if ($type eq 'oracle') {
  yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
  yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
@@ -623,6 +623,7 @@ RUN\
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
 % }
+ <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\

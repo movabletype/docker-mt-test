@@ -10,7 +10,7 @@ RUN yum -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-gd php-pecl-memcache\
  httpd mod_ssl vsftpd ftp memcached\
- && yum clean all &&\
+ &&\
  yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\
  yum -y install oracle-instantclient19.6-basic oracle-instantclient19.6-devel oracle-instantclient19.6-sqlplus &&\
  yum -y reinstall glibc-common &&\
@@ -21,6 +21,7 @@ RUN yum -y install\
     yum -y --enablerepo=ol7_optional_latest install\
  gd-devel giflib-devel php-mysqlnd php-mbstring\
  && yum clean --enablerepo=ol7_optional_latest all &&\
+ yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

@@ -10,7 +10,8 @@ RUN dnf -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit\
  mod_ssl vsftpd ftp memcached\
- && dnf clean all &&\
+ &&\
+ dnf clean all && rm -rf /var/cache/dnf &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\

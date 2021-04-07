@@ -10,11 +10,12 @@ RUN yum -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
- && yum clean all &&\
+ &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl\
  && yum clean --enablerepo=epel all &&\
+ yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

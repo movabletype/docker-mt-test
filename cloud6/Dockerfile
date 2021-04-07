@@ -8,7 +8,7 @@ RUN yum -y install\
  netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
- && yum clean all &&\
+ &&\
  yum -y install http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm &&\
     yum -y --enablerepo=mysql57-community install\
  mysql-community-server mysql-community-client mysql-community-devel\
@@ -17,6 +17,7 @@ RUN yum -y install\
     yum -y --enablerepo=remi,remi-php74 install\
  php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
  && yum clean --enablerepo=remi,remi-php74 all &&\
+ yum clean all && rm -rf /var/cache/yum &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
  cd perl-5.28.2 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
