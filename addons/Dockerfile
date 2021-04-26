@@ -10,5 +10,5 @@ RUN apt-get update &&\
  make && make install && cd .. && rm -rf pure-ftpd-* &&\
  curl -kLO ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.7a.tar.gz &&\
  tar xf proftpd-1.3.7a.tar.gz && cd proftpd-1.3.7a &&\
- ./configure --prefix=/usr/local --enable-dso --enable-openssl --with-pic &&\
+ ./configure --prefix=/usr/local --enable-dso --enable-openssl --with-pic --with-modules=mod_tls &&\
  make && make install && cd .. && rm -rf proftpd-*
