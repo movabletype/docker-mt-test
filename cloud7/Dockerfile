@@ -21,12 +21,12 @@ RUN yum -y install\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
  cd perl-5.28.2 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.35/GraphicsMagick-1.3.35.tar.gz &&\
- tar xf GraphicsMagick-1.3.35.tar.gz && cd GraphicsMagick-1.3.35 &&\
- ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.36/GraphicsMagick-1.3.36.tar.gz &&\
+ tar xf GraphicsMagick-1.3.36.tar.gz && cd GraphicsMagick-1.3.36 &&\
+ ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
- ./configure --enable-shared --with-perl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/php74/php.ini &&\
  ln -s /usr/bin/php74 /usr/local/bin/php &&\
