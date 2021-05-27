@@ -18,11 +18,13 @@ my %aliases = qw(
     perl-5.20 jessie
     perl-5.28 buster
     perl-5.30 fedora
+    perl-5.32 bullseye
 
     php-5.3 centos6
     php-5.6 jessie
     php-7.3 buster
     php-7.4 fedora
+    php-8.0 sid
 );
 my %aliases_rev;
 while (my ($alias, $name) = each %aliases) {
