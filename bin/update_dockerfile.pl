@@ -16,7 +16,7 @@ my %Conf = (
             )],
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm
-                libgd-dev libpng-dev libgif-dev libjpeg-dev
+                libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
@@ -41,7 +41,7 @@ my %Conf = (
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
-                giflib-devel libpng-devel libjpeg-devel gd-devel
+                giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
@@ -218,12 +218,13 @@ my %Conf = (
                 'php-mysqlnd' => 'php-mysql',
                 'GraphicsMagick-perl' => '',
                 'phpunit' => '',
+                'libwebp-devel',
             },
             libs => [qw( perl-XML-Parser )],
             php => [qw( php-xml )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl libwebp-devel )],
         },
         epel => {
             rpm => 'epel-release',
@@ -422,6 +423,7 @@ my %Conf = (
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
+                'libwebp-devel' => '',
                 'GraphicsMagick-perl' => '',
             },
             base   => [qw( which )],
@@ -432,7 +434,7 @@ my %Conf = (
             enable => 'ol7_developer_EPEL',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel php-mysqlnd php-mbstring )],
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
@@ -588,7 +590,7 @@ RUN\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
  curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\

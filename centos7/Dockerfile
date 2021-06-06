@@ -6,7 +6,7 @@ RUN yum -y install\
  git make gcc curl perl perl-core zip unzip bzip2 which procps\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
+ ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
