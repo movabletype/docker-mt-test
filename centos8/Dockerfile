@@ -6,7 +6,7 @@ RUN dnf -y install\
  glibc-langpack-ja git make gcc curl perl perl-core zip unzip bzip2 which procps\
  mysql-devel mysql-server mysql\
  vim nano\
- netpbm-progs libpng-devel libjpeg-devel gd-devel\
+ netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php-json php-pdo php-xml php php-mysqlnd php-gd php-mbstring\
  mod_ssl vsftpd ftp memcached\

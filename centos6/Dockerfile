@@ -15,7 +15,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
- GraphicsMagick-perl\
+ GraphicsMagick-perl libwebp-devel\
  && yum clean --enablerepo=epel all &&\
  yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\

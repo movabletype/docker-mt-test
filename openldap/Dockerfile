@@ -2,7 +2,9 @@ FROM centos:6
 
 ADD ./ldif/* /root/
 
-RUN yum -y install openldap-servers openldap-clients\
+RUN sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
+ yum -y install openldap-servers openldap-clients\
  && yum clean all\
  && mkdir /var/lib/ldap/jp/\
  && chown ldap:ldap /var/lib/ldap/jp/\

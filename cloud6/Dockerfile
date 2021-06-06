@@ -5,7 +5,7 @@ WORKDIR /root
 RUN yum -y install\
  git make gcc curl perl perl-core zip unzip bzip2 which procps\
  vim nano\
- netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
+ netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
@@ -23,7 +23,7 @@ RUN yum -y install\
  cd perl-5.28.2 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.36/GraphicsMagick-1.3.36.tar.gz &&\
  tar xf GraphicsMagick-1.3.36.tar.gz && cd GraphicsMagick-1.3.36 &&\
- ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\

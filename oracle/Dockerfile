@@ -19,7 +19,7 @@ RUN yum -y install\
  GraphicsMagick-perl-1.3.32-1.el7\
  && yum clean --enablerepo=ol7_developer_EPEL all &&\
     yum -y --enablerepo=ol7_optional_latest install\
- gd-devel giflib-devel php-mysqlnd php-mbstring\
+ gd-devel giflib-devel libwebp-devel php-mysqlnd php-mbstring\
  && yum clean --enablerepo=ol7_optional_latest all &&\
  yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
