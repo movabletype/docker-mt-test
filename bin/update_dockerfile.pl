@@ -16,7 +16,7 @@ my %Conf = (
             )],
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm
-                libgd-dev libpng-dev libgif-dev libjpeg-dev
+                libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
@@ -41,7 +41,7 @@ my %Conf = (
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
-                giflib-devel libpng-devel libjpeg-devel gd-devel
+                giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
@@ -218,12 +218,13 @@ my %Conf = (
                 'php-mysqlnd' => 'php-mysql',
                 'GraphicsMagick-perl' => '',
                 'phpunit' => '',
+                'libwebp-devel',
             },
             libs => [qw( perl-XML-Parser )],
             php => [qw( php-xml )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl libwebp-devel )],
         },
         epel => {
             rpm => 'epel-release',
@@ -422,6 +423,7 @@ my %Conf = (
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
+                'libwebp-devel' => '',
                 'GraphicsMagick-perl' => '',
             },
             base   => [qw( which )],
@@ -432,7 +434,7 @@ my %Conf = (
             enable => 'ol7_developer_EPEL',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel php-mysqlnd php-mbstring )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel php-mysqlnd php-mbstring )],
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
