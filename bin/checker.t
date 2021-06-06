@@ -18,6 +18,10 @@ my %prereqs = (
     'IO::Socket::SSL' => '2.058',
 );
 
+my $image_name = $ENV{TEST_IMAGE};
+
+diag "\nChecking $image_name";
+
 for my $module (sort keys %prereqs) {
     my $optional = $module =~ s/\?$//;
     my $required = $prereqs{$module};
@@ -58,11 +62,26 @@ my %imagemagick_supports = map {$_ => 1} Image::Magick->QueryFormat;
 ok $imagemagick_supports{gif}, "ImageMagick supports GIF";
 ok $imagemagick_supports{png}, "ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "ImageMagick supports JPEG";
+SKIP: {
+    local $TODO = 'WebP may not be supported' if $image_name =~ /amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty/;
+    ok $imagemagick_supports{webp}, "ImageMagick supports WebP";
+}
+my $imagemagick_depth = Image::Magick->new->Get('depth');
+is $imagemagick_depth => '16', "ImageMagick Quantum Depth: Q$imagemagick_depth";
 
 my %graphicsmagick_supports = map {$_ => 1} Graphics::Magick->QueryFormat;
 ok $graphicsmagick_supports{gif}, "GraphicsMagick supports GIF";
 ok $graphicsmagick_supports{png}, "GraphicsMagick supports PNG";
 ok $graphicsmagick_supports{jpeg}, "GraphicsMagick supports JPEG";
+SKIP: {
+    local $TODO = 'WebP may not be supported' if $image_name =~ /centos6|jessie|trusty/;
+    ok $graphicsmagick_supports{webp}, "GraphicsMagick supports WebP";
+}
+SKIP: {
+    local $TODO = 'may be 8' if $image_name =~ /centos6|jessie|trusty/;
+    my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
+    is $graphicsmagick_depth => '16', "GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
+}
 
 my ($php_version) = `php --version` =~ /PHP (\d\.\d+\.\d+)/;
 ok $php_version, "PHP exists ($php_version)";
