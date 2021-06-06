@@ -5,7 +5,7 @@ use version;
 
 my %prereqs = (
     'Archive::Tar' => '',
-    'Archive::Zip' => '<= 1.65?',
+    'Archive::Zip' => '<= 1.65?(cloud6|cloud7)',
     'DBD::mysql' => '4.000',
     'DBI' => '1.633',
     'GD' => 0,
@@ -34,7 +34,10 @@ for my $module (sort keys %prereqs) {
     }
     my $version = $module->VERSION // 0;
     if ($required) {
-        my $todo = $required =~ s/\?$//;
+        my $todo = $required =~ s/\?(.*)$//;
+        if (my $condition = $1) {
+            $todo = 0 if $image_name !~ /$condition/;
+        }
         SKIP: {
             local $TODO = 'may fail' if $todo;
             my ($op, $required_version);
