@@ -218,7 +218,7 @@ my %Conf = (
                 'php-mysqlnd' => 'php-mysql',
                 'GraphicsMagick-perl' => '',
                 'phpunit' => '',
-                'libwebp-devel',
+                'libwebp-devel' => '',
             },
             libs => [qw( perl-XML-Parser )],
             php => [qw( php-xml )],
