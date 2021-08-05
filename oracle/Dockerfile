@@ -3,7 +3,7 @@ FROM oraclelinux:7-slim
 WORKDIR /root
 
 RUN yum -y install\
- which git make gcc curl perl perl-core zip unzip bzip2 which procps\
+ which git make gcc curl perl perl-core zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs libpng-devel libjpeg-devel\

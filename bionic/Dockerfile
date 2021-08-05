@@ -5,7 +5,7 @@ WORKDIR /root
 RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make gcc curl ssh locales perl unzip bzip2 procps ssl-cert\
+ ca-certificates netbase git make gcc curl ssh locales perl unzip bzip2 procps ssl-cert postfix\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev\

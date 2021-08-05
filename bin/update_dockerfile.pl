@@ -12,7 +12,7 @@ my %Conf = (
         apt => {
             base => [qw(
                 ca-certificates netbase git make gcc curl ssh locales perl
-                unzip bzip2 procps ssl-cert
+                unzip bzip2 procps ssl-cert postfix
             )],
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm
@@ -37,7 +37,7 @@ my %Conf = (
         yum => {
             base => [qw(
                 git make gcc curl perl perl-core
-                zip unzip bzip2 which procps
+                zip unzip bzip2 which procps postfix
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
