@@ -3,7 +3,7 @@ FROM fedora:23
 WORKDIR /root
 
 RUN dnf -y install\
- hostname git make gcc curl perl perl-core zip unzip bzip2 which procps\
+ hostname git make gcc curl perl perl-core zip unzip bzip2 which procps postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\

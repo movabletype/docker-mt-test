@@ -14,7 +14,7 @@ for my $name (@targets) {
     next unless -f $dockerfile;
     next if $dockerfile->slurp =~ /EXPOSE/;
     diag "testing $name";
-    ok eval { !system("docker run -it -v\$PWD:/mt -w /mt movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
+    ok eval { !system("docker run -it --rm -v\$PWD:/mt -w /mt movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
     my $log = path("log/check_$name.log")->slurp;
     if ($log =~ /Result: FAIL/) {
         rename "log/check_$name.log" => "log/check_error_$name.log";

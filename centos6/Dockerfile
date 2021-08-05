@@ -5,7 +5,7 @@ WORKDIR /root
 RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
  yum -y install\
- git make gcc curl perl perl-core zip unzip bzip2 which procps\
+ git make gcc curl perl perl-core zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\

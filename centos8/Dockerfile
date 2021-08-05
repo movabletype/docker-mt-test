@@ -3,7 +3,7 @@ FROM centos:8
 WORKDIR /root
 
 RUN dnf -y install\
- glibc-langpack-ja git make gcc curl perl perl-core zip unzip bzip2 which procps\
+ glibc-langpack-ja git make gcc curl perl perl-core zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
