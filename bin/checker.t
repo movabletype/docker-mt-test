@@ -126,4 +126,13 @@ ok $openssl_version, "openssl exists ($openssl_version)";
 my $locale = `locale -a`;
 ok $locale =~ /ja_JP\.utf8/, "has Japanese locale" or warn $locale;
 
+my ($tar) = `tar --version 2>&1` =~ /\A\w*tar (.+?[0-9.]+)/;
+ok $tar, "has tar $tar";
+
+my ($zip) = `zip --version 2>&1` =~ /This is Zip ([0-9.]+)/;;
+ok $zip, "has zip $zip";
+
+my ($unzip) = `unzip --version 2>&1` =~ /UnZip ([0-9.]+)/;
+ok $unzip, "has unzip $unzip";
+
 done_testing;
