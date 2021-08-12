@@ -3,7 +3,7 @@ FROM fedora:32
 WORKDIR /root
 
 RUN dnf -y install\
- glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core zip unzip bzip2 which perl-Unix-Process postfix\
+ glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\

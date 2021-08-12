@@ -3,7 +3,7 @@ FROM centos:7
 WORKDIR /root
 
 RUN yum -y install\
- git make gcc curl perl perl-core zip unzip bzip2 which procps postfix\
+ git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
