@@ -10,15 +10,19 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
  perl-XML-Parser libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php-xml php php-mysql php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl libwebp-devel\
  && yum clean --enablerepo=epel all &&\
+ yum -y install http://rpms.famillecollet.com/enterprise/remi-release-6.rpm &&\
+    yum -y --enablerepo=remi,remi-php55 install\
+ php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml\
+ && yum clean --enablerepo=remi,remi-php55 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
+ ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\

@@ -217,17 +217,28 @@ my %Conf = (
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
                 'GraphicsMagick-perl' => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'libwebp-devel' => '',
             },
             libs => [qw( perl-XML-Parser )],
-            php => [qw( php-xml )],
         },
         repo => {
             epel => [qw( GraphicsMagick-perl libwebp-devel )],
+            remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
+        },
+        remi => {
+            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-6.rpm',
+            enable => 'remi,remi-php55',
+            php_version => 'php55',
         },
         cpan => {
             missing => [qw( App::cpanminus DBD::SQLite )],
@@ -597,7 +608,11 @@ RUN\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{remi}) {
+ % if ($conf->{remi}{php_version} eq 'php55') {
+ sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
+ % } else {
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
+ % }
  ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
 % } else {
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
