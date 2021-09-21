@@ -26,11 +26,12 @@ my %Conf = (
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
+            bcompat => [qw( pQuery )],
         },
     },
     centos => {
@@ -51,11 +52,12 @@ my %Conf = (
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
+            bcompat => [qw( pQuery )],
         },
     },
     sid => {
@@ -429,8 +431,11 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'php' => '',
+                'php-gd' => '',
                 'php-mysqlnd' => '',
                 'php-mbstring' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
@@ -439,14 +444,24 @@ my %Conf = (
             },
             base   => [qw( which )],
             server => [qw( httpd )],
+            client => [qw(
+                oracle-instantclient19.12-basic
+                oracle-instantclient19.12-sqlplus
+                php-oci8-19c
+            )],
         },
         epel => {
             rpm => 'oracle-epel-release-el7',
             enable => 'ol7_developer_EPEL',
         },
+        ol7_developer_php74 => {
+            rpm => 'oracle-php-release-el7',
+            enable => 'ol7_developer_php74',
+        },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel php-mysqlnd php-mbstring )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
+            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
