@@ -624,7 +624,7 @@ RUN\
 % }
 % if ($conf->{remi}) {
  % if ($conf->{remi}{php_version} eq 'php55') {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
+ sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /opt/remi/<%= $conf->{remi}{php_version} %>/root/etc/php.ini &&\\
  % } else {
  sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
  % }
