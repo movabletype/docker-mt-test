@@ -429,8 +429,11 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'php' => '',
+                'php-gd' => '',
                 'php-mysqlnd' => '',
                 'php-mbstring' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'giflib-devel' => '',
                 'gd-devel' => '',
@@ -439,14 +442,24 @@ my %Conf = (
             },
             base   => [qw( which )],
             server => [qw( httpd )],
+            client => [qw(
+                oracle-instantclient19.12-basic
+                oracle-instantclient19.12-sqlplus
+                php-oci8-19c
+            )],
         },
         epel => {
             rpm => 'oracle-epel-release-el7',
             enable => 'ol7_developer_EPEL',
         },
+        ol7_developer_php74 => {
+            rpm => 'oracle-php-release-el7',
+            enable => 'ol7_developer_php74',
+        },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel php-mysqlnd php-mbstring )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
+            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
