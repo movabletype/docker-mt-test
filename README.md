@@ -14,8 +14,8 @@ Dockerfile to test MT.
 |buster|debian:buster|*5.28.1*|*7.3.29*|*MariaDB 10.3.29*|1.1.1d|2022-01|
 |fedora|fedora:32|*5.30.3*|7.4.19|*8.0.24*|1.1.1k|-|
 |bullseye|debian:bullseye|*5.32.1*|*7.4.21*|*MariaDB 10.5.11*|1.1.1k|-|
-|cloud6 (\*1)|centos:7|*5.28.2*|*7.4.22*|*5.7.35*|1.0.2k|-|
-|cloud7 (\*1)|centos:7|*5.28.2*|*7.4.22*|*5.7.35*|1.0.2k|-|
+|cloud6 (\*1)|centos:7|*5.28.2*|*7.4.23*|*5.7.35*|1.0.2k|-|
+|cloud7 (\*1)|centos:7|*5.28.2*|*7.4.23*|*5.7.35*|1.0.2k|-|
 
 \*1 These images are not used in the MT cloud, but the well-known modules should have the same version (except for those used only in tests).
 
