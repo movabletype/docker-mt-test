@@ -35,9 +35,10 @@ RUN yum -y install\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
+ cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
+ pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus TAP::Harness::Env\

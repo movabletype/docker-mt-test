@@ -21,16 +21,17 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml\
  && yum clean --enablerepo=remi,remi-php55 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
+ sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /opt/remi/php55/root/etc/php.ini &&\
  ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 &&\
+ cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
+ pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\
