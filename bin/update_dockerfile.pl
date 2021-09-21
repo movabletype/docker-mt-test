@@ -31,6 +31,7 @@ my %Conf = (
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
+            bcompat => [qw( pQuery )],
         },
     },
     centos => {
@@ -56,6 +57,7 @@ my %Conf = (
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
             extra   => [qw( JSON::XS Starman )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
+            bcompat => [qw( pQuery )],
         },
     },
     sid => {
