@@ -257,14 +257,26 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'GraphicsMagick-perl' => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
             },
         },
         repo => {
             epel => [qw( GraphicsMagick-perl )],
+            remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
+        },
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php71',
+            php_version => 'php71',
         },
         cpan => {
             missing => [qw( TAP::Harness::Env )],
