@@ -78,6 +78,10 @@ my %Conf = (
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php8.0-mbstring php8.0-xml )],
         },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
         phpunit => 9,
     },
     bullseye => {
