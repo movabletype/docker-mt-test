@@ -638,7 +638,14 @@ RUN\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
 %   }
+%   if ($conf->{$repo}{module}) {
+%#    unfortunately the return value of dnf module seems too unstable
+    <%= $conf->{installer} // 'yum' %> -y module reset <%= $conf->{$repo}{module}{reset} %> ;\\
+    <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
+    <%= $conf->{installer} // 'yum' %> -y install\\
+%   } else {
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+%   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
 % }
