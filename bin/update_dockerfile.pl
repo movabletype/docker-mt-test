@@ -591,7 +591,12 @@ RUN set -ex &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \\
-   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g'
+   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g' &&\\
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
+   my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \\
+   $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
+   open my $fh, ">", $inifile or die $!; print $fh $ini'
+
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8 \\
@@ -651,14 +656,7 @@ RUN\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{remi}) {
- % if ($conf->{remi}{php_version} eq 'php55') {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /opt/remi/<%= $conf->{remi}{php_version} %>/root/etc/php.ini &&\\
- % } else {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
- % }
  ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
-% } else {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
 % }
 % if ($conf->{setcap}) {
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
@@ -700,7 +698,11 @@ RUN set -ex &&\\
 % }
   perl -i -pe \\
     's{AllowOverride None}{AllowOverride All}g' \\
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \\
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
+    open my $fh, ">", $inifile; print $fh $ini'
 
 % # cf https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html
 % if (exists $conf->{make_dummy_cert}) {
