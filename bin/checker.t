@@ -98,6 +98,17 @@ ok $phpinfo =~ /GIF Read Support => enabled/, "$image_name: PHP supports GIF rea
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/, "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/, "$image_name: PHP supports PNG";
+SKIP: {
+    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|sid/;
+    ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
+}
+
+my ($php_ini) = $phpinfo =~ m!Loaded Configuration File => (/\S+/php\.ini)!;
+ok $php_ini, "$image_name: Loaded php.ini: $php_ini";
+if (-e $php_ini) {
+    my $ini = do { open my $fh, '<', $php_ini; local $/; <$fh>; };
+    ok $ini =~ m!date\.timezone = "Asia/Tokyo"!, "$image_name: php.ini contains date.timezone = \"Asia/Tokyo\"";
+}
 
 my ($phpunit) = `phpunit --version` =~ /PHPUnit (\d+\.\d+\.\d+)/;
 ok $phpunit, "$image_name: phpunit exists ($phpunit)";
