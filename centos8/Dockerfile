@@ -8,7 +8,6 @@ RUN dnf -y install\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php-json php-pdo php-xml php php-mysqlnd php-gd php-mbstring\
  mod_ssl vsftpd ftp memcached\
  &&\
     dnf -y --enablerepo=PowerTools install\
@@ -18,8 +17,13 @@ RUN dnf -y install\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD\
  && dnf clean --enablerepo=epel all &&\
+ dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm &&\
+    dnf -y module reset php ;\
+    dnf -y module enable php:remi-8.0 ;\
+    dnf -y install\
+ php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
+ && dnf clean --enablerepo=remi all &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
  curl -sL https://phar.phpunit.de/phpunit-8.phar > phpunit && chmod +x phpunit &&\
@@ -43,7 +47,11 @@ ENV LANG=en_US.UTF-8 \
 RUN set -ex &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+    open my $fh, ">", $inifile; print $fh $ini'
 
 RUN cd /usr/bin && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
   perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \

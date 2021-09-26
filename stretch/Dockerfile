@@ -38,7 +38,12 @@ RUN set -ex &&\
  a2ensite default-ssl &&\
  make-ssl-cert generate-default-snakeoil &&\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \
-   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g'
+   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g' &&\
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+   my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \
+   $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+   open my $fh, ">", $inifile or die $!; print $fh $ini'
+
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \

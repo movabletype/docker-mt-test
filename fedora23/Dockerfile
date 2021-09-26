@@ -12,7 +12,6 @@ RUN dnf -y install\
  mod_ssl vsftpd ftp memcached\
  &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
@@ -34,7 +33,11 @@ ENV LANG=en_US.UTF-8 \
 RUN set -ex &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+    open my $fh, ">", $inifile; print $fh $ini'
 
 RUN cd /etc/pki/tls/certs/ && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
   perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \

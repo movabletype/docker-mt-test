@@ -8,15 +8,18 @@ RUN yum -y install\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl\
  && yum clean --enablerepo=epel all &&\
+ yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
+    yum -y --enablerepo=remi,remi-php71 install\
+ php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml\
+ && yum clean --enablerepo=remi,remi-php71 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\
+ ln -s /usr/bin/php71 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
@@ -40,7 +43,11 @@ RUN set -ex &&\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+    open my $fh, ">", $inifile; print $fh $ini'
 
 
 COPY ./docker-entrypoint.sh /
