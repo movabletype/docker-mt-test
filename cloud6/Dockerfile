@@ -13,7 +13,7 @@ RUN yum -y install\
     yum -y --enablerepo=mysql57-community install\
  mysql-community-server mysql-community-client mysql-community-devel\
  && yum clean --enablerepo=mysql57-community all &&\
- yum -y install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm &&\
+ yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php74 install\
  php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
  && yum clean --enablerepo=remi,remi-php74 all &&\
@@ -28,7 +28,6 @@ RUN yum -y install\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/php74/php.ini &&\
  ln -s /usr/bin/php74 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
@@ -153,7 +152,11 @@ RUN set -ex &&\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+    open my $fh, ">", $inifile; print $fh $ini'
 
 
 COPY ./docker-entrypoint.sh /

@@ -16,12 +16,11 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl libwebp-devel\
  && yum clean --enablerepo=epel all &&\
- yum -y install http://rpms.famillecollet.com/enterprise/remi-release-6.rpm &&\
+ yum -y install https://rpms.remirepo.net/enterprise/remi-release-6.rpm &&\
     yum -y --enablerepo=remi,remi-php55 install\
  php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml\
  && yum clean --enablerepo=remi,remi-php55 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /opt/remi/php55/root/etc/php.ini &&\
  ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
@@ -45,7 +44,11 @@ ENV LANG=en_US.UTF-8 \
 RUN set -ex &&\
   perl -i -pe \
     's{AllowOverride None}{AllowOverride All}g' \
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
+    open my $fh, ">", $inifile; print $fh $ini'
 
 
 COPY ./docker-entrypoint.sh /

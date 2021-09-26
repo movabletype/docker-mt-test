@@ -78,6 +78,10 @@ my %Conf = (
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php8.0-mbstring php8.0-xml )],
         },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
         phpunit => 9,
     },
     bullseye => {
@@ -238,7 +242,7 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-6.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
             enable => 'remi,remi-php55',
             php_version => 'php55',
         },
@@ -257,14 +261,26 @@ my %Conf = (
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
                 'GraphicsMagick-perl' => '',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
                 'phpunit' => '',
             },
         },
         repo => {
             epel => [qw( GraphicsMagick-perl )],
+            remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
+        },
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
+            enable => 'remi,remi-php71',
+            php_version => 'php71',
         },
         cpan => {
             missing => [qw( TAP::Harness::Env )],
@@ -277,23 +293,35 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'php-mysql'         => 'php-mysqlnd',
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
                 'php-pecl-memcache' => '',
-                'phpunit'           => '',
-                'ssh'               => '',
+                'phpunit' => '',
+                'ssh' => '',
                 'GraphicsMagick-perl' => '',
                 'ImageMagick-perl' => '',
                 'perl-GD' => '',
                 'giflib-devel' => '',
             },
-            php => [qw/ php-json php-pdo php-xml /],
             base => [qw/ glibc-langpack-ja /],
         },
         epel => {
             rpm => 'epel-release',
         },
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.rpm',
+            module => {
+                reset => 'php',
+                enable => 'php:remi-8.0',
+            },
+            php_version => 'php80',
+        },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             PowerTools => [qw/ giflib-devel /],
         },
         installer               => 'dnf',
@@ -335,7 +363,7 @@ my %Conf = (
             remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
             enable => 'remi,remi-php74',
             php_version => 'php74',
         },
@@ -380,7 +408,7 @@ my %Conf = (
             remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
             enable => 'remi,remi-php74',
             php_version => 'php74',
         },
@@ -563,7 +591,12 @@ RUN set -ex &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \\
-   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g'
+   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g' &&\\
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
+   my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \\
+   $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
+   open my $fh, ">", $inifile or die $!; print $fh $ini'
+
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8 \\
@@ -605,7 +638,14 @@ RUN\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
 %   }
+%   if ($conf->{$repo}{module}) {
+%#    unfortunately the return value of dnf module seems too unstable
+    <%= $conf->{installer} // 'yum' %> -y module reset <%= $conf->{$repo}{module}{reset} %> ;\\
+    <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
+    <%= $conf->{installer} // 'yum' %> -y install\\
+%   } else {
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+%   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
 % }
@@ -622,15 +662,8 @@ RUN\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
-% if ($conf->{remi}) {
- % if ($conf->{remi}{php_version} eq 'php55') {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /opt/remi/<%= $conf->{remi}{php_version} %>/root/etc/php.ini &&\\
- % } else {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/opt/remi/<%= $conf->{remi}{php_version} %>/php.ini &&\\
- % }
+% if ($conf->{remi} && !$conf->{remi}{module}) {
  ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
-% } else {
- sed -i 's/^;date\.timezone =/date\.timezone = "Asia\/Tokyo"/' /etc/php.ini &&\\
 % }
 % if ($conf->{setcap}) {
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
@@ -672,7 +705,11 @@ RUN set -ex &&\\
 % }
   perl -i -pe \\
     's{AllowOverride None}{AllowOverride All}g' \\
-    /etc/httpd/conf/httpd.conf
+    /etc/httpd/conf/httpd.conf &&\\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
+    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \\
+    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
+    open my $fh, ">", $inifile; print $fh $ini'
 
 % # cf https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html
 % if (exists $conf->{make_dummy_cert}) {
