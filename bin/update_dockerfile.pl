@@ -242,7 +242,7 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-6.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
             enable => 'remi,remi-php55',
             php_version => 'php55',
         },
@@ -363,7 +363,7 @@ my %Conf = (
             remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
             enable => 'remi,remi-php74',
             php_version => 'php74',
         },
@@ -408,7 +408,7 @@ my %Conf = (
             remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
-            rpm => 'http://rpms.famillecollet.com/enterprise/remi-release-7.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
             enable => 'remi,remi-php74',
             php_version => 'php74',
         },
