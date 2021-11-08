@@ -146,4 +146,12 @@ ok $zip, "$image_name: has zip $zip";
 my ($unzip) = `unzip --version 2>&1` =~ /UnZip ([0-9.]+)/;
 ok $unzip, "$image_name: has unzip $unzip";
 
+my (@icc_profiles) = (`find /usr/share | grep '.icc\$'` // '') =~ /(\w+\.icc)$/gm;
+my $srgb = grep /\bsRGB\.icc$/i, @icc_profiles;
+SKIP: {
+    local $TODO = 'CentOS 6 has no icc profile packages' if $image_name =~ /centos6/;
+    ok @icc_profiles, "$image_name: has " . join(",", @icc_profiles);
+    ok $srgb, "$image_name: has sRGB.icc";
+}
+
 done_testing;

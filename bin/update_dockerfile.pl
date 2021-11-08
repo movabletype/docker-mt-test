@@ -17,6 +17,7 @@ my %Conf = (
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
+                icc-profiles-free
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
@@ -43,6 +44,7 @@ my %Conf = (
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
+                icc-profiles-openicc
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
@@ -231,6 +233,7 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'libwebp-devel' => '',
+                'icc-profiles-openicc' => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
@@ -247,6 +250,7 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
+            broken => [qw( Math::GMP@2.22 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
         },
         use_cpanm => 1,
@@ -305,6 +309,7 @@ my %Conf = (
                 'ImageMagick-perl' => '',
                 'perl-GD' => '',
                 'giflib-devel' => '',
+                'icc-profiles-openicc' => '',
             },
             base => [qw/ glibc-langpack-ja /],
         },
@@ -469,14 +474,10 @@ my %Conf = (
                 'gd-devel' => '',
                 'libwebp-devel' => '',
                 'GraphicsMagick-perl' => '',
+                'icc-profiles-openicc' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
-            client => [qw(
-                oracle-instantclient19.12-basic
-                oracle-instantclient19.12-sqlplus
-                php-oci8-19c
-            )],
         },
         epel => {
             rpm => 'oracle-epel-release-el7',
@@ -487,6 +488,10 @@ my %Conf = (
             enable => 'ol7_developer_php74',
         },
         repo => {
+            ol7_oracle_instantclient => [qw(
+                oracle-instantclient19.6-basic
+                oracle-instantclient19.6-sqlplus
+            )],
             ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
@@ -567,10 +572,10 @@ RUN apt-get update &&\\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
 % if ($conf->{phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
- curl -sL --compressed https://git.io/cpm > cpm &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
@@ -578,7 +583,7 @@ RUN apt-get update &&\\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
  cpm install -g --test &&\\
  rm -rf cpanfile /root/.perl-cpm/
 
@@ -670,10 +675,10 @@ RUN\
  setcap -r /usr/libexec/mysqld &&\\
 % }
 % if ($conf->{phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
- curl -sL --compressed https://git.io/cpm > cpm &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
@@ -681,7 +686,7 @@ RUN\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps . &&\\
 % } else {

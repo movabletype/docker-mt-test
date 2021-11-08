@@ -8,15 +8,15 @@ RUN apt-get update &&\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
  mysql-server mysql-client libmysql++-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm libgd2-xpm-dev libpng12-dev libgif-dev libjpeg-dev libwebp-dev\
+ perlmagick libgraphics-magick-perl netpbm libgd2-xpm-dev libpng12-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
  php5 php5-cli php5-mysql php5-gd php5-memcache phpunit\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
- curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
- curl -sL --compressed https://git.io/cpm > cpm &&\
+ curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
@@ -25,7 +25,7 @@ RUN apt-get update &&\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm/
 

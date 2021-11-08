@@ -4,7 +4,6 @@ WORKDIR /root
 
 RUN yum -y install\
  which git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
- oracle-instantclient19.12-basic oracle-instantclient19.12-sqlplus php-oci8-19c\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs libpng-devel libjpeg-devel\
@@ -25,10 +24,13 @@ RUN yum -y install\
     yum -y --enablerepo=ol7_optional_latest install\
  gd-devel giflib-devel libwebp-devel\
  && yum clean --enablerepo=ol7_optional_latest all &&\
+    yum -y --enablerepo=ol7_oracle_instantclient install\
+ oracle-instantclient19.6-basic oracle-instantclient19.6-sqlplus\
+ && yum clean --enablerepo=ol7_oracle_instantclient all &&\
  yum clean all && rm -rf /var/cache/yum &&\
- curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
- curl -sL --compressed https://git.io/cpm > cpm &&\
+ curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
@@ -38,7 +40,7 @@ RUN yum -y install\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  DBD::Oracle\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
