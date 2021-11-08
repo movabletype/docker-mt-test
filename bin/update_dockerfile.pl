@@ -250,6 +250,7 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
+            broken => [qw( Math::GMP@2.22 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
         },
         use_cpanm => 1,
