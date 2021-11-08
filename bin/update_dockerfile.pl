@@ -17,6 +17,7 @@ my %Conf = (
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
+                icc-profiles-free
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
@@ -43,6 +44,7 @@ my %Conf = (
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
+                icc-profiles-openicc
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
@@ -231,6 +233,7 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'libwebp-devel' => '',
+                'icc-profiles-openicc' => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
@@ -305,6 +308,7 @@ my %Conf = (
                 'ImageMagick-perl' => '',
                 'perl-GD' => '',
                 'giflib-devel' => '',
+                'icc-profiles-openicc' => '',
             },
             base => [qw/ glibc-langpack-ja /],
         },
@@ -469,6 +473,7 @@ my %Conf = (
                 'gd-devel' => '',
                 'libwebp-devel' => '',
                 'GraphicsMagick-perl' => '',
+                'icc-profiles-openicc' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
