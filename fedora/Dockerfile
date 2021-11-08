@@ -6,7 +6,7 @@ RUN dnf -y install\
  glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
- ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit\
  mod_ssl vsftpd ftp memcached\
@@ -14,7 +14,7 @@ RUN dnf -y install\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
- curl -sL --compressed https://git.io/cpm > cpm &&\
+ curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
@@ -23,7 +23,7 @@ RUN dnf -y install\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 

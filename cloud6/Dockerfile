@@ -5,7 +5,7 @@ WORKDIR /root
 RUN yum -y install\
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  vim nano\
- netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
+ netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
@@ -29,9 +29,9 @@ RUN yum -y install\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  ln -s /usr/bin/php74 /usr/local/bin/php &&\
- curl -sL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
- curl -sL --compressed https://git.io/cpm > cpm &&\
+ curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
@@ -41,7 +41,7 @@ RUN yum -y install\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus TAP::Harness::Env\
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps . &&\
 # use cpanm to avoid strong caching of cpm
  cpanm -nf https://cpan.metacpan.org/authors/id/M/MS/MSTROUT/YAML-0.84.tar.gz &&\
