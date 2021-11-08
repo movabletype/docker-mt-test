@@ -572,10 +572,10 @@ RUN apt-get update &&\\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
 % if ($conf->{phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
- curl -sL --compressed https://git.io/cpm > cpm &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
@@ -583,7 +583,7 @@ RUN apt-get update &&\\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
  cpm install -g --test &&\\
  rm -rf cpanfile /root/.perl-cpm/
 
@@ -675,10 +675,10 @@ RUN\
  setcap -r /usr/libexec/mysqld &&\\
 % }
 % if ($conf->{phpunit}) {
- curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
- curl -sL --compressed https://git.io/cpm > cpm &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
@@ -686,7 +686,7 @@ RUN\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps . &&\\
 % } else {
