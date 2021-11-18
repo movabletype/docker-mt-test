@@ -85,9 +85,16 @@ SKIP: {
     my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
     is $graphicsmagick_depth => '16', "$image_name: GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
 }
+my ($has_identify) = `which identify`;
+ok $has_identify, "has identify";
+my ($has_convert) = `which convert`;
+ok $has_convert, "has convert";
+my ($has_gm) = `which gm`;
+ok $has_gm, "has gm";
 
 my ($php_version) = `php --version` =~ /PHP (\d\.\d+\.\d+)/;
 ok $php_version, "$image_name: PHP exists ($php_version)";
+(my $php_version_number = $php_version) =~ s/\.\d+$//;
 
 my $phpinfo = `php -i`;
 ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "$image_name: PHP has mbstring";
@@ -112,6 +119,19 @@ if (-e $php_ini) {
 
 my ($phpunit) = `phpunit --version` =~ /PHPUnit (\d+\.\d+\.\d+)/;
 ok $phpunit, "$image_name: phpunit exists ($phpunit)";
+if ($php_version_number >= 7.3) {
+    is substr($phpunit, 0, 1) => 9, "phpunit 9 (9.5.x) for php >= 7.3 ($php_version)";
+} elsif ($php_version_number >= 7.2) {
+    is substr($phpunit, 0, 1) => 8, "phpunit 8 (8.5.21) for php >= 7.2 ($php_version)";
+} elsif ($php_version_number >= 7.1) {
+    is substr($phpunit, 0, 1) => 7, "phpunit 7 (7.5.20) for php >= 7.1 ($php_version)";
+} elsif ($php_version_number >= 7.0) {
+    is substr($phpunit, 0, 1) => 6, "phpunit 6 (6.5.14) for php >= 7.0 ($php_version)";
+} elsif ($php_version_number >= 5.6) {
+    is substr($phpunit, 0, 1) => 5, "phpunit 5 (5.7.27) for php >= 5.6 ($php_version)";
+} else {
+    is substr($phpunit, 0, 1) => 4, "phpunit 4 (4.8.36) for php >= 5.3 ($php_version)";
+}
 
 my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
 my $mysql = $is_maria ? "MariaDB" : "MySQL";

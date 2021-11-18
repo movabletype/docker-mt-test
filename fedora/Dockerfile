@@ -6,14 +6,16 @@ RUN dnf -y install\
  glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
- ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit\
+ php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
  &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
+ curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

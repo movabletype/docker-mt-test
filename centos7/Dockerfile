@@ -6,13 +6,13 @@ RUN yum -y install\
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+ ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
- GraphicsMagick-perl\
+ GraphicsMagick-perl GraphicsMagick\
  && yum clean --enablerepo=epel all &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php71 install\
@@ -20,7 +20,7 @@ RUN yum -y install\
  && yum clean --enablerepo=remi,remi-php71 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
  ln -s /usr/bin/php71 /usr/local/bin/php &&\
- curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-7.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

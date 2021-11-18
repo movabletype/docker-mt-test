@@ -15,7 +15,7 @@ RUN dnf -y install\
  && dnf clean --enablerepo=PowerTools all &&\
  dnf -y install epel-release &&\
     dnf -y --enablerepo=epel install\
- GraphicsMagick-perl ImageMagick-perl perl-GD\
+ GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
  && dnf clean --enablerepo=epel all &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm &&\
     dnf -y module reset php ;\
@@ -26,7 +26,7 @@ RUN dnf -y install\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
- curl -skL https://phar.phpunit.de/phpunit-8.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

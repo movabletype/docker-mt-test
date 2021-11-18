@@ -6,7 +6,7 @@ RUN yum -y install\
  which git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs libpng-devel libjpeg-devel\
+ ImageMagick-perl perl-GD netpbm-progs ImageMagick libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  httpd mod_ssl vsftpd ftp memcached\
  &&\
@@ -28,7 +28,7 @@ RUN yum -y install\
  oracle-instantclient19.6-basic oracle-instantclient19.6-sqlplus\
  && yum clean --enablerepo=ol7_oracle_instantclient all &&\
  yum clean all && rm -rf /var/cache/yum &&\
- curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
+ curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

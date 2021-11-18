@@ -15,7 +15,7 @@ my %Conf = (
                 zip unzip bzip2 procps ssl-cert postfix
             )],
             images => [qw(
-                perlmagick libgraphics-magick-perl netpbm
+                perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
                 icc-profiles-free
             )],
@@ -42,7 +42,7 @@ my %Conf = (
                 tar zip unzip bzip2 which procps postfix
             )],
             images => [qw(
-                ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
+                ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
                 icc-profiles-openicc
             )],
@@ -109,12 +109,15 @@ my %Conf = (
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
                 'libmysqlclient-dev' => '',
+                'phpunit' => '',
             },
             db => [qw( libdbd-mysql-perl )],
+            php => [qw( php-mbstring php-xml )],
         },
         apache => {
             enmod => [qw( php7.3 )],
         },
+        phpunit => 9,
     },
     jessie => {
         from => 'debian:jessie-slim',
@@ -135,7 +138,7 @@ my %Conf = (
         apache => {
             enmod => [qw( php5 )],
         },
-        phpunit => 4,
+        phpunit => 5,
     },
     stretch => {
         from => 'debian:stretch-slim',
@@ -161,11 +164,14 @@ my %Conf = (
         apt  => {
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
+                'phpunit' => '',
             },
+            php => [qw( php-mbstring php-xml )]
         },
         apache => {
             enmod => [qw( php7.2 )],
         },
+        phpunit => 8,
     },
     trusty => {
         from => 'ubuntu:trusty',
@@ -196,12 +202,14 @@ my %Conf = (
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
+        phpunit => 9,
     },
     fedora23 => {
         from => 'fedora:23',
@@ -216,7 +224,7 @@ my %Conf = (
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 5,
     },
     centos6 => {
         from => 'centos:6',
@@ -224,6 +232,7 @@ my %Conf = (
         yum  => {
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-cli' => '',
@@ -238,7 +247,7 @@ my %Conf = (
             libs => [qw( perl-XML-Parser )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl libwebp-devel )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel )],
             remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
@@ -264,6 +273,7 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-cli' => '',
@@ -275,7 +285,7 @@ my %Conf = (
             },
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick )],
             remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
@@ -289,7 +299,7 @@ my %Conf = (
         cpan => {
             missing => [qw( TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 7,
         locale_def => 1,
     },
     centos8 => {
@@ -305,7 +315,9 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'ssh' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
                 'perl-GD' => '',
                 'giflib-devel' => '',
@@ -325,14 +337,14 @@ my %Conf = (
             php_version => 'php80',
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD )],
+            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             PowerTools => [qw/ giflib-devel /],
         },
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 8,
+        phpunit => 9,
     },
     cloud6 => {
         from => 'centos:7',
@@ -350,14 +362,16 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'perl-GD' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 9,
         make => {
             perl => '5.28.2',
             ImageMagick => '7.0.8-68',
@@ -395,14 +409,16 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'perl-GD' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 9,
         make => {
             perl => '5.28.2',
             ImageMagick => '7.0.8-68',
@@ -432,6 +448,7 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-mysqlnd' => '',
@@ -450,11 +467,11 @@ my %Conf = (
             enable => 'amzn2extra-php7.4',
         },
         repo => {
-            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
+            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl GraphicsMagick )],
             'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 9,
     },
     oracle => {
         from => 'oraclelinux:7-slim',
@@ -473,6 +490,7 @@ my %Conf = (
                 'giflib-devel' => '',
                 'gd-devel' => '',
                 'libwebp-devel' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'icc-profiles-openicc' => '',
             },
@@ -500,7 +518,7 @@ my %Conf = (
             missing => [qw( DBD::Oracle )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 9,
         release => 19.6,
     },
 );
