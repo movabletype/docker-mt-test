@@ -15,7 +15,7 @@ my %Conf = (
                 zip unzip bzip2 procps ssl-cert postfix
             )],
             images => [qw(
-                perlmagick libgraphics-magick-perl netpbm
+                perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
                 icc-profiles-free
             )],
@@ -42,7 +42,7 @@ my %Conf = (
                 tar zip unzip bzip2 which procps postfix
             )],
             images => [qw(
-                ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs
+                ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
                 icc-profiles-openicc
             )],
@@ -224,6 +224,7 @@ my %Conf = (
         yum  => {
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-cli' => '',
@@ -238,7 +239,7 @@ my %Conf = (
             libs => [qw( perl-XML-Parser )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl libwebp-devel )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel )],
             remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
@@ -264,6 +265,7 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-cli' => '',
@@ -275,7 +277,7 @@ my %Conf = (
             },
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick )],
             remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
@@ -305,7 +307,9 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'ssh' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
                 'perl-GD' => '',
                 'giflib-devel' => '',
@@ -325,7 +329,7 @@ my %Conf = (
             php_version => 'php80',
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD )],
+            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             PowerTools => [qw/ giflib-devel /],
         },
@@ -350,7 +354,9 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'perl-GD' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
         },
@@ -395,7 +401,9 @@ my %Conf = (
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
                 'perl-GD' => '',
+                'ImageMagick' => '',
                 'ImageMagick-perl' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
         },
@@ -432,6 +440,7 @@ my %Conf = (
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
                 'mysql-devel'  => 'mariadb-devel',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'php' => '',
                 'php-mysqlnd' => '',
@@ -450,7 +459,7 @@ my %Conf = (
             enable => 'amzn2extra-php7.4',
         },
         repo => {
-            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl )],
+            'GraphicsMagick1.3' => [qw( GraphicsMagick-perl GraphicsMagick )],
             'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
@@ -473,6 +482,7 @@ my %Conf = (
                 'giflib-devel' => '',
                 'gd-devel' => '',
                 'libwebp-devel' => '',
+                'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'icc-profiles-openicc' => '',
             },
