@@ -109,12 +109,14 @@ my %Conf = (
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
                 'libmysqlclient-dev' => '',
+                'phpunit' => '',
             },
             db => [qw( libdbd-mysql-perl )],
         },
         apache => {
             enmod => [qw( php7.3 )],
         },
+        phpunit => 9,
     },
     jessie => {
         from => 'debian:jessie-slim',
@@ -135,7 +137,7 @@ my %Conf = (
         apache => {
             enmod => [qw( php5 )],
         },
-        phpunit => 4,
+        phpunit => 5,
     },
     stretch => {
         from => 'debian:stretch-slim',
@@ -161,11 +163,13 @@ my %Conf = (
         apt  => {
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
+                'phpunit' => '',
             },
         },
         apache => {
             enmod => [qw( php7.2 )],
         },
+        phpunit => 8,
     },
     trusty => {
         from => 'ubuntu:trusty',
@@ -196,12 +200,14 @@ my %Conf = (
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
+        phpunit => 9,
     },
     fedora23 => {
         from => 'fedora:23',
@@ -216,7 +222,7 @@ my %Conf = (
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 5,
     },
     centos6 => {
         from => 'centos:6',
@@ -291,7 +297,7 @@ my %Conf = (
         cpan => {
             missing => [qw( TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 7,
         locale_def => 1,
     },
     centos8 => {
@@ -336,7 +342,7 @@ my %Conf = (
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 8,
+        phpunit => 9,
     },
     cloud6 => {
         from => 'centos:7',
@@ -363,7 +369,7 @@ my %Conf = (
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 9,
         make => {
             perl => '5.28.2',
             ImageMagick => '7.0.8-68',
@@ -410,7 +416,7 @@ my %Conf = (
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
         },
-        phpunit => 4,
+        phpunit => 9,
         make => {
             perl => '5.28.2',
             ImageMagick => '7.0.8-68',
@@ -463,7 +469,7 @@ my %Conf = (
             'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 9,
     },
     oracle => {
         from => 'oraclelinux:7-slim',
@@ -510,7 +516,7 @@ my %Conf = (
             missing => [qw( DBD::Oracle )],
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 4,
+        phpunit => 9,
         release => 19.6,
     },
 );
