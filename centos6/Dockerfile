@@ -8,13 +8,13 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel\
+ ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel\
  perl-XML-Parser libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
- GraphicsMagick-perl libwebp-devel\
+ GraphicsMagick-perl GraphicsMagick libwebp-devel\
  && yum clean --enablerepo=epel all &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-6.rpm &&\
     yum -y --enablerepo=remi,remi-php55 install\

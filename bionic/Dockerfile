@@ -8,12 +8,14 @@ RUN apt-get update &&\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
+ perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
- php php-cli php-mysql php-gd php-memcache phpunit\
+ php-mbstring php-xml php php-cli php-mysql php-gd php-memcache\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+ curl -skL https://phar.phpunit.de/phpunit-8.phar > phpunit && chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

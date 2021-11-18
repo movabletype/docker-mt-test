@@ -8,7 +8,7 @@ RUN apt-get update &&\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
  libdbd-mysql-perl mariadb-server mariadb-client\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
+ perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache\
  apache2 vsftpd ftp memcached\
