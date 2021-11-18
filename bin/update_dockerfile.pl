@@ -112,6 +112,7 @@ my %Conf = (
                 'phpunit' => '',
             },
             db => [qw( libdbd-mysql-perl )],
+            php => [qw( php-mbstring php-xml )],
         },
         apache => {
             enmod => [qw( php7.3 )],
@@ -165,6 +166,7 @@ my %Conf = (
                 'php-mysqlnd' => 'php-mysql',
                 'phpunit' => '',
             },
+            php => [qw( php-mbstring php-xml )]
         },
         apache => {
             enmod => [qw( php7.2 )],
