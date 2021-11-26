@@ -56,15 +56,33 @@ for my $module (sort keys %prereqs) {
 my ($perl_version) = `perl -v` =~ /v(5\.\d+\.\d+)/;
 ok $perl_version, "$image_name: Perl exists ($perl_version)";
 
+my $gd_version = eval { GD::LIBGD_VERSION() } || 0;
+my $gd_version_str = eval { GD::VERSION_STRING() } || 'unknown';
+note "$image_name: GD version $gd_version ($gd_version_str)";
+if ($gd_version >= 2.0101) {
+    ok eval { GD::supportsFileType('test.gif') }, "$image_name: GD supports GIF";
+    ok eval { GD::supportsFileType('test.png') }, "$image_name: GD supports PNG";
+    ok eval { GD::supportsFileType('test.jpg') }, "$image_name: GD supports JPEG";
+    ok eval { GD::supportsFileType('test.bmp') }, "$image_name: GD supports BMP";
+    ok eval { GD::supportsFileType('test.webp') }, "$image_name: GD supports WEBP";
+}
+
+my $has_imager_webp = eval { require Imager::File::WEBP };
 my %imager_supports = map {$_ => 1} Imager->read_types;
 ok $imager_supports{gif}, "$image_name: Imager supports GIF";
 ok $imager_supports{png}, "$image_name: Imager supports PNG";
 ok $imager_supports{jpeg}, "$image_name: Imager supports JPEG";
+ok $imager_supports{bmp}, "$image_name: Imager supports BMP";
+SKIP: {
+    local $TODO = 'WebP may not be supported' unless $has_imager_webp;
+    ok $imager_supports{webp}, "$image_name: Imager supports WebP";
+}
 
 my %imagemagick_supports = map {$_ => 1} Image::Magick->QueryFormat;
 ok $imagemagick_supports{gif}, "$image_name: ImageMagick supports GIF";
 ok $imagemagick_supports{png}, "$image_name: ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "$image_name: ImageMagick supports JPEG";
+ok $imagemagick_supports{bmp}, "$image_name: ImageMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
@@ -76,6 +94,7 @@ my %graphicsmagick_supports = map {$_ => 1} Graphics::Magick->QueryFormat;
 ok $graphicsmagick_supports{gif}, "$image_name: GraphicsMagick supports GIF";
 ok $graphicsmagick_supports{png}, "$image_name: GraphicsMagick supports PNG";
 ok $graphicsmagick_supports{jpeg}, "$image_name: GraphicsMagick supports JPEG";
+ok $graphicsmagick_supports{bmp}, "$image_name: GraphicsMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /centos6|jessie|trusty/;
     ok $graphicsmagick_supports{webp}, "$image_name: GraphicsMagick supports WebP";
