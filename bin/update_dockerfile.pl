@@ -30,7 +30,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
-            extra   => [qw( JSON::XS Starman )],
+            extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
         },
@@ -57,7 +57,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
-            extra   => [qw( JSON::XS Starman )],
+            extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
         },
@@ -134,6 +134,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( YAML::Syck@1.31 )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for jessie is too old (0.4.1 as of this writing)
+            },
         },
         apache => {
             enmod => [qw( php5 )],
@@ -188,6 +191,11 @@ my %Conf = (
                 'libpng-dev'         => 'libpng12-dev',
             },
         },
+        cpan => {
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for trusty is too old (0.4.0 as of this writing)
+            },
+        },
         apache => {
             enmod => [qw( php5 )],
         },
@@ -221,6 +229,11 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
             },
             base => [qw( hostname )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for fedora23 is too old (0.4.4 as of this writing)
+            },
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
@@ -261,6 +274,9 @@ my %Conf = (
         cpan => {
             broken => [qw( Math::GMP@2.22 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
+            },
         },
         use_cpanm => 1,
         phpunit => 4,
@@ -298,6 +314,9 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( TAP::Harness::Env )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for centos7/updates is too old (0.3.0 as of this writing)
+            },
         },
         phpunit => 7,
         locale_def => 1,
@@ -370,6 +389,9 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
+            },
         },
         phpunit => 9,
         make => {
@@ -417,6 +439,9 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for cloud7/updates is too old (0.3.0 as of this writing)
+            },
         },
         phpunit => 9,
         make => {
@@ -459,6 +484,11 @@ my %Conf = (
             },
             base   => [qw( which hostname glibc-langpack-ja )],
             server => [qw( httpd )], ## for mod_ssl
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
+            },
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -516,6 +546,9 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( DBD::Oracle )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
+            },
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
