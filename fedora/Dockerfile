@@ -34,7 +34,7 @@ ENV LANG=en_US.UTF-8 \
 
 RUN set -ex &&\
   perl -i -pe \
-    's{AllowOverride None}{AllowOverride All}g' \
+   's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
     /etc/httpd/conf/httpd.conf &&\
   perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
     my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
