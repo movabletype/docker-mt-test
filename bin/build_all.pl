@@ -25,6 +25,7 @@ my %aliases = qw(
     php-7.3 buster
     php-7.4 fedora
     php-8.0 centos8
+    php-8.1 sid
 );
 my %aliases_rev;
 while (my ($alias, $name) = each %aliases) {
