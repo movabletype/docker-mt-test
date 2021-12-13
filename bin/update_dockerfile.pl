@@ -647,7 +647,7 @@ RUN set -ex &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \\
-   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g' &&\\
+   's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' &&\\
  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
    my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \\
    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
@@ -760,7 +760,7 @@ RUN set -ex &&\\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\\
 % }
   perl -i -pe \\
-    's{AllowOverride None}{AllowOverride All}g' \\
+   's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \\
     /etc/httpd/conf/httpd.conf &&\\
   perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
     my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \\
