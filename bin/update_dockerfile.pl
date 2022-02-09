@@ -674,9 +674,9 @@ FROM <%= $conf->{from} %>
 WORKDIR /root
 
 RUN\
-% if ($type eq 'centos6') {
-  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
-  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\\
+% if ($type =~ /^centos[68]$/) {
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
  <%= $conf->{installer} // 'yum' %> -y install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
@@ -693,6 +693,10 @@ RUN\
  amazon-linux-extras install <%= $repo %> &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%     if ($type =~ /^centos[68]$/) {
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
+%     }
 %   }
 %   if ($conf->{$repo}{module}) {
 %#    unfortunately the return value of dnf module seems too unstable
