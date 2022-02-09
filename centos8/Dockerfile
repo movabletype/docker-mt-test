@@ -2,7 +2,9 @@ FROM centos:8
 
 WORKDIR /root
 
-RUN dnf -y install\
+RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+ dnf -y install\
  glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
  vim nano\
@@ -14,10 +16,14 @@ RUN dnf -y install\
  giflib-devel\
  && dnf clean --enablerepo=PowerTools all &&\
  dnf -y install epel-release &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
  && dnf clean --enablerepo=epel all &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.0 ;\
     dnf -y install\
