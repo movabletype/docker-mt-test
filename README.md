@@ -10,7 +10,7 @@ Dockerfile to test MT.
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
 |centos6|centos:6|*5.10.1*|*5.5.38*|*5.1.73*|1.0.1e|2020-11|
-|centos8|centos:8|5.26.3|*8.0.13*|8.0.26|1.1.1k|2021-12|
+|centos8|centos:8|5.26.3|*8.0.15*|8.0.26|1.1.1k|2021-12|
 |jessie|debian:jessie|5.20.2|*5.6.40*|*5.5.62*|1.0.1t|2020-06 (LTS)|
 |buster|debian:buster|*5.28.1*|*7.3.31*|*MariaDB 10.3.31*|1.1.1d|2022-01|
 |fedora|fedora:32|*5.30.3*|7.4.19|*8.0.24*|1.1.1k|-|
