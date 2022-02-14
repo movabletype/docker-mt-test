@@ -19,6 +19,7 @@ my %aliases = qw(
     perl-5.28 buster
     perl-5.30 fedora
     perl-5.32 bullseye
+    perl-5.34 sid
 
     php-5.5 centos6
     php-5.6 jessie
