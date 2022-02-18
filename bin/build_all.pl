@@ -17,15 +17,15 @@ my %aliases = qw(
     perl-5.10 centos6
     perl-5.20 jessie
     perl-5.28 buster
-    perl-5.30 fedora
+    perl-5.30 fedora32
     perl-5.32 bullseye
-    perl-5.34 sid
+    perl-5.34 fedora
 
     php-5.5 centos6
     php-5.6 jessie
     php-7.3 buster
-    php-7.4 fedora
-    php-8.0 centos8
+    php-7.4 fedora32
+    php-8.0 fedora
     php-8.1 sid
 );
 my %aliases_rev;
