@@ -765,7 +765,8 @@ RUN\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
- cpanm --installdeps . &&\\
+ curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+ cpanm --installdeps -v . &&\\
 % } else {
  cpm install -g --test &&\\
 % }
