@@ -2,8 +2,8 @@ FROM centos:6
 
 WORKDIR /root
 
-RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
-  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-Base.repo &&\
+RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
  yum -y install\
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
@@ -13,10 +13,14 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl GraphicsMagick libwebp-devel\
  && yum clean --enablerepo=epel all &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-6.rpm &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=remi,remi-php55 install\
  php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml\
  && yum clean --enablerepo=remi,remi-php55 all &&\
@@ -35,7 +39,8 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpanm --installdeps . &&\
+ curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
+ cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
