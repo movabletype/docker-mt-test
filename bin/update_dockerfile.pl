@@ -829,6 +829,7 @@ RUN\
  &&\\
 %   }
 % }
+ <%= $conf->{installer} // 'yum' %> -y update &&\\
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -853,17 +854,23 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+% if ($conf->{use_cpanm}) {
+ curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% }
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+% if ($conf->{use_cpanm}) {
+ cpanm -v \\
+% } else {
  cpm install -g --test\\
+% }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
- curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
  cpanm --installdeps -v . &&\\
 % } else {
  cpm install -g --test &&\\
