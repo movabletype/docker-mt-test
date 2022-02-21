@@ -87,7 +87,7 @@ ok $imagemagick_supports{png}, "$image_name: ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "$image_name: ImageMagick supports JPEG";
 ok $imagemagick_supports{bmp}, "$image_name: ImageMagick supports BMP";
 SKIP: {
-    local $TODO = 'WebP may not be supported' if $image_name =~ /amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty/;
+    local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty)$/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
 }
 my $imagemagick_depth = Image::Magick->new->Get('depth');
