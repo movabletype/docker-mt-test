@@ -889,6 +889,7 @@ ENV LANG=en_US.UTF-8 \\
 
 RUN set -ex &&\\
 % if ($conf->{locale_def}) {
+  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\\
 % }
   perl -i -pe \\
