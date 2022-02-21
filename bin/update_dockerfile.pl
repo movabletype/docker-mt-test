@@ -823,7 +823,11 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
+%   if ($conf->{$repo}{enable}) {
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
+%   } else {
+ &&\\
+%   }
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
