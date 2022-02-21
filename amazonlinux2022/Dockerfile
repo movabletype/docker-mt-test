@@ -1,31 +1,24 @@
-FROM amazonlinux:2
+FROM amazonlinux:2022
 
 WORKDIR /root
 
-RUN yum -y install\
- which hostname glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
- mariadb-devel mariadb-server mariadb\
+RUN dnf -y install\
+ which hostname glibc-langpack-ja glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ mariadb105-pam mysql-devel mysql-server mysql\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- httpd mod_ssl vsftpd ftp memcached\
+ php-cli php php-mysqlnd php-gd php-mbstring\
+ httpd mod_ssl vsftpd memcached\
  &&\
- amazon-linux-extras install GraphicsMagick1.3 &&\
-    yum -y --enablerepo=amzn2extra-GraphicsMagick1.3 install\
- GraphicsMagick-perl GraphicsMagick\
- && yum clean --enablerepo=amzn2extra-GraphicsMagick1.3 all &&\
- amazon-linux-extras install php7.4 &&\
-    yum -y --enablerepo=amzn2extra-php7.4 install\
- php php-mysqlnd php-gd php-mbstring php-xml\
- && yum clean --enablerepo=amzn2extra-php7.4 all &&\
- yum -y update &&\
- yum clean all && rm -rf /var/cache/yum &&\
+ dnf -y update &&\
+ dnf clean all && rm -rf /var/cache/dnf &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
@@ -39,6 +32,8 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\
+  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
+  localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
     /etc/httpd/conf/httpd.conf &&\
@@ -47,7 +42,7 @@ RUN set -ex &&\
     $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
     open my $fh, ">", $inifile; print $fh $ini'
 
-RUN cd /etc/pki/tls/certs/ && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
+RUN cd /usr/bin && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
   perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \
   /etc/httpd/conf.d/ssl.conf && cd $WORKDIR
 

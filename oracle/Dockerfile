@@ -27,6 +27,7 @@ RUN yum -y install\
     yum -y --enablerepo=ol7_oracle_instantclient install\
  oracle-instantclient19.6-basic oracle-instantclient19.6-sqlplus\
  && yum clean --enablerepo=ol7_oracle_instantclient all &&\
+ yum -y update &&\
  yum clean all && rm -rf /var/cache/yum &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

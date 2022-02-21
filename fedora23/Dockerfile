@@ -11,6 +11,7 @@ RUN dnf -y install\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit\
  mod_ssl vsftpd ftp memcached\
  &&\
+ dnf -y update &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  curl -skL https://phar.phpunit.de/phpunit-5.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
