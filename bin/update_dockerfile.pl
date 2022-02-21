@@ -525,6 +525,32 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
     },
+    amazonlinux2022 => {
+        from => 'amazonlinux:2022',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                ftp => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+            },
+            base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
+            server => [qw( httpd )], ## for mod_ssl
+            db     => [qw( mariadb105-pam )],
+            php    => [qw( php-cli )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
+            },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        phpunit => 9,
+        locale_def => 1,
+    },
     oracle => {
         from => 'oraclelinux:7-slim',
         base => 'centos',
@@ -575,6 +601,74 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
         release => 19.6,
+    },
+    oracle8 => {
+        from => 'oraclelinux:8-slim',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'mariadb',
+                'mysql-server' => 'mariadb-server',
+                'mysql-devel'  => 'mariadb-devel',
+                'php' => '',
+                'php-gd' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'giflib-devel' => '',
+                'gd-devel' => '',
+                'libwebp-devel' => '',
+                'ImageMagick' => '',
+                'ImageMagick-perl' => '',
+                'GraphicsMagick' => '',
+                'GraphicsMagick-perl' => '',
+                'icc-profiles-openicc' => '',
+                'perl-GD' => '',
+            },
+            base   => [qw( which glibc-locale-source )],
+            server => [qw( httpd )],
+        },
+        epel => {
+            rpm => 'oracle-epel-release-el8',
+            enable => 'ol8_developer_EPEL',
+        },
+        instantclient => {
+            rpm => 'oracle-instantclient-release-el8',
+            enable => 'ol8_oracle_instantclient21',
+        },
+        appstream => {
+            module => {
+                reset => 'php',
+                enable => 'php:7.4',
+            },
+        },
+        repo => {
+            instantclient => [qw(
+                oracle-instantclient-basic
+                oracle-instantclient-devel
+                oracle-instantclient-sqlplus
+            )],
+            # oracle epel8 does not have giflib-devel
+            epel => [qw(
+                ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl
+                gd-devel libwebp-devel
+                perl-GD
+            )],
+            appstream => [qw( php php-cli php-gd php-mysqlnd php-mbstring )],
+        },
+        cpan => {
+            no_test => [qw( DBI Test::NoWarnings )],
+            missing => [qw( DBD::Oracle )],
+            _replace => {
+                'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
+            },
+        },
+        make_dummy_cert => '/usr/bin',
+        phpunit => 9,
+        installer => 'microdnf',
+        release => 19.6,
+        locale_def => 1,
     },
 );
 
@@ -841,7 +935,7 @@ set -e
 % if ($type eq 'centos6') {
 service mysqld start
 service memcached start
-% } elsif ($type =~ /^(?:centos7|fedora23|oracle|amazonlinux)$/) {
+% } elsif ($type =~ /^(?:centos7|fedora23|oracle|oracle8|amazonlinux|amazonlinux2022)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
