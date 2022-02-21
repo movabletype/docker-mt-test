@@ -201,7 +201,7 @@ my %Conf = (
         },
         phpunit => 4,
     },
-    fedora => {
+    fedora35 => {
         from => 'fedora:35',
         base => 'centos',
         yum  => {
@@ -944,7 +944,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora32)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora35|fedora32)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
