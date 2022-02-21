@@ -17,6 +17,7 @@ RUN yum -y install\
     yum -y --enablerepo=remi,remi-php74 install\
  php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
  && yum clean --enablerepo=remi,remi-php74 all &&\
+ yum -y update &&\
  yum clean all && rm -rf /var/cache/yum &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
@@ -31,18 +32,19 @@ RUN yum -y install\
  ln -s /usr/bin/php74 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
- cpm install -g --test\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus TAP::Harness::Env\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpanm --installdeps . &&\
+ cpanm --installdeps -v . &&\
 # use cpanm to avoid strong caching of cpm
  cpanm -nf https://cpan.metacpan.org/authors/id/M/MS/MSTROUT/YAML-0.84.tar.gz &&\
  cpanm -nf https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.633.tar.gz &&\
@@ -149,6 +151,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\
+  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \

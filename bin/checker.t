@@ -69,7 +69,10 @@ if ($gd_version >= 2.0101) {
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
 my %imager_supports = map {$_ => 1} Imager->read_types;
-ok $imager_supports{gif}, "$image_name: Imager supports GIF";
+SKIP: {
+    local $TODO = 'GIF may not be supported' if $image_name =~ /^(?:oracle8)$/;
+    ok $imager_supports{gif}, "$image_name: Imager supports GIF";
+}
 ok $imager_supports{png}, "$image_name: Imager supports PNG";
 ok $imager_supports{jpeg}, "$image_name: Imager supports JPEG";
 ok $imager_supports{bmp}, "$image_name: Imager supports BMP";
@@ -84,7 +87,7 @@ ok $imagemagick_supports{png}, "$image_name: ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "$image_name: ImageMagick supports JPEG";
 ok $imagemagick_supports{bmp}, "$image_name: ImageMagick supports BMP";
 SKIP: {
-    local $TODO = 'WebP may not be supported' if $image_name =~ /amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty/;
+    local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty)$/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
 }
 my $imagemagick_depth = Image::Magick->new->Get('depth');
@@ -119,7 +122,10 @@ my $phpinfo = `php -i`;
 ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "$image_name: PHP has mbstring";
 ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
+SKIP: {
+    local $TODO = 'PHP-Dom is not supported yet' if $image_name =~ /^(?:amazonlinux2022|oracle8)$/;
+    ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
+}
 ok $phpinfo =~ /GIF Read Support => enabled/, "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/, "$image_name: PHP supports JPEG";
@@ -136,20 +142,23 @@ if (-e $php_ini) {
     ok $ini =~ m!date\.timezone = "Asia/Tokyo"!, "$image_name: php.ini contains date.timezone = \"Asia/Tokyo\"";
 }
 
-my ($phpunit) = `phpunit --version` =~ /PHPUnit (\d+\.\d+\.\d+)/;
-ok $phpunit, "$image_name: phpunit exists ($phpunit)";
-if ($php_version_number >= 7.3) {
-    is substr($phpunit, 0, 1) => 9, "phpunit 9 (9.5.x) for php >= 7.3 ($php_version)";
-} elsif ($php_version_number >= 7.2) {
-    is substr($phpunit, 0, 1) => 8, "phpunit 8 (8.5.21) for php >= 7.2 ($php_version)";
-} elsif ($php_version_number >= 7.1) {
-    is substr($phpunit, 0, 1) => 7, "phpunit 7 (7.5.20) for php >= 7.1 ($php_version)";
-} elsif ($php_version_number >= 7.0) {
-    is substr($phpunit, 0, 1) => 6, "phpunit 6 (6.5.14) for php >= 7.0 ($php_version)";
-} elsif ($php_version_number >= 5.6) {
-    is substr($phpunit, 0, 1) => 5, "phpunit 5 (5.7.27) for php >= 5.6 ($php_version)";
-} else {
-    is substr($phpunit, 0, 1) => 4, "phpunit 4 (4.8.36) for php >= 5.3 ($php_version)";
+SKIP: {
+    local $TODO = 'phpunit is not supported yet' if $image_name =~ /^(?:amazonlinux2022|oracle8)$/;
+    my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
+    ok $phpunit, "$image_name: phpunit exists ($phpunit)";
+    if ($php_version_number >= 7.3) {
+        is substr($phpunit, 0, 1) => 9, "phpunit 9 (9.5.x) for php >= 7.3 ($php_version)";
+    } elsif ($php_version_number >= 7.2) {
+        is substr($phpunit, 0, 1) => 8, "phpunit 8 (8.5.21) for php >= 7.2 ($php_version)";
+    } elsif ($php_version_number >= 7.1) {
+        is substr($phpunit, 0, 1) => 7, "phpunit 7 (7.5.20) for php >= 7.1 ($php_version)";
+    } elsif ($php_version_number >= 7.0) {
+        is substr($phpunit, 0, 1) => 6, "phpunit 6 (6.5.14) for php >= 7.0 ($php_version)";
+    } elsif ($php_version_number >= 5.6) {
+        is substr($phpunit, 0, 1) => 5, "phpunit 5 (5.7.27) for php >= 5.6 ($php_version)";
+    } else {
+        is substr($phpunit, 0, 1) => 4, "phpunit 4 (4.8.36) for php >= 5.3 ($php_version)";
+    }
 }
 
 my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
@@ -191,6 +200,11 @@ SKIP: {
     local $TODO = 'CentOS 6 has no icc profile packages' if $image_name =~ /centos6/;
     ok @icc_profiles, "$image_name: has " . join(",", @icc_profiles);
     ok $srgb, "$image_name: has sRGB.icc";
+}
+
+if ($image_name =~ /oracle/) {
+    my ($sqlplus_version) = (`sqlplus -v`) =~ /^Version (\d+\.\d+)/m;
+    ok $sqlplus_version, "$image_name: sqlplus exists ($sqlplus_version)";
 }
 
 done_testing;

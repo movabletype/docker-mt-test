@@ -18,6 +18,7 @@ RUN yum -y install\
     yum -y --enablerepo=remi,remi-php71 install\
  php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml\
  && yum clean --enablerepo=remi,remi-php71 all &&\
+ yum -y update &&\
  yum clean all && rm -rf /var/cache/yum &&\
  ln -s /usr/bin/php71 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-7.phar > phpunit && chmod +x phpunit &&\
@@ -40,6 +41,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\
+  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
   localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
