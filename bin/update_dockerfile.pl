@@ -437,6 +437,7 @@ my %Conf = (
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
         use_cpanm => 1,
@@ -490,6 +491,7 @@ my %Conf = (
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
         use_cpanm => 1,
@@ -821,6 +823,9 @@ RUN\
  amazon-linux-extras install <%= $repo %> &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%     if ($conf->{$repo}{gpg_key}) {
+ rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
+%     }
 %     if ($type =~ /^centos[68]$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
