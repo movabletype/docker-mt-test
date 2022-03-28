@@ -256,6 +256,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for fedora23 is too old (0.4.4 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
@@ -414,6 +416,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
         make => {
@@ -464,6 +468,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud7/updates is too old (0.3.0 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
         make => {
@@ -511,6 +517,7 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
             },
+            no_test => [qw(XML::DOM)],
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -593,6 +600,7 @@ my %Conf = (
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
         },
         cpan => {
+            no_test => [qw( DBI Test::NoWarnings )],
             missing => [qw( DBD::Oracle )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
