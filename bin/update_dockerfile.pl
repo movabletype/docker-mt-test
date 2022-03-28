@@ -262,6 +262,7 @@ my %Conf = (
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 5,
+        no_update => 1,
     },
     centos6 => {
         from => 'centos:6',
@@ -440,6 +441,7 @@ my %Conf = (
         cloud_prereqs => 'conf/cloud_prereqs6',
         use_cpanm => 1,
         locale_def => 1,
+        no_update => 1,
     },
     cloud7 => {
         from => 'centos:7',
@@ -492,6 +494,7 @@ my %Conf = (
         cloud_prereqs => 'conf/cloud_prereqs7',
         use_cpanm => 1,
         locale_def => 1,
+        no_update => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -677,6 +680,7 @@ my %Conf = (
         installer => 'microdnf',
         release => 19.6,
         locale_def => 1,
+        no_update => 1,
     },
 );
 
@@ -837,7 +841,9 @@ RUN\
  &&\\
 %   }
 % }
- <%= $conf->{installer} // 'yum' %> -y update &&\\
+% if (!$conf->{no_update}) {
+ <%= $conf->{installer} // 'yum' %> -y update --skip-broken &&\\
+% }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
