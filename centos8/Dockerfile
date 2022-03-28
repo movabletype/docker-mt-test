@@ -14,13 +14,13 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  &&\
     dnf -y --enablerepo=PowerTools install\
  giflib-devel\
- && dnf clean --enablerepo=PowerTools all &&\
+ &&\
  dnf -y install epel-release &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
- && dnf clean --enablerepo=epel all &&\
+ &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
@@ -28,8 +28,8 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     dnf -y module enable php:remi-8.0 ;\
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
- && dnf clean --enablerepo=remi all &&\
- dnf -y update &&\
+ &&\
+ dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\

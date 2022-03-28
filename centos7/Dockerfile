@@ -13,12 +13,12 @@ RUN yum -y install\
  yum -y install epel-release &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl GraphicsMagick\
- && yum clean --enablerepo=epel all &&\
+ &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php71 install\
  php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml\
  && yum clean --enablerepo=remi,remi-php71 all &&\
- yum -y update &&\
+ yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
  ln -s /usr/bin/php71 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-7.phar > phpunit && chmod +x phpunit &&\

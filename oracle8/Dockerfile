@@ -23,7 +23,6 @@ RUN microdnf -y install\
     microdnf -y --enablerepo=ol8_oracle_instantclient21 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
  && microdnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
- microdnf -y update &&\
  microdnf clean all && rm -rf /var/cache/microdnf &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

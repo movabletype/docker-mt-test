@@ -11,7 +11,7 @@ RUN dnf -y install\
  php-cli php php-mysqlnd php-gd php-mbstring\
  httpd mod_ssl vsftpd memcached\
  &&\
- dnf -y update &&\
+ dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\

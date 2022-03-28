@@ -17,14 +17,14 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl GraphicsMagick libwebp-devel\
- && yum clean --enablerepo=epel all &&\
+ &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-6.rpm &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=remi,remi-php55 install\
  php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml\
  && yum clean --enablerepo=remi,remi-php55 all &&\
- yum -y update &&\
+ yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
  ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\

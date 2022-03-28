@@ -256,10 +256,13 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for fedora23 is too old (0.4.4 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 5,
+        no_update => 1,
     },
     centos6 => {
         from => 'centos:6',
@@ -414,6 +417,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
         make => {
@@ -432,10 +437,12 @@ my %Conf = (
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
         use_cpanm => 1,
         locale_def => 1,
+        no_update => 1,
     },
     cloud7 => {
         from => 'centos:7',
@@ -464,6 +471,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud7/updates is too old (0.3.0 as of this writing)
             },
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
         make => {
@@ -482,10 +491,12 @@ my %Conf = (
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
         use_cpanm => 1,
         locale_def => 1,
+        no_update => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -511,6 +522,7 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
             },
+            no_test => [qw(XML::DOM)],
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -524,6 +536,7 @@ my %Conf = (
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
+        use_cpanm => 1,
     },
     amazonlinux2022 => {
         from => 'amazonlinux:2022',
@@ -590,9 +603,10 @@ my %Conf = (
             )],
             ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
+            no_test => [qw( DBI Test::NoWarnings )],
             missing => [qw( DBD::Oracle )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
@@ -601,6 +615,7 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
         release => 19.6,
+        use_cpanm => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
@@ -669,6 +684,7 @@ my %Conf = (
         installer => 'microdnf',
         release => 19.6,
         locale_def => 1,
+        no_update => 1,
     },
 );
 
@@ -809,6 +825,9 @@ RUN\
  amazon-linux-extras install <%= $repo %> &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
  <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+%     if ($conf->{$repo}{gpg_key}) {
+ rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
+%     }
 %     if ($type =~ /^centos[68]$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
@@ -829,7 +848,9 @@ RUN\
  &&\\
 %   }
 % }
- <%= $conf->{installer} // 'yum' %> -y update &&\\
+% if (!$conf->{no_update}) {
+ <%= $conf->{installer} // 'yum' %> -y update --skip-broken &&\\
+% }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
