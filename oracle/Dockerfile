@@ -15,7 +15,7 @@ RUN yum -y install\
  yum -y reinstall glibc-common &&\
  yum -y install oracle-epel-release-el7 &&\
     yum -y --enablerepo=ol7_developer_EPEL install\
- GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel\
+ GraphicsMagick-perl-1.3.32-1.el7\
  && yum clean --enablerepo=ol7_developer_EPEL all &&\
  yum -y install oracle-php-release-el7 &&\
     yum -y --enablerepo=ol7_developer_php74 install\
@@ -23,26 +23,27 @@ RUN yum -y install\
  && yum clean --enablerepo=ol7_developer_php74 all &&\
     yum -y --enablerepo=ol7_optional_latest install\
  gd-devel giflib-devel libwebp-devel\
- && yum clean --enablerepo=ol7_optional_latest all &&\
+ &&\
     yum -y --enablerepo=ol7_oracle_instantclient install\
  oracle-instantclient19.6-basic oracle-instantclient19.6-sqlplus\
- && yum clean --enablerepo=ol7_oracle_instantclient all &&\
- yum -y update &&\
+ &&\
+ yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
- cpm install -g --test\
+ cpm install -g DBI Test::NoWarnings XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  DBD::Oracle\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test &&\
+ cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \

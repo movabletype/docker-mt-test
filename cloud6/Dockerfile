@@ -9,15 +9,15 @@ RUN yum -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
+  rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 &&\
  yum -y install http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm &&\
     yum -y --enablerepo=mysql57-community install\
  mysql-community-server mysql-community-client mysql-community-devel\
- && yum clean --enablerepo=mysql57-community all &&\
+ &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
     yum -y --enablerepo=remi,remi-php74 install\
  php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
  && yum clean --enablerepo=remi,remi-php74 all &&\
- yum -y update &&\
  yum clean all && rm -rf /var/cache/yum &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
@@ -36,7 +36,7 @@ RUN yum -y install\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\

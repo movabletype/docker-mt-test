@@ -11,7 +11,7 @@ RUN dnf -y install\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y update &&\
+ dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
