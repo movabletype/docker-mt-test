@@ -602,7 +602,7 @@ my %Conf = (
             )],
             ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 gd-devel giflib-devel libwebp-devel)],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
