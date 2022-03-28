@@ -536,6 +536,7 @@ my %Conf = (
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
+        use_cpanm => 1,
     },
     amazonlinux2022 => {
         from => 'amazonlinux:2022',
@@ -614,6 +615,7 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
         release => 19.6,
+        use_cpanm => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
