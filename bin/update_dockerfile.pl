@@ -374,7 +374,7 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
                 enable => 'php:remi-8.0',
