@@ -9,8 +9,8 @@ RUN yum -y install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
-  rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 &&\
  yum -y install http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm &&\
+ rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 &&\
     yum -y --enablerepo=mysql57-community install\
  mysql-community-server mysql-community-client mysql-community-devel\
  &&\
@@ -25,7 +25,7 @@ RUN yum -y install\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.36/GraphicsMagick-1.3.36.tar.gz &&\
  tar xf GraphicsMagick-1.3.36.tar.gz && cd GraphicsMagick-1.3.36 &&\
  ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-7.0.8-68.tar.xz &&\
+ curl -kLO https://imagemagick.org/archive/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
