@@ -74,7 +74,7 @@ my %Conf = (
                 'php-cli'            => 'php8.1-cli',
                 'php-mysqlnd'        => 'php8.1-mysql',
                 'php-gd'             => 'php8.1-gd',
-                'php-memcache'       => '',
+                'php-memcache'       => 'php8.1-memcache',
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
