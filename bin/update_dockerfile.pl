@@ -297,6 +297,7 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
+            no_test => [qw( CryptX )],
             broken => [qw( Math::GMP@2.22 Mojolicious@8.43 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
