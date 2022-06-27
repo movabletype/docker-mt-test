@@ -297,7 +297,8 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
-            broken => [qw( Math::GMP@2.22 Mojolicious@8.43 )],
+            no_test => [qw( CryptX )],
+            broken => [qw( Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
@@ -373,7 +374,7 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
                 enable => 'php:remi-8.0',
@@ -389,6 +390,7 @@ my %Conf = (
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
+        no_best => 1,
     },
     cloud6 => {
         from => 'centos:7',
@@ -849,7 +851,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y update --skip-broken &&\\
+ <%= $conf->{installer} // 'yum' %> -y update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
@@ -859,7 +861,7 @@ RUN\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
- curl -kLO http://www.imagemagick.org/download/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
+ curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\

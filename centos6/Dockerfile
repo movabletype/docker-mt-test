@@ -33,11 +33,11 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install -g CryptX XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Math::GMP@2.22 Mojolicious@8.43 Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  App::cpanminus DBD::SQLite\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

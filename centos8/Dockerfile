@@ -21,7 +21,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
  &&\
- dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.rpm &&\
+ dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     dnf -y module reset php ;\
@@ -29,7 +29,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
  &&\
- dnf -y update --skip-broken &&\
+ dnf -y update --skip-broken --nobest &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
