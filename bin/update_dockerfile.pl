@@ -390,6 +390,7 @@ my %Conf = (
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
+        no_best => 1,
     },
     cloud6 => {
         from => 'centos:7',
@@ -850,7 +851,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y update --skip-broken &&\\
+ <%= $conf->{installer} // 'yum' %> -y update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{make}) {
