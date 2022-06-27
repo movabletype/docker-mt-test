@@ -298,7 +298,7 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( CryptX )],
-            broken => [qw( Math::GMP@2.22 Mojolicious@8.43 )],
+            broken => [qw( Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
