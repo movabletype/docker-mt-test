@@ -201,6 +201,28 @@ my %Conf = (
         },
         phpunit => 4,
     },
+    fedora36 => {
+        from => 'fedora:36',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora35 => {
         from => 'fedora:35',
         base => 'centos',
@@ -391,6 +413,101 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
+    },
+    rockylinux => {
+        from => 'rockylinux:8.5',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'ssh' => '',
+                'GraphicsMagick' => '',
+                'GraphicsMagick-perl' => '',
+                'ImageMagick' => '',
+                'ImageMagick-perl' => '',
+                'perl-GD' => '',
+                'giflib-devel' => '',
+                'icc-profiles-openicc' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja glibc-locale-source )],
+        },
+        epel => {
+            rpm => 'epel-release',
+        },
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
+            module => {
+                reset => 'php',
+                enable => 'php:remi-8.0',
+            },
+            php_version => 'php80',
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            powertools => [qw/ giflib-devel /],
+        },
+        installer               => 'dnf',
+        setcap                  => 1,
+        make_dummy_cert => '/usr/bin',
+        phpunit => 9,
+        locale_def => 1
+    },
+    almalinux => {
+        from => 'almalinux:9.0',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'php' => '',
+                'php-cli' => '',
+                'php-mysqlnd' => '',
+                'php-mbstring' => '',
+                'php-gd' => '',
+                'php-pecl-memcache' => '',
+                'phpunit' => '',
+                'ssh' => '',
+                'GraphicsMagick' => '',
+                'GraphicsMagick-perl' => '',
+                'ImageMagick' => '',
+                'ImageMagick-perl' => '',
+                'perl-GD' => '',
+                'giflib-devel' => '',
+                'icc-profiles-openicc' => '',
+                'mysql-devel' => '',
+            },
+            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source /],
+        },
+        epel => {
+            rpm => 'epel-release',
+        },
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            module => {
+                reset => 'php',
+                enable => 'php:remi-8.1',
+            },
+            php_version => 'php81',
+        },
+        repo => {
+            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            crb  => [qw( mysql-devel giflib-devel )],
+        },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        installer               => 'dnf',
+        setcap                  => 1,
+        make_dummy_cert => '/usr/bin',
+        phpunit => 9,
+        allow_erasing => 1,
     },
     cloud6 => {
         from => 'centos:7',
@@ -812,7 +929,7 @@ RUN\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
- <%= $conf->{installer} // 'yum' %> -y install\\
+ <%= $conf->{installer} // 'yum' %> -y <% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
@@ -979,7 +1096,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora35|fedora32)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora3[256]|rockylinux|almalinux)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
