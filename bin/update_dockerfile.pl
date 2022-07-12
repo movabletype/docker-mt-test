@@ -601,12 +601,12 @@ my %Conf = (
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
+            remi => [qw( php80-php php80-php-mbstring php80-php-mysqlnd php80-php-gd php80-php-pecl-memcache php80-php-xml )],
         },
         remi => {
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php74',
-            php_version => 'php74',
+            enable => 'remi,remi-php80',
+            php_version => 'php80',
         },
         'mysql57-community' => {
             rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',

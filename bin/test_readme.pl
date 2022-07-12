@@ -12,7 +12,7 @@ for my $line (split /\n/, path('README.md')->slurp) {
     $line =~ s/\*//g;
     $line =~ s/MariaDB //;
     my ($image, $base, $perl, $php, $mysql, $openssl) = split '\|', $line;
-    next if $image =~ /(?:addons|chromedriver|chromiumdriver|openldap)/;
+    next if $image =~ /(?:addons|chromedriver|chromiumdriver|openldap|playwright)/;
     $image =~ s/ .+$//;
     $mapping{$image} = {perl => $perl, php => $php, mysql => $mysql, openssl => $openssl};
 }
