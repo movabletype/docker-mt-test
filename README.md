@@ -51,3 +51,4 @@ Dockerfile to test MT.
 |chromedriver|fedora:32|chromium-driver 85.0.4183.121|
 |chromiumdriver|movabletype/test:buster|chromium-driver 87.0.4280.141-0.1~deb10u1|
 |openldap|centos:6|openldap 2.4.40|
+|playwright|movabletype/test:buster|node 16.16.0, playwright 1.23.2 |
