@@ -2,7 +2,7 @@ FROM centos:7
 
 WORKDIR /root
 
-RUN yum -y install\
+RUN yum -y  install\
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  vim nano\
  netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -15,9 +15,9 @@ RUN yum -y install\
  mysql-community-server mysql-community-client mysql-community-devel\
  &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
-    yum -y --enablerepo=remi,remi-php74 install\
- php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
- && yum clean --enablerepo=remi,remi-php74 all &&\
+    yum -y --enablerepo=remi,remi-php80 install\
+ php80-php php80-php-mbstring php80-php-mysqlnd php80-php-gd php80-php-pecl-memcache php80-php-xml\
+ && yum clean --enablerepo=remi,remi-php80 all &&\
  yum clean all && rm -rf /var/cache/yum &&\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.28.2.tar.gz && tar xf perl-5.28.2.tar.gz &&\
@@ -29,7 +29,7 @@ RUN yum -y install\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- ln -s /usr/bin/php74 /usr/local/bin/php &&\
+ ln -s /usr/bin/php80 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
