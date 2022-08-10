@@ -770,11 +770,13 @@ my %Conf = (
             rpm => 'oracle-instantclient-release-el8',
             enable => 'ol8_oracle_instantclient21',
         },
-        appstream => {
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:7.4',
+                enable => 'php:remi-8.1',
             },
+            php_version => 'php81',
         },
         repo => {
             instantclient => [qw(
@@ -788,7 +790,7 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            appstream => [qw( php php-cli php-gd php-mysqlnd php-mbstring )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
