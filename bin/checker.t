@@ -134,6 +134,10 @@ SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|sid/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
+if ($image_name =~ /oracle/) {
+    ok $phpinfo =~ /oci8/, "$image_name: PHP supports oci8";
+    ok $phpinfo =~ /PDO drivers .*oci/, "$image_name: PHP PDO supports oci";
+}
 
 my ($php_ini) = $phpinfo =~ m!Loaded Configuration File => (/\S+/php\.ini)!;
 ok $php_ini, "$image_name: Loaded php.ini: $php_ini";
