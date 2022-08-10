@@ -8,7 +8,7 @@ RUN microdnf -y install\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- httpd mod_ssl vsftpd ftp memcached\
+ httpd mod_ssl vsftpd ftp memcached oraclelinux-developer-release-el8\
  &&\
     microdnf -y module reset php ;\
     microdnf -y module enable php:7.4 ;\
@@ -23,6 +23,8 @@ RUN microdnf -y install\
     microdnf -y --enablerepo=ol8_oracle_instantclient21 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
  && microdnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
+ microdnf -y module enable php-oci8 &&\
+ microdnf -y install php-oci8-21c &&\
  microdnf clean all && rm -rf /var/cache/microdnf &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
