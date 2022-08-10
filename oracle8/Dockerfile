@@ -2,30 +2,30 @@ FROM oraclelinux:8-slim
 
 WORKDIR /root
 
-RUN microdnf -y install\
+RUN microdnf -y  install\
  which glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- httpd mod_ssl vsftpd ftp memcached oraclelinux-developer-release-el8\
+ httpd mod_ssl vsftpd ftp memcached\
  &&\
-    microdnf -y module reset php ;\
-    microdnf -y module enable php:7.4 ;\
-    microdnf -y install\
- php php-cli php-gd php-mysqlnd php-mbstring\
- &&\
- microdnf -y install oracle-epel-release-el8 &&\
-    microdnf -y --enablerepo=ol8_developer_EPEL install\
+  microdnf -y install dnf &&\
+ dnf -y install oracle-epel-release-el8 &&\
+    dnf -y --enablerepo=ol8_developer_EPEL install\
  ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl gd-devel libwebp-devel perl-GD\
- && microdnf clean --enablerepo=ol8_developer_EPEL all &&\
- microdnf -y install oracle-instantclient-release-el8 &&\
-    microdnf -y --enablerepo=ol8_oracle_instantclient21 install\
+ && dnf clean --enablerepo=ol8_developer_EPEL all &&\
+ dnf -y install oracle-instantclient-release-el8 &&\
+    dnf -y --enablerepo=ol8_oracle_instantclient21 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
- && microdnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
- microdnf -y module enable php-oci8 &&\
- microdnf -y install php-oci8-21c &&\
- microdnf clean all && rm -rf /var/cache/microdnf &&\
+ && dnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
+ dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
+    dnf -y module reset php ;\
+    dnf -y module enable php:remi-8.1 ;\
+    dnf -y install\
+ php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8\
+ &&\
+ dnf clean all && rm -rf /var/cache/dnf &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\

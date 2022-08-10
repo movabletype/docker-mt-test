@@ -715,13 +715,12 @@ my %Conf = (
             rpm => 'oracle-php-release-el7',
             enable => 'ol7_developer_php74',
         },
+        instantclient => {
+            rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
+        },
         repo => {
-            ol7_oracle_instantclient => [qw(
-                oracle-instantclient19.6-basic
-                oracle-instantclient19.6-sqlplus
-            )],
             ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
-            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-19c )],
+            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
         },
         cpan => {
@@ -771,11 +770,13 @@ my %Conf = (
             rpm => 'oracle-instantclient-release-el8',
             enable => 'ol8_oracle_instantclient21',
         },
-        appstream => {
+        remi => {
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:7.4',
+                enable => 'php:remi-8.1',
             },
+            php_version => 'php81',
         },
         repo => {
             instantclient => [qw(
@@ -789,7 +790,7 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            appstream => [qw( php php-cli php-gd php-mysqlnd php-mbstring )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
@@ -934,9 +935,14 @@ RUN\
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
+% if ($type eq 'oracle8') {
+  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
+  % $conf->{installer} = 'dnf';
+% }
 % if ($type eq 'oracle') {
- yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
- yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
+ yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
+ yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\
+ yum -y install oracle-instantclient-devel oracle-instantclient-sqlplus &&\\
  yum -y reinstall glibc-common &&\\
 % }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
@@ -954,7 +960,9 @@ RUN\
 %   }
 %   if ($conf->{$repo}{module}) {
 %#    unfortunately the return value of dnf module seems too unstable
+    % if ($conf->{$repo}{module}{reset}) {
     <%= $conf->{installer} // 'yum' %> -y module reset <%= $conf->{$repo}{module}{reset} %> ;\\
+    % }
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
     <%= $conf->{installer} // 'yum' %> -y install\\
 %   } else {
