@@ -960,7 +960,9 @@ RUN\
 %   }
 %   if ($conf->{$repo}{module}) {
 %#    unfortunately the return value of dnf module seems too unstable
+    % if ($conf->{$repo}{module}{reset}) {
     <%= $conf->{installer} // 'yum' %> -y module reset <%= $conf->{$repo}{module}{reset} %> ;\\
+    % }
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
     <%= $conf->{installer} // 'yum' %> -y install\\
 %   } else {
