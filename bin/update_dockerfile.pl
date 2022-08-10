@@ -935,6 +935,10 @@ RUN\
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
+% if ($type eq 'oracle8') {
+  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
+  % $conf->{installer} = 'dnf';
+% }
 % if ($type eq 'oracle') {
  yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
  yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
