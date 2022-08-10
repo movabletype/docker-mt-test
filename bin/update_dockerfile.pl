@@ -940,8 +940,9 @@ RUN\
   % $conf->{installer} = 'dnf';
 % }
 % if ($type eq 'oracle') {
- yum -y install oracle-release-el7 && yum-config-manager --enable ol7_oracle_instantclient &&\\
- yum -y install oracle-instantclient<%= $conf->{release} %>-basic oracle-instantclient<%= $conf->{release} %>-devel oracle-instantclient<%= $conf->{release} %>-sqlplus &&\\
+ yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
+ yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\
+ yum -y install oracle-instantclient-devel oracle-instantclient-sqlplus &&\\
  yum -y reinstall glibc-common &&\\
 % }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
