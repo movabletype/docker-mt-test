@@ -770,6 +770,9 @@ my %Conf = (
             rpm => 'oracle-instantclient-release-el8',
             enable => 'ol8_oracle_instantclient21',
         },
+        codeready => {
+            enable => 'ol8_codeready_builder',
+        },
         remi => {
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
@@ -791,6 +794,7 @@ my %Conf = (
                 perl-GD
             )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
+            codeready => [qw( giflib-devel )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],

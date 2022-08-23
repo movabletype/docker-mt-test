@@ -11,6 +11,9 @@ RUN microdnf -y  install\
  httpd mod_ssl vsftpd ftp memcached\
  &&\
   microdnf -y install dnf &&\
+    dnf -y --enablerepo=ol8_codeready_builder install\
+ giflib-devel\
+ && dnf clean --enablerepo=ol8_codeready_builder all &&\
  dnf -y install oracle-epel-release-el8 &&\
     dnf -y --enablerepo=ol8_developer_EPEL install\
  ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl gd-devel libwebp-devel perl-GD\
