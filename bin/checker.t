@@ -69,10 +69,7 @@ if ($gd_version >= 2.0101) {
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
 my %imager_supports = map {$_ => 1} Imager->read_types;
-SKIP: {
-    local $TODO = 'GIF may not be supported' if $image_name =~ /^(?:oracle8)$/;
-    ok $imager_supports{gif}, "$image_name: Imager supports GIF";
-}
+ok $imager_supports{gif}, "$image_name: Imager supports GIF";
 ok $imager_supports{png}, "$image_name: Imager supports PNG";
 ok $imager_supports{jpeg}, "$image_name: Imager supports JPEG";
 ok $imager_supports{bmp}, "$image_name: Imager supports BMP";
@@ -123,7 +120,7 @@ ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Mul
 ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
 SKIP: {
-    local $TODO = 'PHP-Dom is not supported yet' if $image_name =~ /^(?:amazonlinux2022|oracle8)$/;
+    local $TODO = 'PHP-Dom is not supported yet' if $image_name =~ /^(?:amazonlinux2022)$/;
     ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
 }
 ok $phpinfo =~ /GIF Read Support => enabled/, "$image_name: PHP supports GIF read";
@@ -147,7 +144,7 @@ if (-e $php_ini) {
 }
 
 SKIP: {
-    local $TODO = 'phpunit is not supported yet' if $image_name =~ /^(?:amazonlinux2022|oracle8)$/;
+    local $TODO = 'phpunit is not supported yet' if $image_name =~ /^(?:amazonlinux2022)$/;
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
     if ($php_version_number >= 7.3) {
