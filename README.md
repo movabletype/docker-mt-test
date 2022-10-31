@@ -10,10 +10,10 @@ Dockerfile to test MT.
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
 |centos6|centos:6|*5.10.1*|*5.5.38*|*5.1.73*|1.0.1e|2020-11|
-|jessie|debian:jessie|5.20.2|*5.6.40*|*5.5.62*|1.0.1t|2020-06 (LTS)|
 |buster|debian:buster|*5.28.1*|*7.3.31*|*MariaDB 10.3.34*|1.1.1n|2022-01|
-|fedora35|fedora:35|*5.34.1*|8.0.20|*8.0.28*|1.1.1o|-|
 |bullseye|debian:bullseye|*5.32.1*|*7.4.28*|*MariaDB 10.5.15*|1.1.1n|-|
+|fedora35|fedora:35|*5.34.1*|8.0.20|*8.0.28*|1.1.1o|-|
+|bookworm|debian:bookworm|*5.36.0*|8.1.7|*MariaDB 10.6.10*|3.0.5|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.30*|*5.7.38*|1.0.2k|-|
 |cloud7 (\*1)|centos:7|*5.28.2*|*8.0.21*|*5.7.38*|1.0.2k|-|
 
@@ -31,9 +31,10 @@ Dockerfile to test MT.
 |rockylinux|rockylinux:8.5|5.26.3|8.0.21|8.0.26|1.1.1k|-|
 |almalinux|almalinux:9.0|5.32.1|8.1.7|8.0.28|3.0.1|-|
 |trusty|ubuntu:trusty|5.18.2|5.5.9|5.5.62|1.0.1f|2019-04|
+|jessie|debian:jessie|5.20.2|*5.6.40*|*5.5.62*|1.0.1t|2020-06 (LTS)|
 |stretch|debian:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|5.7.38|1.1.1|2023-04|
-|sid|debian:sid|*5.34.0*|8.1.5|*MariaDB 10.6.8*|3.0.4|-|
+|sid|debian:sid|5.36.0|8.1.12|MariaDB 10.6.10|3.0.5|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.29|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*3)|amazonlinux:2022|5.32.1|7.4.19|MariaDB 10.5.13|1.1.1l|-|
 |oracle (\*2)|oraclelinux:7-slim|5.16.3|7.4.30|MariaDB 5.5.68|1.0.2k|-|
