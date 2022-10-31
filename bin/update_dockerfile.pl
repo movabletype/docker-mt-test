@@ -688,12 +688,9 @@ my %Conf = (
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
             server => [qw( httpd )], ## for mod_ssl
             db     => [qw( mariadb105-pam )],
-            php    => [qw( php-cli )],
+            php    => [qw( php-cli php-xml php-json )],
         },
         cpan => {
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
-            },
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },

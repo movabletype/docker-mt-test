@@ -2,13 +2,13 @@ FROM amazonlinux:2022
 
 WORKDIR /root
 
-RUN dnf -y install\
+RUN dnf -y  install\
  which hostname glibc-langpack-ja glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb105-pam mysql-devel mysql-server mysql\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php-cli php php-mysqlnd php-gd php-mbstring\
+ php-cli php-xml php-json php php-mysqlnd php-gd php-mbstring\
  httpd mod_ssl vsftpd memcached\
  &&\
  dnf -y update --skip-broken &&\
@@ -23,7 +23,7 @@ RUN dnf -y install\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
- JSON::XS Starman\
+ JSON::XS Starman Imager::File::WEBP\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

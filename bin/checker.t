@@ -119,16 +119,13 @@ my $phpinfo = `php -i`;
 ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "$image_name: PHP has mbstring";
 ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-SKIP: {
-    local $TODO = 'PHP-Dom is not supported yet' if $image_name =~ /^(?:amazonlinux2022)$/;
-    ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
-}
+ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
 ok $phpinfo =~ /GIF Read Support => enabled/, "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/, "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/, "$image_name: PHP supports PNG";
 SKIP: {
-    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|sid/;
+    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
 if ($image_name =~ /oracle/) {
@@ -144,7 +141,6 @@ if (-e $php_ini) {
 }
 
 SKIP: {
-    local $TODO = 'phpunit is not supported yet' if $image_name =~ /^(?:amazonlinux2022)$/;
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
     if ($php_version_number >= 7.3) {
