@@ -6,6 +6,7 @@ use warnings;
 use Parallel::ForkManager;
 use Getopt::Long qw/:config pass_through/;
 use Mojo::File qw/path/;
+use Mojo::JSON qw/decode_json/;
 
 GetOptions(
     'no_cache|no-cache' => \my $no_cache,
@@ -36,11 +37,14 @@ while (my ($alias, $name) = each %aliases) {
     push @{$aliases_rev{$name}}, $alias;
 }
 
+my %supported_platforms = map { $_ => 1 } qw(linux/amd64 linux/arm64/v8);
+
 my @targets = @ARGV ? @ARGV : glob "*";
 
 my $pm = Parallel::ForkManager->new($workers // 2);
 for my $name (@targets) {
-    next unless -f "$name/Dockerfile";
+    my $dockerfile = "$name/Dockerfile";
+    next unless -f $dockerfile;
     next if $errored_only && !-f "log/build_error_$name.log";
     say $name;
     my $pid = $pm->start and next;
@@ -48,7 +52,20 @@ for my $name (@targets) {
     for my $t (@{$aliases_rev{$name} || []}) {
         $tags .= " --tag movabletype/test:$t";
     }
-    system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+
+    my @platforms = qw(linux/amd64);
+    my $from = path($dockerfile)->slurp =~ m/^FROM\s+(.+)$/m ? $1 : undef;
+    my $manifest = $from && decode_json(join('', `docker manifest inspect $from`));
+    if ($manifest && $manifest->{manifests}) {
+        @platforms = grep {
+            $supported_platforms{$_}
+        } map {
+            $_->{platform}->{os} . '/' . $_->{platform}->{architecture} .
+                ($_->{platform}->{variant} ? '/' . $_->{platform}->{variant} : '')
+        } @{$manifest->{manifests}}
+    }
+
+    system("docker buildx build $name --push --platform @{[join(',', @platforms)]} $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
     my $log = path("log/build_$name.log")->slurp;
     if ($log =~ /Successfully built/) {
         if ($log =~ /No package (.+) available/) {
