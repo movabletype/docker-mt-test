@@ -901,13 +901,13 @@ RUN apt-get update &&\\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g\\
+ cpm install --show-build-log-on-failure -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install --show-build-log-on-failure -g\\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
- cpm install -g --test &&\\
+ cpm install --show-build-log-on-failure -g --test &&\\
  rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\\
@@ -1028,11 +1028,11 @@ RUN\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install --show-build-log-on-failure -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
- cpm install -g --test\\
+ cpm install --show-build-log-on-failure -g --test\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1041,7 +1041,7 @@ RUN\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps -v . &&\\
 % } else {
- cpm install -g --test &&\\
+ cpm install --show-build-log-on-failure -g --test &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
@@ -1102,7 +1102,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpm install --show-build-log-on-failure -g --cpanfile=t/cpanfile
 fi
 
 exec "$@"
@@ -1150,7 +1150,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpm install --show-build-log-on-failure -g --cpanfile=t/cpanfile
 fi
 
 exec "$@"
