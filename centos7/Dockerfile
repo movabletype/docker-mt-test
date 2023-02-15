@@ -26,15 +26,15 @@ RUN yum -y install\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
- cpm install -g --test\
+ cpm install --show-build-log-on-failure -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install --show-build-log-on-failure -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65 Crypt::Curve25519@0.05\
  JSON::XS Starman\
  TAP::Harness::Env\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test &&\
+ cpm install --show-build-log-on-failure -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
