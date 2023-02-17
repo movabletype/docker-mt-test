@@ -10,7 +10,7 @@ RUN apt-get update &&\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
- php8.1-mbstring php8.1-xml php8.1 php8.1-cli php8.1-mysql php8.1-gd php8.1-memcache\
+ php8.2-mbstring php8.2-xml php8.2 php8.2-cli php8.2-mysql php8.2-gd php8.2-memcache\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
@@ -23,7 +23,7 @@ RUN apt-get update &&\
  cpm install -g\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman Imager::File::WEBP\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\

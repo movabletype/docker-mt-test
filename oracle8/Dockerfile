@@ -2,6 +2,7 @@ FROM oraclelinux:8-slim
 
 WORKDIR /root
 
+
 RUN microdnf -y  install\
  which glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
@@ -38,7 +39,7 @@ RUN microdnf -y  install\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman\
  DBD::Oracle\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

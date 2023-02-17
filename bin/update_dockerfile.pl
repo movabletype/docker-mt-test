@@ -29,7 +29,7 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
+            broken  => [qw( Archive::Zip@1.65 )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -56,7 +56,7 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 Crypt::Curve25519@0.05 )],
+            broken  => [qw( Archive::Zip@1.65 )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -70,15 +70,15 @@ my %Conf = (
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
                 'libmysqlclient-dev' => '',
-                'php'                => 'php8.1',
-                'php-cli'            => 'php8.1-cli',
-                'php-mysqlnd'        => 'php8.1-mysql',
-                'php-gd'             => 'php8.1-gd',
-                'php-memcache'       => 'php8.1-memcache',
+                'php'                => 'php8.2',
+                'php-cli'            => 'php8.2-cli',
+                'php-mysqlnd'        => 'php8.2-mysql',
+                'php-gd'             => 'php8.2-gd',
+                'php-memcache'       => 'php8.2-memcache',
                 'phpunit'            => '',
             },
             db => [qw( libdbd-mysql-perl )],
-            php => [qw( php8.1-mbstring php8.1-xml )],
+            php => [qw( php8.2-mbstring php8.2-xml )],
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
@@ -139,7 +139,7 @@ my %Conf = (
         phpunit => 9,
     },
     jessie => {
-        from => 'debian:jessie-slim',
+        from => 'debian/eol:jessie-slim',
         base => 'debian',
         apt  => {
             _replace => {
@@ -220,6 +220,30 @@ my %Conf = (
         },
         phpunit => 4,
     },
+    fedora37 => {
+        from => 'fedora:37',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora36 => {
         from => 'fedora:36',
         base => 'centos',
@@ -235,8 +259,10 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
+        patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -257,8 +283,10 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
+        patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -338,7 +366,10 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
-            no_test => [qw( CryptX )],
+            no_test => [qw(
+                CryptX Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
+                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
+            )],
             broken => [qw( Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
@@ -472,11 +503,17 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             powertools => [qw/ giflib-devel /],
         },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+        },
+        patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
-        locale_def => 1
+        locale_def => 1,
     },
     almalinux => {
         from => 'almalinux:9.0',
@@ -520,8 +557,10 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
+        patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
@@ -846,6 +885,14 @@ for my $name (@targets) {
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spurt($dockerfile);
     path("$name/docker-entrypoint.sh")->spurt($entrypoint)->chmod(0755);
+    if ($conf->{patch}) {
+        require File::Copy::Recursive;
+        for my $target (@{$conf->{patch}}) {
+            path("$name/patch")->make_path;
+            File::Copy::Recursive::dircopy("patch/$target", "$name/patch/$target");
+        }
+        path("$name/patch/.gitignore")->spurt('*');
+    }
 }
 
 sub merge_conf {
@@ -945,6 +992,10 @@ FROM <%= $conf->{from} %>
 
 WORKDIR /root
 
+% if ($conf->{patch}) {
+COPY ./patch/ /root/patch/
+% }
+
 RUN\
 % if ($type =~ /^centos[68]$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
@@ -1022,8 +1073,14 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
-% if ($conf->{use_cpanm}) {
- curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% if ($conf->{use_cpanm} or $conf->{patch}) {
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% }
+% if ($conf->{patch}) {
+%   for my $patch (@{$conf->{patch}}) {
+      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cd /root &&\\
+%   }
+    rm -rf /root/patch &&\\
 % }
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
@@ -1124,7 +1181,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora3[256]|rockylinux|almalinux)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora3[0-9]|rockylinux|almalinux)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 

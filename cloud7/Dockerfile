@@ -2,6 +2,7 @@ FROM centos:7
 
 WORKDIR /root
 
+
 RUN yum -y  install\
  git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  vim nano\
@@ -32,7 +33,7 @@ RUN yum -y  install\
  ln -s /usr/bin/php80 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
- curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
@@ -40,7 +41,7 @@ RUN yum -y  install\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman\
  App::cpanminus TAP::Harness::Env\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
