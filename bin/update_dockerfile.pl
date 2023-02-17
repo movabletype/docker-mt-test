@@ -338,7 +338,10 @@ my %Conf = (
             php_version => 'php55',
         },
         cpan => {
-            no_test => [qw( CryptX )],
+            no_test => [qw(
+                CryptX Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
+                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
+            )],
             broken => [qw( Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
