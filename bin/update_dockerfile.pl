@@ -237,6 +237,7 @@ my %Conf = (
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
+        patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -259,6 +260,7 @@ my %Conf = (
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
+        patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -475,6 +477,7 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             powertools => [qw/ giflib-devel /],
         },
+        patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
@@ -525,6 +528,7 @@ my %Conf = (
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
+        patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
@@ -849,6 +853,14 @@ for my $name (@targets) {
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spurt($dockerfile);
     path("$name/docker-entrypoint.sh")->spurt($entrypoint)->chmod(0755);
+    if ($conf->{patch}) {
+        require File::Copy::Recursive;
+        for my $target (@{$conf->{patch}}) {
+            path("$name/patch")->make_path;
+            File::Copy::Recursive::dircopy("patch/$target", "$name/patch/$target");
+        }
+        path("$name/patch/.gitignore")->spurt('*');
+    }
 }
 
 sub merge_conf {
@@ -948,6 +960,10 @@ FROM <%= $conf->{from} %>
 
 WORKDIR /root
 
+% if ($conf->{patch}) {
+COPY ./patch/ /root/patch/
+% }
+
 RUN\
 % if ($type =~ /^centos[68]$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
@@ -1025,8 +1041,14 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
-% if ($conf->{use_cpanm}) {
- curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% if ($conf->{use_cpanm} or $conf->{patch}) {
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% }
+% if ($conf->{patch}) {
+%   for my $patch (@{$conf->{patch}}) {
+      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cd /root &&\\
+%   }
+    rm -rf /root/patch &&\\
 % }
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
