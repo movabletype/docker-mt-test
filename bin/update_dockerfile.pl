@@ -235,7 +235,8 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -258,7 +259,8 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -477,6 +479,11 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             powertools => [qw/ giflib-devel /],
         },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+        },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
@@ -526,7 +533,8 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            # https://github.com/kazuho/p5-test-mysqld/issues/38
+            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
         },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
