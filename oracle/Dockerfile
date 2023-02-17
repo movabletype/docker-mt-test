@@ -2,6 +2,7 @@ FROM oraclelinux:7-slim
 
 WORKDIR /root
 
+
 RUN yum -y  install\
  which git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
@@ -29,7 +30,7 @@ RUN yum -y  install\
  yum clean all && rm -rf /var/cache/yum &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
- curl -sKL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
@@ -37,7 +38,7 @@ RUN yum -y  install\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman\
  DBD::Oracle\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

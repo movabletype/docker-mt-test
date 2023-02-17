@@ -2,7 +2,8 @@ FROM fedora:23
 
 WORKDIR /root
 
-RUN dnf -y install\
+
+RUN dnf -y  install\
  hostname git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
@@ -21,7 +22,7 @@ RUN dnf -y install\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\

@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian/eol:jessie-slim
 
 WORKDIR /root
 
@@ -23,7 +23,7 @@ RUN apt-get update &&\
  cpm install -g\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65 Crypt::Curve25519@0.05\
+ Archive::Zip@1.65\
  JSON::XS Starman\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\

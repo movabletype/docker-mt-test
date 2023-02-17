@@ -1,7 +1,8 @@
-FROM fedora:32
+FROM fedora:37
 
 WORKDIR /root
 
+COPY ./patch/ /root/patch/
 
 RUN dnf -y  install\
  glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
@@ -18,10 +19,13 @@ RUN dnf -y  install\
  setcap -r /usr/libexec/mysqld &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
+      cd /root/patch/Test-mysqld-1.0013 && cpanm --installdeps . && cd /root &&\
+    rm -rf /root/patch &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install -g HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpm install -g --test\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
