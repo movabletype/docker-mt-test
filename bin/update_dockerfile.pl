@@ -139,7 +139,7 @@ my %Conf = (
         phpunit => 9,
     },
     jessie => {
-        from => 'debian:jessie-slim',
+        from => 'debian/eol:jessie-slim',
         base => 'debian',
         apt  => {
             _replace => {
