@@ -479,7 +479,7 @@ my %Conf = (
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
-        locale_def => 1
+        locale_def => 1,
     },
     almalinux => {
         from => 'almalinux:9.0',
