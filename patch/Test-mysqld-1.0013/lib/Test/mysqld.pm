@@ -9,7 +9,7 @@ use Cwd;
 use DBI;
 use File::Copy::Recursive qw(dircopy);
 use File::Temp qw(tempdir);
-use POSIX qw(SIGTERM WNOHANG);
+use POSIX qw(SIGTERM WNOHANG SIGKILL);
 use Time::HiRes qw(sleep);
 
 our $VERSION = '1.0013';
@@ -168,7 +168,12 @@ sub send_stop_signal {
 sub wait_for_stop {
     my $self = shift;
     local $?; # waitpid may change this value :/
-    while (waitpid($self->pid, 0) <= 0) {
+    my $ct = 0;
+    while (waitpid($self->pid, WNOHANG) <= 0) {
+        if ($ct++ > 50) {
+            $self->send_stop_signal(SIGKILL);
+        }
+        sleep 0.1;
     }
     $self->pid(undef);
     # might remain for example when sending SIGKILL

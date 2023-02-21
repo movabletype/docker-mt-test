@@ -1,4 +1,0 @@
-#!/usr/bin/perl
-
-use Module::Build::Tiny;
-Build();
