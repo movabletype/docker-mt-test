@@ -235,8 +235,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            # https://github.com/kazuho/p5-test-mysqld/issues/38
-            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -259,8 +258,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            # https://github.com/kazuho/p5-test-mysqld/issues/38
-            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -283,8 +281,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            # https://github.com/kazuho/p5-test-mysqld/issues/38
-            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -505,8 +502,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            # https://github.com/kazuho/p5-test-mysqld/issues/38
-            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
@@ -557,8 +553,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            # https://github.com/kazuho/p5-test-mysqld/issues/38
-            no_test => [qw( HTML::TreeBuilder::LibXML App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
