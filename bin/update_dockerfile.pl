@@ -1073,7 +1073,7 @@ RUN\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
-      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cd /root &&\\
+      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
