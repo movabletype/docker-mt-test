@@ -40,7 +40,7 @@ RUN microdnf -y  install\
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65\
- JSON::XS Starman\
+ JSON::XS Starman Plack::Middleware::ReverseProxy\
  DBD::Oracle\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
