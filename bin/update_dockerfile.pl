@@ -30,7 +30,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 )],
-            extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
+            extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
         },
@@ -57,7 +57,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken  => [qw( Archive::Zip@1.65 )],
-            extra   => [qw( JSON::XS Starman Imager::File::WEBP )],
+            extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
         },
