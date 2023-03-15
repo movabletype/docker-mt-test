@@ -86,6 +86,7 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
+        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -180,6 +181,7 @@ my %Conf = (
             enmod => [qw( php7.0 )],
         },
         phpunit => 6,
+        use_cpanm => 1,
     },
     bionic => {
         from => 'ubuntu:bionic',
@@ -220,6 +222,7 @@ my %Conf = (
             enmod => [qw( php5 )],
         },
         phpunit => 4,
+        use_cpanm => 1,
     },
     fedora37 => {
         from => 'fedora:37',
@@ -461,6 +464,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
+        use_cpanm => 1,
     },
     rockylinux => {
         from => 'rockylinux:8.5',
@@ -941,17 +945,34 @@ RUN apt-get update &&\\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+% if ($conf->{use_cpanm} or $conf->{patch}) {
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+% }
+% if ($conf->{patch}) {
+%   for my $patch (@{$conf->{patch}}) {
+      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
+%   }
+    rm -rf /root/patch &&\\
+% }
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
  cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g\\
+% if ($conf->{use_cpanm}) {
+ cpanm -v \\
+% } else {
+ cpm install -g --test\\
+% }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
- cpm install -g --test &&\\
- rm -rf cpanfile /root/.perl-cpm/
+% if ($conf->{use_cpanm}) {
+ cpanm -v \\
+% } else {
+ cpm install -g --test\\
+% }
+ && rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
