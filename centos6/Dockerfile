@@ -39,7 +39,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Archive::Zip@1.65\
- JSON::XS Starman\
+ JSON::XS Starman Plack::Middleware::ReverseProxy\
  App::cpanminus DBD::SQLite\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
