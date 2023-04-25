@@ -86,7 +86,6 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
-        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
