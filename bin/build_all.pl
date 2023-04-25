@@ -30,7 +30,7 @@ my %aliases = qw(
     php-7.4 fedora32
     php-8.0 fedora35
     php-8.1 fedora37
-    php-8.2 sid
+    php-8.2 bookworm
 );
 my %aliases_rev;
 while (my ($alias, $name) = each %aliases) {

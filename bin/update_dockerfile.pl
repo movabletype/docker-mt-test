@@ -86,7 +86,6 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
-        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -968,7 +967,7 @@ RUN apt-get update &&\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpanm}) {
- cpanm -v \\
+ cpanm -v --installdeps . \\
 % } else {
  cpm install -g --test\\
 % }
