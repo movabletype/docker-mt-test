@@ -36,7 +36,7 @@ Dockerfile to test MT.
 |stretch|debian:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|5.7.41|1.1.1|2023-04|
 |bookworm|debian:bookworm|*5.36.0*|*8.2.4*|*MariaDB 10.11.2*|3.0.8|-|
-|sid|debian:sid|5.36.0|8.2.4|MariaDB 10.11.2|3.0.8|-|
+|sid|debian:sid|5.36.0|8.2.5|MariaDB 10.11.2|3.0.8|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*4)|amazonlinux:2022|5.32.1|7.4.19|MariaDB 10.5.13|1.1.1l|-|
 |oracle (\*3)|oraclelinux:7-slim|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
