@@ -1,27 +1,27 @@
-FROM rockylinux:8.5
+FROM rockylinux:9.1
 
 WORKDIR /root
 
 COPY ./patch/ /root/patch/
 
-RUN dnf -y  install\
- glibc-langpack-en glibc-langpack-ja glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
- mysql-devel mysql-server mysql\
+RUN dnf -y --allowerasing install\
+ glibc-langpack-ja glibc-langpack-en glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ mysql-server mysql\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
+    dnf -y --enablerepo=crb install\
+ mysql-devel giflib-devel\
+ &&\
  dnf -y install epel-release &&\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
  &&\
-    dnf -y --enablerepo=powertools install\
- giflib-devel\
- &&\
- dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
+ dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm &&\
     dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.0 ;\
+    dnf -y module enable php:remi-8.1 ;\
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
  &&\
@@ -51,8 +51,6 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
 
 RUN set -ex &&\
-  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
-  localedef -f UTF-8 -i ja_JP ja_JP.UTF-8 &&\
   perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
     /etc/httpd/conf/httpd.conf &&\
