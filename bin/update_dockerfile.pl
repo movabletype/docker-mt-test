@@ -466,7 +466,7 @@ my %Conf = (
         use_cpanm => 1,
     },
     rockylinux => {
-        from => 'rockylinux:8.5',
+        from => 'rockylinux:9.1',
         base => 'centos',
         yum  => {
             _replace => {
@@ -485,24 +485,25 @@ my %Conf = (
                 'perl-GD' => '',
                 'giflib-devel' => '',
                 'icc-profiles-openicc' => '',
+                'mysql-devel' => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja glibc-locale-source )],
+            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source /],
         },
         epel => {
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:remi-8.0',
+                enable => 'php:remi-8.1',
             },
-            php_version => 'php80',
+            php_version => 'php81',
         },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            powertools => [qw/ giflib-devel /],
+            crb  => [qw( mysql-devel giflib-devel )],
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
@@ -513,7 +514,7 @@ my %Conf = (
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
-        locale_def => 1,
+        allow_erasing => 1,
     },
     almalinux => {
         from => 'almalinux:9.0',
