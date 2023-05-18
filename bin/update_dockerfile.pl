@@ -832,9 +832,9 @@ my %Conf = (
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:remi-8.1',
+                enable => 'php:remi-8.2',
             },
-            php_version => 'php81',
+            php_version => 'php82',
         },
         repo => {
             instantclient => [qw(
