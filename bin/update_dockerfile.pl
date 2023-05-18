@@ -832,9 +832,9 @@ my %Conf = (
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:remi-8.1',
+                enable => 'php:remi-8.2',
             },
-            php_version => 'php81',
+            php_version => 'php82',
         },
         repo => {
             instantclient => [qw(
@@ -1018,15 +1018,15 @@ RUN\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
+% if ($type =~ /^oracle[89]$/) {
+  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
+  % $conf->{installer} = 'dnf';
+% }
  <%= $conf->{installer} // 'yum' %> -y <% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
-% if ($type eq 'oracle8') {
-  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
-  % $conf->{installer} = 'dnf';
-% }
 % if ($type eq 'oracle') {
  yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
  yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\

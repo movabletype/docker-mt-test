@@ -3,7 +3,8 @@ FROM oraclelinux:8-slim
 WORKDIR /root
 
 
-RUN microdnf -y  install\
+RUN  microdnf -y install dnf &&\
+ dnf -y  install\
  which glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
@@ -11,7 +12,6 @@ RUN microdnf -y  install\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  httpd mod_ssl vsftpd ftp memcached\
  &&\
-  microdnf -y install dnf &&\
     dnf -y --enablerepo=ol8_codeready_builder install\
  giflib-devel\
  && dnf clean --enablerepo=ol8_codeready_builder all &&\
@@ -25,7 +25,7 @@ RUN microdnf -y  install\
  && dnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
     dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.1 ;\
+    dnf -y module enable php:remi-8.2 ;\
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8\
  &&\
