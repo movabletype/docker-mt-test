@@ -1018,15 +1018,15 @@ RUN\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
+% if ($type =~ /^oracle[89]$/) {
+  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
+  % $conf->{installer} = 'dnf';
+% }
  <%= $conf->{installer} // 'yum' %> -y <% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
-% if ($type eq 'oracle8') {
-  <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
-  % $conf->{installer} = 'dnf';
-% }
 % if ($type eq 'oracle') {
  yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
  yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\
