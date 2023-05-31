@@ -466,7 +466,7 @@ my %Conf = (
         use_cpanm => 1,
     },
     rockylinux => {
-        from => 'rockylinux:9.1',
+        from => 'rockylinux:9.2',
         base => 'centos',
         yum  => {
             _replace => {
