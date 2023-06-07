@@ -681,6 +681,7 @@ my %Conf = (
         use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
+        use_legacy_policies => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -1074,6 +1075,9 @@ RUN\
  <%= $conf->{installer} // 'yum' %> -y update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
+% if ($conf->{use_legacy_policies}) {
+  update-crypto-policies --set legacy &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
