@@ -648,6 +648,7 @@ my %Conf = (
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
+            addons  => [qw( Net::LibIDN )],
         },
         phpunit => 9,
         make => {
@@ -658,6 +659,10 @@ my %Conf = (
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
+            epel => [qw( libidn-devel )],
+        },
+        epel => {
+            rpm => 'epel-release',
         },
         remi => {
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
@@ -676,6 +681,7 @@ my %Conf = (
         use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
+        use_legacy_policies => 1,
     },
     amazonlinux => {
         from => 'amazonlinux:2',
@@ -1069,16 +1075,19 @@ RUN\
  <%= $conf->{installer} // 'yum' %> -y update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
+% if ($conf->{use_legacy_policies}) {
+  update-crypto-policies --set legacy &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
  curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{remi} && !$conf->{remi}{module}) {
@@ -1104,10 +1113,11 @@ RUN\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
 % if ($conf->{use_cpanm}) {
+ cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpanm -v \\
 % } else {
+ cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
