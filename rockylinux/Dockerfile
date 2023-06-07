@@ -5,7 +5,7 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y --allowerasing install\
- glibc-langpack-ja glibc-langpack-en glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ glibc-langpack-ja glibc-langpack-en glibc-locale-source libdb-devel git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-server mysql\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\

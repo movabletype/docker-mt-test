@@ -1,8 +1,6 @@
-FROM movabletype/test:buster
+FROM movabletype/test:cloud7
 
-RUN apt-get update &&\
- DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
- apt-get --no-install-recommends -y install\
+RUN dnf install -y \
   vsftpd ftp gettext &&\
  curl -kLO https://github.com/jedisct1/pure-ftpd/releases/download/1.0.49/pure-ftpd-1.0.49.tar.gz &&\
  tar xf pure-ftpd-1.0.49.tar.gz && cd pure-ftpd-1.0.49 &&\
