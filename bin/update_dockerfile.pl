@@ -648,6 +648,7 @@ my %Conf = (
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
+            addons  => [qw( Net::LibIDN )],
         },
         phpunit => 9,
         make => {
@@ -658,6 +659,10 @@ my %Conf = (
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
+            epel => [qw( libidn-devel )],
+        },
+        epel => {
+            rpm => 'epel-release',
         },
         remi => {
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
