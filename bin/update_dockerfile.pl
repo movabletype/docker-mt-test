@@ -1113,10 +1113,11 @@ RUN\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
 % if ($conf->{use_cpanm}) {
+ cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpanm -v \\
 % } else {
+ cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
