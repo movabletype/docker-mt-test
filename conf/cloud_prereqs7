@@ -1,11 +1,12 @@
 MSTROUT/YAML-0.84.tar.gz
 SMUELLER/ExtUtils-ParseXS-3.30.tar.gz
 TIMB/DBI-1.633.tar.gz
-CAPTTOFU/DBD-mysql-4.033.tar.gz
+DVEEDEN/DBD-mysql-4.050.tar.gz
 ADAMK/Crypt-DSA-1.17.tar.gz
 TODDR/IPC-Run-0.94.tar.gz
 CLEISHMAN/Cache-2.04.tar.gz
-LDS/GD-2.46.tar.gz
+RURBAN/GD-2.77.tar.gz
+#LDS/GD-2.46.tar.gz
 BINGOS/Archive-Tar-2.04.tar.gz
 TODDR/XML-Parser-2.41.tar.gz
 GAAS/Digest-SHA1-2.13.tar.gz
@@ -39,6 +40,7 @@ TOKUHIROM/HTTP-Headers-Fast-0.21.tar.gz
 DROLSKY/Devel-StackTrace-2.00.tar.gz
 MARKOV/MailTools-2.08.tar.gz
 MARKSTOS/CGI.pm-3.58.tar.gz
+MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz
 MIYAGAWA/CGI-Compile-0.15.tar.gz
 DAGOLDEN/File-pushd-1.009.tar.gz
 GAAS/MIME-Base64-3.15.tar.gz
@@ -46,7 +48,6 @@ RJBS/MIME-Lite-3.028.tar.gz
 DOY/Try-Tiny-0.22.tar.gz
 CORION/parent-0.234.tar.gz
 DMUEY/File-Copy-Recursive-0.38.tar.gz
-MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz
 GAAS/IO-String-1.08.tar.gz
 GAAS/HTTP-Message-6.06.tar.gz
 GAAS/URI-1.60.tar.gz
@@ -86,7 +87,7 @@ TADAM/Plack-Middleware-Access-0.4.tar.gz
 MANU/Net-IP-1.26.tar.gz
 MRSAM/Net-CIDR-0.17.tar.gz
 MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz
-ABH/Mozilla-CA-20180117.tar.gz
+ABH/Mozilla-CA-20211001.tar.gz
 JHI/BSD-Resource-1.2910.tar.gz
 RGARCIA/Linux-Pid-0.04.tar.gz
 FUJIWARA/Plack-Middleware-SetLocalEnv-0.02.tar.gz
@@ -99,3 +100,4 @@ KHW/Unicode-Normalize-1.26.tar.gz
 PHRED/Archive-Zip-1.68.tar.gz
 TODDR/IO-Tty-1.14.tar.gz
 JACOBY/Expect-1.35.tar.gz
+NIKOLAS/POSIX-AtFork-0.04.tar.gz

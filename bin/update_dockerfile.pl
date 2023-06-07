@@ -487,7 +487,7 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'mysql-devel' => '',
             },
-            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source /],
+            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source libdb-devel /],
         },
         epel => {
             rpm => 'epel-release',
@@ -622,13 +622,10 @@ my %Conf = (
         no_update => 1,
     },
     cloud7 => {
-        from => 'centos:7',
+        from => 'rockylinux:9.2',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => '',
-                'mysql-server' => '',
-                'mysql-devel'  => '',
                 'php' => '',
                 'php-cli' => '',
                 'php-mysqlnd' => '',
@@ -641,36 +638,41 @@ my %Conf = (
                 'ImageMagick-perl' => '',
                 'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
+                'icc-profiles-openicc' => '',
+                'giflib-devel' => '',
+                'mysql-devel' => '',
             },
+            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
+            libs => [qw/ ncurses-devel libdb-devel /],
         },
         cpan => {
-            missing => [qw( App::cpanminus TAP::Harness::Env )],
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for cloud7/updates is too old (0.3.0 as of this writing)
-            },
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
         make => {
-            perl => '5.28.2',
+            perl => '5.36.1',
             ImageMagick => '7.0.8-68',
             GraphicsMagick => '1.3.36',
         },
         repo => {
-            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php80-php php80-php-mbstring php80-php-mysqlnd php80-php-gd php80-php-pecl-memcache php80-php-xml )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            crb  => [qw( mysql-devel giflib-devel )],
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php80',
+            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            module => {
+                reset => 'php',
+                enable => 'php:remi-8.0',
+            },
             php_version => 'php80',
         },
-        'mysql57-community' => {
-            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
-            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
-        },
         cloud_prereqs => 'conf/cloud_prereqs7',
+        patch => ['Test-mysqld-1.0013'],
+        installer => 'dnf',
+        setcap => 1,
+        make_dummy_cert => '/usr/bin',
+        allow_erasing => 1,
         use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
@@ -1121,7 +1123,7 @@ RUN\
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
 # use cpanm to avoid strong caching of cpm
 %   for my $prereq (@cloud_prereqs) {
- cpanm -nf <%= $prereq %> &&\\
+ cpanm -nfv <%= $prereq %> &&\\
 %   }
 % }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

@@ -15,7 +15,7 @@ Dockerfile to test MT.
 |fedora35|fedora:35|*5.34.1*|8.0.26|*8.0.31*|1.1.1q|-|
 |fedora37|fedora:37|*5.36.0*|*8.1.16*|*8.0.32*|3.0.8|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.33*|*5.7.41*|1.0.2k|-|
-|cloud7 (\*1)|centos:7|*5.28.2*|*8.0.28*|*5.7.41*|1.0.2k|-|
+|cloud7 (\*1)|centos:7|*5.36.1*|*8.0.28*|*8.0.32*|3.0.7|-|
 |centos8 (\*2)|centos:8|5.26.3|*8.0.28*|8.0.26|1.1.1k|2021-12|
 |fedora32 (\*2)|fedora:32|*5.30.3*|7.4.19|8.0.24|1.1.1k|-|
 |jessie (\*2)|debian:jessie|5.20.2|*5.6.40*|*5.5.62*|1.0.1t|2020-06 (LTS)|
@@ -30,7 +30,7 @@ Dockerfile to test MT.
 |centos7|centos:7|5.16.3|*7.1.33*|*MariaDB 5.5.68*|1.0.2k|2024-06|
 |fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
 |fedora36|fedora:36|5.34.1|8.1.16|8.0.32|3.0.8|-|
-|rockylinux|rockylinux:9.1|5.32.1|8.1.19|8.0.32|3.0.7|-|
+|rockylinux|rockylinux:9.2|5.32.1|8.1.19|8.0.32|3.0.7|-|
 |almalinux|almalinux:9.0|5.32.1|8.1.16|8.0.30|3.0.1|-|
 |trusty|ubuntu:trusty|5.18.2|5.5.9|5.5.62|1.0.1f|2019-04|
 |stretch|debian:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
@@ -49,7 +49,7 @@ Dockerfile to test MT.
 
 |image name|base image|extra packages|
 |-|-|-|
-|addons|movabletype/test:buster|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
+|addons|movabletype/test:cloud7|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
 |chromedriver|fedora:32|chromium-driver 85.0.4183.121|
 |chromiumdriver|movabletype/test:buster|chromium-driver 87.0.4280.141-0.1~deb10u1|
 |openldap|centos:6|openldap 2.4.40|

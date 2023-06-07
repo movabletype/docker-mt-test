@@ -5,7 +5,7 @@ use version;
 
 my %prereqs = (
     'Archive::Tar' => '',
-    'Archive::Zip' => '<= 1.65?(cloud6|cloud7)',
+    'Archive::Zip' => '<= 1.65?(cloud6|cloud7|addons)',
     'DBD::mysql' => '4.000',
     'DBI' => '1.633',
     'GD' => 0,
