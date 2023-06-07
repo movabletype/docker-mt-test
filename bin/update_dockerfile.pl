@@ -1123,7 +1123,7 @@ RUN\
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
 # use cpanm to avoid strong caching of cpm
 %   for my $prereq (@cloud_prereqs) {
- cpanm -nf <%= $prereq %> &&\\
+ cpanm -nfv <%= $prereq %> &&\\
 %   }
 % }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
