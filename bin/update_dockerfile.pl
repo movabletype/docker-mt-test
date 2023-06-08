@@ -651,7 +651,7 @@ my %Conf = (
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
-            addons  => [qw( Net::LibIDN )],
+            addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
         },
         phpunit => 9,
         make => {
