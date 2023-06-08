@@ -162,9 +162,10 @@ my %Conf = (
             enmod => [qw( php5 )],
         },
         phpunit => 5,
+        use_archive => 1,
     },
     stretch => {
-        from => 'debian:stretch-slim',
+        from => 'debian/eol:stretch-slim',
         base => 'debian',
         apt  => {
             _replace => {
@@ -181,6 +182,7 @@ my %Conf = (
         },
         phpunit => 6,
         use_cpanm => 1,
+        use_archive => 1,
     },
     bionic => {
         from => 'ubuntu:bionic',
@@ -588,6 +590,7 @@ my %Conf = (
                 'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
+            libs => [qw( gd-devel )],
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
@@ -595,7 +598,7 @@ my %Conf = (
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            no_test => [qw( HTML::TreeBuilder::LibXML GD )],
         },
         phpunit => 9,
         make => {
@@ -648,7 +651,7 @@ my %Conf = (
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
-            addons  => [qw( Net::LibIDN )],
+            addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
         },
         phpunit => 9,
         make => {
@@ -941,7 +944,13 @@ FROM <%= $conf->{from} %>
 
 WORKDIR /root
 
-RUN apt-get update &&\\
+RUN \\
+% if ($conf->{use_archive}) {
+  sed -i -E 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
+  sed -i -E 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
+  sed -i -E 's/^.+\-updates.+//' /etc/apt/sources.list &&\\
+% }
+ apt-get update &&\\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
  apt-get --no-install-recommends -y install\\
 % for my $key (sort keys %{ $conf->{apt} }) {
@@ -953,9 +962,7 @@ RUN apt-get update &&\\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
-% if ($conf->{use_cpanm} or $conf->{patch}) {
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
-% }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
@@ -1188,7 +1195,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
@@ -1236,7 +1243,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"

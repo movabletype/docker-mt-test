@@ -4,7 +4,8 @@ CAPTTOFU/DBD-mysql-4.033.tar.gz
 ADAMK/Crypt-DSA-1.17.tar.gz
 TODDR/IPC-Run-0.94.tar.gz
 CLEISHMAN/Cache-2.04.tar.gz
-LDS/GD-2.46.tar.gz
+RURBAN/GD-2.77.tar.gz
+#LDS/GD-2.46.tar.gz
 BINGOS/Archive-Tar-2.04.tar.gz
 TODDR/XML-Parser-2.41.tar.gz
 GAAS/Digest-SHA1-2.13.tar.gz

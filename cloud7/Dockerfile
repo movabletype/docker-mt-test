@@ -49,7 +49,7 @@ RUN dnf -y --allowerasing install\
  mv cpm /usr/local/bin/ &&\
  cpanm -n HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
  cpanm -v \
- Net::LibIDN Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
+ Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
@@ -107,7 +107,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DM/DMUEY/File-Copy-Recursive-0.38.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/IO-String-1.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTTP-Message-6.06.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/URI-1.60.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/S/SI/SIMBABQUE/URI-5.19.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-1.11.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GR/GRANTM/XML-SAX-Base-1.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GR/GRANTM/XML-SAX-0.99.tar.gz &&\
@@ -143,7 +143,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TA/TADAM/Plack-Middleware-Access-0.4.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MANU/Net-IP-1.26.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MR/MRSAM/Net-CIDR-0.17.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/A/AB/ABH/Mozilla-CA-20211001.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/J/JH/JHI/BSD-Resource-1.2910.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/R/RG/RGARCIA/Linux-Pid-0.04.tar.gz &&\

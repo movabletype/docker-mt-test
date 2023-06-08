@@ -50,7 +50,8 @@ CORION/parent-0.234.tar.gz
 DMUEY/File-Copy-Recursive-0.38.tar.gz
 GAAS/IO-String-1.08.tar.gz
 GAAS/HTTP-Message-6.06.tar.gz
-GAAS/URI-1.60.tar.gz
+#GAAS/URI-1.60.tar.gz
+SIMBABQUE/URI-5.19.tar.gz
 PERIGRIN/XML-NamespaceSupport-1.11.tar.gz
 GRANTM/XML-SAX-Base-1.08.tar.gz
 GRANTM/XML-SAX-0.99.tar.gz
@@ -86,7 +87,8 @@ JWB/Proc-ProcessTable-0.51.tar.gz
 TADAM/Plack-Middleware-Access-0.4.tar.gz
 MANU/Net-IP-1.26.tar.gz
 MRSAM/Net-CIDR-0.17.tar.gz
-MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz
+#MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz
+MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz
 ABH/Mozilla-CA-20211001.tar.gz
 JHI/BSD-Resource-1.2910.tar.gz
 RGARCIA/Linux-Pid-0.04.tar.gz

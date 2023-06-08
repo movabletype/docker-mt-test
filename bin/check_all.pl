@@ -6,8 +6,11 @@ use warnings;
 use Getopt::Long;
 use Test::More;
 use Mojo::File qw/path/;
+use LWP::UserAgent;
 
 my @targets = @ARGV ? @ARGV : glob "*";
+
+LWP::UserAgent->new->mirror("https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile", "t/cpanfile");
 
 for my $name (@targets) {
     my $dockerfile = path("$name/Dockerfile");
