@@ -162,9 +162,10 @@ my %Conf = (
             enmod => [qw( php5 )],
         },
         phpunit => 5,
+        use_archive => 1,
     },
     stretch => {
-        from => 'debian:stretch-slim',
+        from => 'debian/eol:stretch-slim',
         base => 'debian',
         apt  => {
             _replace => {
@@ -181,6 +182,7 @@ my %Conf = (
         },
         phpunit => 6,
         use_cpanm => 1,
+        use_archive => 1,
     },
     bionic => {
         from => 'ubuntu:bionic',
@@ -941,7 +943,13 @@ FROM <%= $conf->{from} %>
 
 WORKDIR /root
 
-RUN apt-get update &&\\
+RUN \\
+% if ($conf->{use_archive}) {
+  sed -i -E 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
+  sed -i -E 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
+  sed -i -E 's/^.+\-updates.+//' /etc/apt/sources.list &&\\
+% }
+ apt-get update &&\\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
  apt-get --no-install-recommends -y install\\
 % for my $key (sort keys %{ $conf->{apt} }) {
