@@ -590,6 +590,7 @@ my %Conf = (
                 'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
             },
+            libs => [qw( gd-devel )],
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
@@ -597,7 +598,7 @@ my %Conf = (
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            no_test => [qw( HTML::TreeBuilder::LibXML GD )],
         },
         phpunit => 9,
         make => {
