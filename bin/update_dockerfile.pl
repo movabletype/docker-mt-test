@@ -962,9 +962,7 @@ RUN \\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
-% if ($conf->{use_cpanm} or $conf->{patch}) {
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
-% }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
@@ -1197,7 +1195,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
@@ -1245,7 +1243,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
