@@ -10,7 +10,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpm install -g --cpanfile=t/cpanfile
+    cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"

@@ -1,8 +1,11 @@
-FROM debian:stretch-slim
+FROM debian/eol:stretch-slim
 
 WORKDIR /root
 
-RUN apt-get update &&\
+RUN \
+  sed -i -E 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list &&\
+  sed -i -E 's/^.+\-updates.+//' /etc/apt/sources.list &&\
+ apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
@@ -16,18 +19,19 @@ RUN apt-get update &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  curl -skL https://phar.phpunit.de/phpunit-6.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g YAML::Syck@1.31 XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
- cpm install -g\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  Archive::Zip@1.65\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test &&\
- rm -rf cpanfile /root/.perl-cpm/
+ cpanm -v --installdeps . \
+ && rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\
