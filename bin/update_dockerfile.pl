@@ -875,6 +875,7 @@ my %Conf = (
         release => 19.6,
         locale_def => 1,
         no_update => 1,
+        use_cpanm => 1,
     },
 );
 
@@ -1108,9 +1109,7 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
-% if ($conf->{use_cpanm} or $conf->{patch}) {
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
-% }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
