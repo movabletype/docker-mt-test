@@ -4,6 +4,7 @@ WORKDIR /root
 
 RUN \
   sed -i -E 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list &&\
+  sed -i -E 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list &&\
   sed -i -E 's/^.+\-updates.+//' /etc/apt/sources.list &&\
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\

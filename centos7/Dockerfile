@@ -24,6 +24,7 @@ RUN yum -y  install\
  ln -s /usr/bin/php71 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-7.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
