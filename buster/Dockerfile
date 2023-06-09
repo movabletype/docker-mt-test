@@ -2,7 +2,8 @@ FROM debian:buster-slim
 
 WORKDIR /root
 
-RUN apt-get update &&\
+RUN \
+ apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
