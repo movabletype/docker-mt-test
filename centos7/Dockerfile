@@ -34,6 +34,7 @@ RUN yum -y  install\
  pQuery\
  Archive::Zip@1.65\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JavaScript::Minifier CSS::Minifier\
  TAP::Harness::Env\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
