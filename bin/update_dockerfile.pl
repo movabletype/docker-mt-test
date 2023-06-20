@@ -33,6 +33,7 @@ my %Conf = (
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
+            make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
         },
     },
     centos => {
@@ -60,6 +61,7 @@ my %Conf = (
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
+            make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
         },
     },
     sid => {
