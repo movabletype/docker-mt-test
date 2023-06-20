@@ -53,6 +53,7 @@ RUN dnf -y --allowerasing install\
  pQuery\
  Archive::Zip@1.65\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
+ JavaScript::Minifier CSS::Minifier\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
 # use cpanm to avoid strong caching of cpm

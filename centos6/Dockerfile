@@ -40,6 +40,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  pQuery\
  Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Archive::Zip@1.65\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JavaScript::Minifier CSS::Minifier\
  App::cpanminus DBD::SQLite\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\

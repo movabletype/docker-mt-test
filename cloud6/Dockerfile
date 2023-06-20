@@ -43,6 +43,7 @@ RUN yum -y  install\
  pQuery\
  Archive::Zip@1.65\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JavaScript::Minifier CSS::Minifier\
  App::cpanminus TAP::Harness::Env\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
