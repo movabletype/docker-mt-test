@@ -117,8 +117,8 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/N/NA/NANIS/Crypt-SSLeay-0.64.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/P/PM/PMQS/IO-Compress-2.086.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/Encode-Locale-1.03.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIKEM/Net-SSLeay-1.85.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/S/SU/SULLR/IO-Socket-SSL-2.058.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/C/CH/CHRISN/Net-SSLeay-1.92.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/S/SU/SULLR/IO-Socket-SSL-2.083.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GB/GBARR/Authen-SASL-2.15.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/S/SO/SOENKE/String-CRC32-1.4.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/H/HE/HELENA/SOAP-Transport-HTTP-Plack-0.03.tar.gz &&\

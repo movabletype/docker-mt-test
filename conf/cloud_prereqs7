@@ -6,7 +6,6 @@ ADAMK/Crypt-DSA-1.17.tar.gz
 TODDR/IPC-Run-0.94.tar.gz
 CLEISHMAN/Cache-2.04.tar.gz
 RURBAN/GD-2.77.tar.gz
-#LDS/GD-2.46.tar.gz
 BINGOS/Archive-Tar-2.04.tar.gz
 TODDR/XML-Parser-2.41.tar.gz
 GAAS/Digest-SHA1-2.13.tar.gz
@@ -50,7 +49,6 @@ CORION/parent-0.234.tar.gz
 DMUEY/File-Copy-Recursive-0.38.tar.gz
 GAAS/IO-String-1.08.tar.gz
 GAAS/HTTP-Message-6.06.tar.gz
-#GAAS/URI-1.60.tar.gz
 SIMBABQUE/URI-5.19.tar.gz
 PERIGRIN/XML-NamespaceSupport-1.11.tar.gz
 GRANTM/XML-SAX-Base-1.08.tar.gz
@@ -60,8 +58,8 @@ GAAS/HTML-Parser-3.71.tar.gz
 NANIS/Crypt-SSLeay-0.64.tar.gz
 PMQS/IO-Compress-2.086.tar.gz
 GAAS/Encode-Locale-1.03.tar.gz
-MIKEM/Net-SSLeay-1.85.tar.gz
-SULLR/IO-Socket-SSL-2.058.tar.gz
+CHRISN/Net-SSLeay-1.92.tar.gz
+SULLR/IO-Socket-SSL-2.083.tar.gz
 GBARR/Authen-SASL-2.15.tar.gz
 SOENKE/String-CRC32-1.4.tar.gz
 HELENA/SOAP-Transport-HTTP-Plack-0.03.tar.gz
