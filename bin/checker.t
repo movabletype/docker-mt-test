@@ -204,4 +204,8 @@ if ($image_name =~ /oracle/) {
     ok $sqlplus_version, "$image_name: sqlplus exists ($sqlplus_version)";
 }
 
+if (`which sendmail`) {
+    ok !system('sendmail', '-bd'), "start sendmail daemon" or diag $!;
+}
+
 done_testing;
