@@ -1160,7 +1160,8 @@ RUN set -ex &&\\
   perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
     my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \\
     $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
-    open my $fh, ">", $inifile; print $fh $ini'
+    open my $fh, ">", $inifile; print $fh $ini' &&\\
+  sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 % # cf https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html
 % if (exists $conf->{make_dummy_cert}) {
@@ -1230,8 +1231,6 @@ until mysqladmin ping -h localhost --silent; do
     sleep 1
 done
 % }
-
-sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 % if ($type eq 'centos6') {
 mysql -e "create database if not exists mt_test character set utf8;"

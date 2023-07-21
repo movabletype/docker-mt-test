@@ -60,7 +60,8 @@ RUN set -ex &&\
   perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
     my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \
     $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
-    open my $fh, ">", $inifile; print $fh $ini'
+    open my $fh, ">", $inifile; print $fh $ini' &&\
+  sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 RUN cd /usr/bin && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
   perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \
