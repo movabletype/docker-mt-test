@@ -227,6 +227,29 @@ my %Conf = (
         phpunit => 4,
         use_cpanm => 1,
     },
+    fedora39 => {
+        from => 'fedora:39',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora37 => {
         from => 'fedora:37',
         base => 'centos',
