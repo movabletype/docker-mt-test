@@ -23,7 +23,7 @@ RUN dnf -y  install\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test Archive::Zip@1.65 DBD::mysql@4.050 &&\
       cd /root/patch/Test-mysqld-1.0013 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
