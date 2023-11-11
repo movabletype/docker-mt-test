@@ -53,7 +53,7 @@ for my $name (@targets) {
     }
     system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
     my $log = path("log/build_$name.log")->slurp;
-    if ($log =~ m!(naming to docker.io/movabletype/test:$name done|Successfully built)!) {
+    if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built)!) {
         if ($log =~ /No package (.+) available/) {
             rename "log/build_$name.log" => "log/build_warn_$name.log";
         } else {
