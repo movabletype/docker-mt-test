@@ -15,6 +15,11 @@ RUN dnf -y  install\
  &&\
  dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+ mkdir src && cd src &&\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.40/GraphicsMagick-1.3.40.tar.gz &&\
+ tar xf GraphicsMagick-1.3.40.tar.gz && cd GraphicsMagick-1.3.40 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
