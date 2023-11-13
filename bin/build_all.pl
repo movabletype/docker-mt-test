@@ -23,6 +23,7 @@ my %aliases = qw(
     perl-5.32 bullseye
     perl-5.34 fedora35
     perl-5.36 fedora37
+    perl-5.38 fedora39
 
     php-5.5 centos6
     php-5.6 jessie
@@ -30,7 +31,7 @@ my %aliases = qw(
     php-7.4 fedora32
     php-8.0 fedora35
     php-8.1 fedora37
-    php-8.2 bookworm
+    php-8.2 fedora39
 );
 my %aliases_rev;
 while (my ($alias, $name) = each %aliases) {
@@ -52,7 +53,7 @@ for my $name (@targets) {
     }
     system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
     my $log = path("log/build_$name.log")->slurp;
-    if ($log =~ m!(naming to docker.io/movabletype/test:$name done|Successfully built)!) {
+    if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built)!) {
         if ($log =~ /No package (.+) available/) {
             rename "log/build_$name.log" => "log/build_warn_$name.log";
         } else {

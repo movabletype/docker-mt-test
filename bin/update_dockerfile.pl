@@ -27,9 +27,9 @@ my %Conf = (
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 )],
+            broken  => [qw( Archive::Zip@1.65 DBD::mysql@4.050 )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -55,9 +55,9 @@ my %Conf = (
         },
         cpan => {
             ## fragile tests, or broken by other modules (Atom, Pulp)
-            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver )],
+            no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 )],
+            broken  => [qw( Archive::Zip@1.65 DBD::mysql@4.050 )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -227,6 +227,29 @@ my %Conf = (
         phpunit => 4,
         use_cpanm => 1,
     },
+    fedora39 => {
+        from => 'fedora:39',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
+            no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora37 => {
         from => 'fedora:37',
         base => 'centos',
@@ -371,10 +394,15 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw(
-                CryptX Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
-                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
+                CryptX
             )],
-            broken => [qw( Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 )],
+            broken => [qw(
+                Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
+                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
+                Data::OptList@0.112 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
+                Pod::Coverage::TrustPod@0.100005
+                Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
+            )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
@@ -966,16 +994,17 @@ RUN \\
  mv phpunit /usr/local/bin/ &&\\
 % }
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
+ chmod +x cpm &&\\
+ mv cpm /usr/local/bin/ &&\\
+ cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
- curl -skL --compressed https://git.io/cpm > cpm &&\\
- chmod +x cpm &&\\
- mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
@@ -1112,20 +1141,25 @@ RUN\
  mv phpunit /usr/local/bin/ &&\\
 % }
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+ curl -skL --compressed https://git.io/cpm > cpm &&\\
+ chmod +x cpm &&\\
+ mv cpm /usr/local/bin/ &&\\
+% if ($conf->{use_cpanm}) {
+ cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpanm <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+% } else {
+ cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+% }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
- curl -skL --compressed https://git.io/cpm > cpm &&\\
- chmod +x cpm &&\\
- mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpanm}) {
- cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpanm -v \\
 % } else {
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {

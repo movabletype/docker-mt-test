@@ -42,16 +42,16 @@ RUN dnf -y --allowerasing install\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
-      cd /root/patch/Test-mysqld-1.0013 && cpanm --installdeps . && cpanm . && cd /root &&\
-    rm -rf /root/patch &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpanm -n HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Net::SSLeay@1.85 Selenium::Remote::Driver &&\
+ cpanm -n HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm Archive::Zip@1.65 DBD::mysql@4.050 &&\
+      cd /root/patch/Test-mysqld-1.0013 && cpanm --installdeps . && cpanm . && cd /root &&\
+    rm -rf /root/patch &&\
  cpanm -v \
  Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
- Archive::Zip@1.65\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

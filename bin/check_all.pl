@@ -25,16 +25,20 @@ for my $name (@targets) {
     if ($res) {
         my $log = path("log/check_$name.log")->slurp;
         $log = colorstrip($log);
-        my $parser = TAP::Parser->new({source => $log});
-        while (my $result = $parser->next) {
-            next unless $result->is_test;
-            if ($result->is_ok) {
-                $has_ok++;
-                $has_todo++ if $result->raw =~ /# TODO/;
-            } else {
-                next if $result->is_unplanned;
-                $has_fail++;
+        if ($log) {
+            my $parser = TAP::Parser->new({source => $log});
+            while (my $result = $parser->next) {
+                next unless $result->is_test;
+                if ($result->is_ok) {
+                    $has_ok++;
+                    $has_todo++ if $result->raw =~ /# TODO/;
+                } else {
+                    next if $result->is_unplanned;
+                    $has_fail++;
+                }
             }
+        } else {
+            $has_fail++;
         }
     }
     ok $has_ok, $name;
