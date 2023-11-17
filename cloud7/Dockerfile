@@ -10,6 +10,7 @@ RUN dnf -y --allowerasing install\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  ncurses-devel libdb-devel libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
     dnf -y --enablerepo=crb install\
@@ -41,6 +42,9 @@ RUN dnf -y --allowerasing install\
  setcap -r /usr/libexec/mysqld &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

@@ -7,6 +7,8 @@ use Data::Section::Simple qw/get_data_section/;
 use Mojo::Template;
 use Mojo::File qw/path/;
 
+my $ruby_version = '3.1.4';
+
 my %Conf = (
     debian => {
         apt => {
@@ -23,6 +25,7 @@ my %Conf = (
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
             libs   => [qw( libxml2-dev libgmp-dev libssl-dev )],
             php    => [qw( php php-cli php-mysqlnd php-gd php-memcache phpunit )],
+            ruby   => [qw( ruby ruby-dev )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -34,6 +37,9 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+        },
+        gem => {
+            fluentd => [qw(fluentd)],
         },
     },
     centos => {
@@ -51,6 +57,7 @@ my %Conf = (
             db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit )],
+            ruby   => [qw( ruby ruby-devel )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -63,6 +70,9 @@ my %Conf = (
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
         },
+        gem => {
+            fluentd => [qw(fluentd)],
+        },
     },
     sid => {
         from => 'debian:sid-slim',
@@ -71,7 +81,6 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'libmysqlclient-dev' => '',
                 'php'                => 'php8.2',
                 'php-cli'            => 'php8.2-cli',
                 'php-mysqlnd'        => 'php8.2-mysql',
@@ -88,6 +97,7 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
+        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -132,12 +142,17 @@ my %Conf = (
                 'mysql-client'       => 'mariadb-client',
                 'libmysqlclient-dev' => '',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-dev' => '',
             },
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
         apache => {
             enmod => [qw( php7.3 )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         phpunit => 9,
     },
@@ -152,6 +167,8 @@ my %Conf = (
                 'php-gd'       => 'php5-gd',
                 'php-memcache' => 'php5-memcache',
                 'libgd-dev'    => 'libgd2-xpm-dev',
+                'ruby' => '',
+                'ruby-dev' => '',
             },
         },
         cpan => {
@@ -163,6 +180,9 @@ my %Conf = (
         apache => {
             enmod => [qw( php5 )],
         },
+        make => {
+            ruby => '2.7.8',
+        },
         phpunit => 5,
         use_archive => 1,
     },
@@ -173,6 +193,8 @@ my %Conf = (
             _replace => {
                 'libgd-dev'          => 'libgd2-xpm-dev',
                 'libmysqlclient-dev' => 'libmysql++-dev',
+                'ruby' => '',
+                'ruby-dev' => '',
             },
             php => [qw/ php-mbstring /],
         },
@@ -181,6 +203,9 @@ my %Conf = (
         },
         apache => {
             enmod => [qw( php7.0 )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         phpunit => 6,
         use_cpanm => 1,
@@ -193,11 +218,16 @@ my %Conf = (
             _replace => {
                 'php-mysqlnd' => 'php-mysql',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-dev' => '',
             },
             php => [qw( php-mbstring php-xml )]
         },
         apache => {
             enmod => [qw( php7.2 )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         phpunit => 8,
     },
@@ -214,6 +244,8 @@ my %Conf = (
                 'libgd-dev'          => 'libgd2-xpm-dev',
                 'libmysqlclient-dev' => 'libmysql++-dev',
                 'libpng-dev'         => 'libpng12-dev',
+                'ruby' => '',
+                'ruby-dev' => '',
             },
         },
         cpan => {
@@ -223,6 +255,9 @@ my %Conf = (
         },
         apache => {
             enmod => [qw( php5 )],
+        },
+        make => {
+            ruby => '2.7.8',
         },
         phpunit => 4,
         use_cpanm => 1,
@@ -349,6 +384,8 @@ my %Conf = (
                 'mysql' => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base => [qw( hostname )],
         },
@@ -358,6 +395,9 @@ my %Conf = (
             },
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
@@ -381,6 +421,8 @@ my %Conf = (
                 'phpunit' => '',
                 'libwebp-devel' => '',
                 'icc-profiles-openicc' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
@@ -412,6 +454,9 @@ my %Conf = (
                 'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
             },
         },
+        make => {
+            ruby => '2.7.8',
+        },
         use_cpanm => 1,
         phpunit => 4,
     },
@@ -432,6 +477,8 @@ my %Conf = (
                 'php-gd' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
         },
         repo => {
@@ -451,6 +498,9 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos7/updates is too old (0.3.0 as of this writing)
             },
+        },
+        make => {
+            ruby => '2.7.8',
         },
         phpunit => 7,
         locale_def => 1,
@@ -475,6 +525,8 @@ my %Conf = (
                 'perl-GD' => '',
                 'giflib-devel' => '',
                 'icc-profiles-openicc' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base => [qw/ glibc-langpack-ja /],
         },
@@ -493,6 +545,9 @@ my %Conf = (
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             PowerTools => [qw/ giflib-devel /],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         installer               => 'dnf',
         setcap                  => 1,
@@ -623,6 +678,8 @@ my %Conf = (
                 'ImageMagick-perl' => '',
                 'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             libs => [qw( gd-devel )],
         },
@@ -639,6 +696,7 @@ my %Conf = (
             perl => '5.28.2',
             ImageMagick => '7.0.8-68',
             GraphicsMagick => '1.3.36',
+            ruby => '2.7.8',
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
@@ -736,6 +794,8 @@ my %Conf = (
                 'php-mbstring' => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base   => [qw( which hostname glibc-langpack-ja )],
             server => [qw( httpd )], ## for mod_ssl
@@ -755,6 +815,9 @@ my %Conf = (
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl GraphicsMagick )],
             'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
@@ -777,6 +840,9 @@ my %Conf = (
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
+        },
+        gem => {
+            fluentd => [qw(json)],
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -803,6 +869,8 @@ my %Conf = (
                 'GraphicsMagick' => '',
                 'GraphicsMagick-perl' => '',
                 'icc-profiles-openicc' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
@@ -829,6 +897,9 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
             },
+        },
+        make => {
+            ruby => '2.7.8',
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
@@ -858,6 +929,8 @@ my %Conf = (
                 'GraphicsMagick-perl' => '',
                 'icc-profiles-openicc' => '',
                 'perl-GD' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
@@ -902,6 +975,9 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
             },
+        },
+        make => {
+            ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
@@ -993,10 +1069,37 @@ RUN \\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
+% if ($conf->{make}) {
+ mkdir src && cd src &&\\
+%   if ($conf->{make}{perl}) {
+ curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
+ cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
+%   }
+%   if ($conf->{make}{GraphicsMagick}) {
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
+ tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+%   }
+%   if ($conf->{make}{ImageMagick}) {
+ curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
+ tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+%   }
+%   if ($conf->{make}{ruby}) {
+ curl -kLO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
+%   }
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
+% }
 % if ($conf->{phpunit}) {
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ gem install \\
+% for my $key (sort keys %{ $conf->{gem} }) {
+  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+% }
+ &&\\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
@@ -1137,6 +1240,10 @@ RUN\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
+%   if ($conf->{make}{ruby}) {
+ curl -kLO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
+%   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{remi} && !$conf->{remi}{module}) {
@@ -1150,6 +1257,11 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ gem install \\
+% for my $key (sort keys %{ $conf->{gem} }) {
+  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+% }
+ &&\\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
