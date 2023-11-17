@@ -841,6 +841,9 @@ my %Conf = (
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
             no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
+        gem => {
+            fluentd => [qw(json)],
+        },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         phpunit => 9,
