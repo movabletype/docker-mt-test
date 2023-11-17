@@ -23,6 +23,7 @@ my %Conf = (
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
             libs   => [qw( libxml2-dev libgmp-dev libssl-dev )],
             php    => [qw( php php-cli php-mysqlnd php-gd php-memcache phpunit )],
+            ruby   => [qw( ruby ruby-dev )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -34,6 +35,9 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+        },
+        gem => {
+            fluentd => [qw(fluentd)],
         },
     },
     centos => {
@@ -51,6 +55,7 @@ my %Conf = (
             db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit )],
+            ruby   => [qw( ruby ruby-devel )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -62,6 +67,9 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+        },
+        gem => {
+            fluentd => [qw(fluentd)],
         },
     },
     sid => {
