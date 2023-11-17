@@ -7,29 +7,33 @@ RUN \
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
- libdbd-mysql-perl mariadb-server mariadb-client\
+ libdbd-mysql-perl mariadb-server mariadb-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
  php8.2-mbstring php8.2-xml php8.2 php8.2-cli php8.2-mysql php8.2-gd php8.2-memcache\
+ ruby ruby-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test Archive::Zip@1.65 DBD::mysql@4.050 &&\
- cpm install -g --test\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  GD JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test\
+ cpanm -v --installdeps . \
  && rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\

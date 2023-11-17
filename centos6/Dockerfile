@@ -27,9 +27,16 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  && yum clean --enablerepo=remi,remi-php55 all &&\
  yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
+ mkdir src && cd src &&\
+ curl -kLO https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.gz && tar xf ruby-2.7.8.tar.gz &&\
+ cd ruby-2.7.8 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

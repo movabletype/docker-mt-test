@@ -11,6 +11,7 @@ RUN dnf -y  install\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
+ ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
  dnf -y update --skip-broken &&\
@@ -19,6 +20,9 @@ RUN dnf -y  install\
  setcap -r /usr/libexec/mysqld &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

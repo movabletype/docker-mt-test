@@ -30,8 +30,15 @@ RUN  microdnf -y install dnf &&\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8\
  &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+ mkdir src && cd src &&\
+ curl -kLO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.4.tar.gz && tar xf ruby-3.1.4.tar.gz &&\
+ cd ruby-3.1.4 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\

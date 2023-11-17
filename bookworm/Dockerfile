@@ -12,11 +12,15 @@ RUN \
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache\
+ ruby ruby-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ gem install \
+  fluentd\
+ &&\
  curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
