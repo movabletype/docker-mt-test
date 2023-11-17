@@ -170,6 +170,11 @@ if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
     note "InnoDB: file format $file_format, file per table $file_per_table, large prefix $large_prefix";
 }
 
+my ($ruby_version) = `ruby --version 2>&1` =~ /ruby (\d+\.\d+.\d+)/;
+ok $ruby_version, "$image_name: ruby exists ($ruby_version)";
+my ($fluentd_version) = `fluentd --version 2>&1` =~ /fluentd (\d+\.\d+\.\d+)/;
+ok $fluentd_version, "$image_name: fluentd exists ($fluentd_version)";
+
 my ($vsftpd_version) = `/usr/sbin/vsftpd -version 2>&1` =~ /version (\d+\.\d+\.\d+)/;
 if (!$vsftpd_version) {
     $vsftpd_version = -f '/usr/sbin/vsftpd' ? 'failed to capture; see output' : 0;
