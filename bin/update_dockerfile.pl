@@ -81,7 +81,6 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'libmysqlclient-dev' => '',
                 'php'                => 'php8.2',
                 'php-cli'            => 'php8.2-cli',
                 'php-mysqlnd'        => 'php8.2-mysql',
@@ -98,6 +97,7 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
+        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
