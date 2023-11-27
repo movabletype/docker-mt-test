@@ -28,7 +28,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.0 ;\
     dnf -y install\
- php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
+ php php-mbstring php-mysqlnd php-gd php-xml\
  &&\
  dnf -y update --skip-broken --nobest &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
