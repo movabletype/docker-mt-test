@@ -543,7 +543,9 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            # php-pecl-memcache seems broken
+            #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml )],
             PowerTools => [qw/ giflib-devel /],
         },
         make => {

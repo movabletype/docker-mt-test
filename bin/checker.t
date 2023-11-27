@@ -125,7 +125,7 @@ ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF c
 ok $phpinfo =~ /JPEG Support => enabled/, "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/, "$image_name: PHP supports PNG";
 SKIP: {
-    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle/;
+    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
 if ($image_name =~ /oracle/) {
