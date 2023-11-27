@@ -334,6 +334,7 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
+        use_cpanm => 1,
     },
     fedora35 => {
         from => 'fedora:35',
@@ -445,7 +446,7 @@ my %Conf = (
             broken => [qw(
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
-                Data::OptList@0.112 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
+                Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
                 Pod::Coverage::TrustPod@0.100005
                 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
             )],
@@ -543,7 +544,9 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            # php-pecl-memcache seems broken
+            #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml )],
             PowerTools => [qw/ giflib-devel /],
         },
         make => {
@@ -1171,6 +1174,10 @@ RUN\
 % if ($type =~ /^centos[68]$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
+% }
+% if ($type =~ /^fedora36$/) {
+  sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist=https:\/\/mirrorlist.fedoraproject.org/g" /etc/yum.repos.d/fedora-* &&\\
+  sed -i -e "s/^#baseurl=http:\/\/download.example\/pub\/fedora/baseurl=https:\/\/archives.fedoraproject.org\/pub\/archive\/fedora/g" /etc/yum.repos.d/fedora-* &&\\
 % }
 % if ($type =~ /^oracle[89]$/) {
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
