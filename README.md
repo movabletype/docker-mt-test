@@ -32,8 +32,8 @@ Dockerfile to test MT.
 |centos7|centos:7|5.16.3|*7.1.33*|*MariaDB 5.5.68*|1.0.2k|2024-06|
 |fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
 |fedora36|fedora:36|5.34.1|8.1.18|8.0.32|3.0.8|-|
-|rockylinux|rockylinux:9.2|5.32.1|8.1.25|8.0.32|3.0.7|-|
-|almalinux|almalinux:9.0|5.32.1|8.1.25|8.0.32|3.0.7|-|
+|rockylinux|rockylinux:9.2|5.32.1|8.1.26|8.0.32|3.0.7|-|
+|almalinux|almalinux:9.0|5.32.1|8.1.26|8.0.32|3.0.7|-|
 |trusty|ubuntu:trusty|5.18.2|5.5.9|5.5.62|1.0.1f|2019-04|
 |stretch|debian:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|5.7.42|1.1.1|2023-04|
@@ -41,7 +41,7 @@ Dockerfile to test MT.
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*4)|amazonlinux:2022|5.32.1|7.4.19|MariaDB 10.5.13|1.1.1l|-|
 |oracle (\*3)|oraclelinux:7-slim|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
-|oracle8 (\*3)|oraclelinux:8-slim|5.26.3|8.2.12|MariaDB 10.3.39|1.1.1k|-|
+|oracle8 (\*3)|oraclelinux:8-slim|5.26.3|8.2.13|MariaDB 10.3.39|1.1.1k|-|
 
 \*3 with DBD::Oracle 1.80 + OracleInstantClient 21.7
 \*4 This image currently lacks php-dom, thus phpunit
