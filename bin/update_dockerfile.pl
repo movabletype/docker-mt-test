@@ -1113,8 +1113,8 @@ RUN \\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
@@ -1124,7 +1124,7 @@ RUN \\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1133,7 +1133,7 @@ RUN \\
 % if ($conf->{use_cpanm}) {
  cpanm -v --installdeps . \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
  && rm -rf cpanfile /root/.perl-cpm/
 
@@ -1283,8 +1283,8 @@ RUN\
  cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpanm <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1295,7 +1295,7 @@ RUN\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1304,7 +1304,7 @@ RUN\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps -v . &&\\
 % } else {
- cpm install -g --test &&\\
+ cpm install -g --test --show-build-log-on-failure &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
