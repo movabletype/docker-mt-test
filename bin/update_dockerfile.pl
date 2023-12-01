@@ -95,7 +95,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            no_test => [qw( HTML::TreeBuilder::LibXML Imager )],
             extra   => [qw( GD )],
         },
         phpunit => 9,
