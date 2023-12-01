@@ -37,6 +37,7 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+            temp    => [qw( Fluent::Logger )],
         },
         gem => {
             fluentd => [qw(fluentd)],
@@ -69,6 +70,7 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+            temp    => [qw( Fluent::Logger )],
         },
         gem => {
             fluentd => [qw(fluentd)],
