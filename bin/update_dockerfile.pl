@@ -468,6 +468,7 @@ my %Conf = (
         from => 'centos:7',
         base => 'centos',
         yum  => {
+            libs => [qw( libstdc++-static )],
             _replace => {
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
@@ -687,7 +688,7 @@ my %Conf = (
                 'ruby' => '',
                 'ruby-devel' => '',
             },
-            libs => [qw( gd-devel )],
+            libs => [qw( gd-devel libstdc++-static )],
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
@@ -894,7 +895,7 @@ my %Conf = (
             rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel libstdc++-static )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
             epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
         },
