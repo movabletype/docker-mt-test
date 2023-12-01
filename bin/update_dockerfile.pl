@@ -360,6 +360,7 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
+        use_cpanm => 1,
     },
     fedora32 => {
         from => 'fedora:32',
