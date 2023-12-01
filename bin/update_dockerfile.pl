@@ -426,11 +426,12 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby' => '',
                 'ruby-devel' => '',
+                'clang' => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
             remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
@@ -876,6 +877,7 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby' => '',
                 'ruby-devel' => '',
+                'clang' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
@@ -894,7 +896,7 @@ my %Conf = (
         repo => {
             ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
