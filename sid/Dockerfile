@@ -6,7 +6,7 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
+ ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
  libdbd-mysql-perl mariadb-server mariadb-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
@@ -25,13 +25,14 @@ RUN \
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g HTML::TreeBuilder::LibXML XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpm install -g HTML::TreeBuilder::LibXML Imager XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  GD JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm -v --installdeps . \
  && rm -rf cpanfile /root/.perl-cpm/

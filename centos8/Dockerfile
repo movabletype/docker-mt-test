@@ -6,7 +6,7 @@ WORKDIR /root
 RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
  dnf -y  install\
- glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-devel mysql-server mysql\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
@@ -28,7 +28,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.0 ;\
     dnf -y install\
- php php-mbstring php-mysqlnd php-gd php-xml\
+ php php-mbstring php-mysqlnd php-gd php-xml php-json\
  &&\
  dnf -y update --skip-broken --nobest &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
@@ -54,6 +54,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  pQuery\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

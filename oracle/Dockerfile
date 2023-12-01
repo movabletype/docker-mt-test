@@ -4,7 +4,7 @@ WORKDIR /root
 
 
 RUN yum -y  install\
- which git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ which git make cmake gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs ImageMagick libpng-devel libjpeg-devel\
@@ -17,14 +17,14 @@ RUN yum -y  install\
  yum -y reinstall glibc-common &&\
  yum -y install oracle-epel-release-el7 &&\
     yum -y --enablerepo=ol7_developer_EPEL install\
- GraphicsMagick-perl-1.3.32-1.el7\
+ GraphicsMagick-perl-1.3.32-1.el7 clang\
  && yum clean --enablerepo=ol7_developer_EPEL all &&\
  yum -y install oracle-php-release-el7 &&\
     yum -y --enablerepo=ol7_developer_php74 install\
  php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c\
  && yum clean --enablerepo=ol7_developer_php74 all &&\
     yum -y --enablerepo=ol7_optional_latest install\
- gd-devel giflib-devel libwebp-devel\
+ gd-devel giflib-devel libwebp-devel libstdc++-static\
  &&\
  yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
@@ -49,6 +49,7 @@ RUN yum -y  install\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  DBD::Oracle\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
