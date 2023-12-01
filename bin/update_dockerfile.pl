@@ -13,7 +13,7 @@ my %Conf = (
     debian => {
         apt => {
             base => [qw(
-                ca-certificates netbase git make gcc curl ssh locales perl
+                ca-certificates netbase git make cmake gcc clang curl ssh locales perl
                 zip unzip bzip2 procps ssl-cert postfix
             )],
             images => [qw(
@@ -46,7 +46,7 @@ my %Conf = (
     centos => {
         yum => {
             base => [qw(
-                git make gcc curl perl perl-core
+                git make cmake gcc clang curl perl perl-core
                 tar zip unzip bzip2 which procps postfix
             )],
             images => [qw(
