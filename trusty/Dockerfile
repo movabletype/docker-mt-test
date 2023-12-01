@@ -6,7 +6,7 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make gcc curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
+ ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
  mysql-server mysql-client libmysql++-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd2-xpm-dev libpng12-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
@@ -35,6 +35,7 @@ RUN \
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm -v --installdeps . \
  && rm -rf cpanfile /root/.perl-cpm/

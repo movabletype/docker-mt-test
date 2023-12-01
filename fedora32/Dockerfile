@@ -4,7 +4,7 @@ WORKDIR /root
 
 
 RUN dnf -y  install\
- glibc-langpack-en glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
+ glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -33,6 +33,7 @@ RUN dnf -y  install\
  pQuery\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

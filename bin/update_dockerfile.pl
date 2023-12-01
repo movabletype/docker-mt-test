@@ -13,7 +13,7 @@ my %Conf = (
     debian => {
         apt => {
             base => [qw(
-                ca-certificates netbase git make gcc curl ssh locales perl
+                ca-certificates netbase git make cmake gcc clang curl ssh locales perl
                 zip unzip bzip2 procps ssl-cert postfix
             )],
             images => [qw(
@@ -37,6 +37,7 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+            temp    => [qw( Fluent::Logger )],
         },
         gem => {
             fluentd => [qw(fluentd)],
@@ -45,7 +46,7 @@ my %Conf = (
     centos => {
         yum => {
             base => [qw(
-                git make gcc curl perl perl-core
+                git make cmake gcc clang curl perl perl-core
                 tar zip unzip bzip2 which procps postfix
             )],
             images => [qw(
@@ -69,6 +70,7 @@ my %Conf = (
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
+            temp    => [qw( Fluent::Logger )],
         },
         gem => {
             fluentd => [qw(fluentd)],
@@ -93,7 +95,7 @@ my %Conf = (
         },
         cpan => {
             # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
+            no_test => [qw( HTML::TreeBuilder::LibXML Imager )],
             extra   => [qw( GD )],
         },
         phpunit => 9,
@@ -358,6 +360,7 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
+        use_cpanm => 1,
     },
     fedora32 => {
         from => 'fedora:32',
@@ -424,11 +427,12 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby' => '',
                 'ruby-devel' => '',
+                'clang' => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
         repo => {
-            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel )],
+            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
             remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
@@ -465,6 +469,7 @@ my %Conf = (
         from => 'centos:7',
         base => 'centos',
         yum  => {
+            libs => [qw( libstdc++-static )],
             _replace => {
                 'mysql' => 'mariadb',
                 'mysql-server' => 'mariadb-server',
@@ -546,7 +551,7 @@ my %Conf = (
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             # php-pecl-memcache seems broken
             #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml )],
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
             PowerTools => [qw/ giflib-devel /],
         },
         make => {
@@ -684,7 +689,7 @@ my %Conf = (
                 'ruby' => '',
                 'ruby-devel' => '',
             },
-            libs => [qw( gd-devel )],
+            libs => [qw( gd-devel libstdc++-static )],
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
@@ -874,6 +879,7 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby' => '',
                 'ruby-devel' => '',
+                'clang' => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
@@ -890,9 +896,9 @@ my %Conf = (
             rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel )],
+            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel libstdc++-static )],
             ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 )],
+            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
         },
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
@@ -1107,8 +1113,8 @@ RUN \\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
@@ -1118,7 +1124,7 @@ RUN \\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1127,7 +1133,7 @@ RUN \\
 % if ($conf->{use_cpanm}) {
  cpanm -v --installdeps . \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
  && rm -rf cpanfile /root/.perl-cpm/
 
@@ -1277,8 +1283,8 @@ RUN\
  cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpanm <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
- cpm install -g <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1289,7 +1295,7 @@ RUN\
 % if ($conf->{use_cpanm}) {
  cpanm -v \\
 % } else {
- cpm install -g --test\\
+ cpm install -g --test --show-build-log-on-failure\\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1298,7 +1304,7 @@ RUN\
 % if ($conf->{use_cpanm}) {
  cpanm --installdeps -v . &&\\
 % } else {
- cpm install -g --test &&\\
+ cpm install -g --test --show-build-log-on-failure &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});

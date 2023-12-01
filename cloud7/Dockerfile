@@ -5,7 +5,7 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y --allowerasing install\
- glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mysql-server mysql\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
@@ -58,6 +58,7 @@ RUN dnf -y --allowerasing install\
  pQuery\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
 # use cpanm to avoid strong caching of cpm

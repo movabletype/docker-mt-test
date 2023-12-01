@@ -4,11 +4,11 @@ WORKDIR /root
 
 
 RUN yum -y  install\
- git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
- libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ libstdc++-static libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
@@ -43,6 +43,7 @@ RUN yum -y  install\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  TAP::Harness::Env\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpm install -g --test &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

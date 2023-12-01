@@ -4,10 +4,10 @@ WORKDIR /root
 
 
 RUN yum -y  install\
- git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  vim nano\
  netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
- gd-devel libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ gd-devel libstdc++-static libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm &&\
@@ -50,6 +50,7 @@ RUN yum -y  install\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  App::cpanminus TAP::Harness::Env\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
 # use cpanm to avoid strong caching of cpm

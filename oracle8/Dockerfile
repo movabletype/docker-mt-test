@@ -5,7 +5,7 @@ WORKDIR /root
 
 RUN  microdnf -y install dnf &&\
  dnf -y  install\
- which glibc-locale-source git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ which glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
@@ -51,6 +51,7 @@ RUN  microdnf -y install dnf &&\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  DBD::Oracle\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws

@@ -4,7 +4,7 @@ WORKDIR /root
 
 
 RUN yum -y  install\
- which hostname glibc-langpack-ja git make gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ which hostname glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -41,6 +41,7 @@ RUN yum -y  install\
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
