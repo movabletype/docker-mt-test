@@ -140,6 +140,25 @@ if (-e $php_ini) {
     ok $ini =~ m!date\.timezone = "Asia/Tokyo"!, "$image_name: php.ini contains date.timezone = \"Asia/Tokyo\"";
 }
 
+# php cache stuff
+my @wanted_lines = (
+    'Configure Command',
+    'Opcode Caching',
+    'Optimization',
+    'SHM Cache',
+    'File Cache',
+    'JIT',
+    'Startup',
+    'Shared memory model',
+    'opcache.enable_cli',
+    'opcache.jit',
+);
+for my $line (@wanted_lines) {
+    my ($got) = $phpinfo =~ /^($line =>.+)$/m;
+    $got ||= "no $line";
+    diag "$image_name: php: $got";
+}
+
 SKIP: {
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
