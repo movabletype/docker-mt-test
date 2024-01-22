@@ -1260,7 +1260,7 @@ RUN\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpanm}) {
  cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
