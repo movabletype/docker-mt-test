@@ -440,6 +440,7 @@ my %Conf = (
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
                 Pod::Coverage::TrustPod@0.100005
                 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
+                Plack@1.0050
                 DBD::SQLite
                 SQL::Translator@1.63
                 HTML::TreeBuilder::LibXML@0.26
