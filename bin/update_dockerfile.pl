@@ -360,8 +360,13 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
