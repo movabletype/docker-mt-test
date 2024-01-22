@@ -9,6 +9,10 @@ use Mojo::File qw/path/;
 use LWP::UserAgent;
 use TAP::Parser;
 use Term::ANSIColor qw/colorstrip colored/;
+use Digest::MD5 qw/md5_hex/;
+use File::Copy qw/copy/;
+
+GetOptions( backup => \my $backup );
 
 my @targets = @ARGV ? @ARGV : glob "*";
 
@@ -19,6 +23,7 @@ for my $name (@targets) {
     my $dockerfile = path("$name/Dockerfile");
     next unless -f $dockerfile;
     next if (my $conf = $dockerfile->slurp) =~ /EXPOSE/;
+    my $id = substr(md5_hex($conf), 0, 7);
     diag "testing $name";
     my $res = eval { !system("docker run -it --rm -v\$PWD:/mt -w /mt movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
     my ($has_ok, $has_fail, $has_todo) = (0, 0, 0);
@@ -45,13 +50,16 @@ for my $name (@targets) {
     if ($has_fail or !$has_ok) {
         rename "log/check_$name.log" => "log/check_error_$name.log";
         unlink "log/check_warn_$name.log";
+        copy "log/check_error_$name.log" => "log/backup/check_error_$name.$id.log" if $backup;
     } else {
         if ($has_todo) {
             rename "log/check_$name.log" => "log/check_warn_$name.log";
             unlink "log/check_error_$name.log";
+            copy "log/check_warn_$name.log" => "log/backup/check_warn_$name.$id.log" if $backup;
         } else {
             unlink "log/check_error_$name.log";
             unlink "log/check_warn_$name.log";
+            copy "log/check_$name.log" => "log/backup/check_$name.$id.log" if $backup;
         }
     }
     $summary{$name} = [$has_ok, $has_fail, $has_todo];
