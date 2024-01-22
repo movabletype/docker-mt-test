@@ -18,7 +18,7 @@ my %summary;
 for my $name (@targets) {
     my $dockerfile = path("$name/Dockerfile");
     next unless -f $dockerfile;
-    next if $dockerfile->slurp =~ /EXPOSE/;
+    next if (my $conf = $dockerfile->slurp) =~ /EXPOSE/;
     diag "testing $name";
     my $res = eval { !system("docker run -it --rm -v\$PWD:/mt -w /mt movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
     my ($has_ok, $has_fail, $has_todo) = (0, 0, 0);
