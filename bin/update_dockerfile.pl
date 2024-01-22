@@ -32,7 +32,11 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 DBD::mysql@4.050 )],
+            ## HTML::TreeBuilder is here due to a (hopefully tentative) 02packages issue
+            broken  => [qw(
+                Archive::Zip@1.65 DBD::mysql@4.050
+                HTML::TreeBuilder::LibXML@0.27
+            )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -65,7 +69,11 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            broken  => [qw( Archive::Zip@1.65 DBD::mysql@4.050 )],
+            ## HTML::TreeBuilder is here due to a (hopefully tentative) 02packages issue
+            broken  => [qw(
+                Archive::Zip@1.65 DBD::mysql@4.050
+                HTML::TreeBuilder::LibXML@0.27
+            )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
@@ -94,8 +102,7 @@ my %Conf = (
             php => [qw( php8.2-mbstring php8.2-xml )],
         },
         cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML Imager )],
+            no_test => [qw( Imager )],
             extra   => [qw( GD )],
         },
         phpunit => 9,
@@ -113,10 +120,6 @@ my %Conf = (
             },
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
-        },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         phpunit => 9,
     },
@@ -254,6 +257,7 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for trusty is too old (0.4.0 as of this writing)
             },
+            broken => [qw( SQL::Translator@1.63 )],
         },
         apache => {
             enmod => [qw( php5 )],
@@ -276,10 +280,6 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
-        },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -304,10 +304,6 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
-        },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -326,10 +322,6 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
-        },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -351,10 +343,6 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
-        },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -372,8 +360,13 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
+                'ruby' => '',
+                'ruby-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        make => {
+            ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
@@ -397,8 +390,6 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for fedora23 is too old (0.4.4 as of this writing)
             },
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         make => {
             ruby => $ruby_version,
@@ -447,12 +438,17 @@ my %Conf = (
             no_test => [qw(
                 CryptX
             )],
+            # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
             broken => [qw(
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
                 Pod::Coverage::TrustPod@0.100005
                 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
+                Plack@1.0050
+                DBD::SQLite
+                SQL::Translator@1.63
+                HTML::TreeBuilder::LibXML@0.26
             )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
@@ -500,6 +496,7 @@ my %Conf = (
             php_version => 'php71',
         },
         cpan => {
+            broken => [qw( SQL::Translator@1.63 )],
             missing => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos7/updates is too old (0.3.0 as of this writing)
@@ -604,10 +601,6 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
-        },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
@@ -655,10 +648,6 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
-        },
         patch => ['Test-mysqld-1.0013'],
         installer               => 'dnf',
         setcap                  => 1,
@@ -696,8 +685,7 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML GD )],
+            no_test => [qw( GD )],
         },
         phpunit => 9,
         make => {
@@ -749,8 +737,6 @@ my %Conf = (
             libs => [qw/ ncurses-devel libdb-devel /],
         },
         cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
             addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
         },
         phpunit => 9,
@@ -812,7 +798,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
             },
-            no_test => [qw(XML::DOM)],
+            no_test => [qw( XML::DOM )],
+            broken => [qw( SQL::Translator@1.63 )],
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -844,10 +831,6 @@ my %Conf = (
             server => [qw( httpd )], ## for mod_ssl
             db     => [qw( mariadb105-pam )],
             php    => [qw( php-cli php-xml php-json )],
-        },
-        cpan => {
-            # https://github.com/tokuhirom/HTML-TreeBuilder-LibXML/pull/17
-            no_test => [qw( HTML::TreeBuilder::LibXML )],
         },
         gem => {
             fluentd => [qw(json)],
@@ -903,6 +886,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
             missing => [qw( DBD::Oracle )],
+            broken => [qw( SQL::Translator@1.63 )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
             },
@@ -1281,7 +1265,7 @@ RUN\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpanm}) {
  cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
