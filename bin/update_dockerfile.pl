@@ -257,6 +257,7 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for trusty is too old (0.4.0 as of this writing)
             },
+            broken => [qw( SQL::Translator@1.63 )],
         },
         apache => {
             enmod => [qw( php5 )],
@@ -439,6 +440,7 @@ my %Conf = (
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
                 Pod::Coverage::TrustPod@0.100005
                 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
+                SQL::Translator@1.63
                 HTML::TreeBuilder::LibXML@0.26
             )],
             missing => [qw( App::cpanminus DBD::SQLite )],
@@ -487,6 +489,7 @@ my %Conf = (
             php_version => 'php71',
         },
         cpan => {
+            broken => [qw( SQL::Translator@1.63 )],
             missing => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos7/updates is too old (0.3.0 as of this writing)
@@ -788,7 +791,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
             },
-            no_test => [qw(XML::DOM)],
+            no_test => [qw( XML::DOM )],
+            broken => [qw( SQL::Translator@1.63 )],
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -875,6 +879,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( DBI Test::NoWarnings )],
             missing => [qw( DBD::Oracle )],
+            broken => [qw( SQL::Translator@1.63 )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
             },
