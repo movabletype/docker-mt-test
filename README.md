@@ -53,6 +53,6 @@ Dockerfile to test MT.
 |addons|movabletype/test:buster|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
 |addons8|movabletype/test:cloud7|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
 |chromedriver|fedora:32|chromium-driver 85.0.4183.121|
-|chromiumdriver|movabletype/test:buster|chromium-driver 87.0.4280.141-0.1~deb10u1|
+|chromiumdriver|movabletype/test:bookworm|chromium-driver 119.0.6045.199-1~deb12u1|
 |openldap|centos:6|openldap 2.4.40|
 |playwright|movabletype/test:buster|node 16.16.0, playwright 1.23.2 |

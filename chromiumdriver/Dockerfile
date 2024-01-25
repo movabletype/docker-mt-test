@@ -1,4 +1,4 @@
-FROM movabletype/test:buster
+FROM movabletype/test:bookworm
 
 RUN apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
