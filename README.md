@@ -50,8 +50,8 @@ Dockerfile to test MT.
 
 |image name|base image|extra packages|
 |-|-|-|
-|addons|movabletype/test:buster|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
-|addons8|movabletype/test:cloud7|vsftpd 3.0.3-12, proftpd 1.3.7a, pureftpd 1.0.49|
+|addons|movabletype/test:buster|vsftpd 3.0.3-12, proftpd 1.3.8b, pureftpd 1.0.50|
+|addons8|movabletype/test:cloud7|vsftpd 3.0.3-12, proftpd 1.3.8b, pureftpd 1.0.50|
 |chromedriver|fedora:32|chromium-driver 85.0.4183.121|
 |chromiumdriver|movabletype/test:bookworm|chromium-driver 119.0.6045.199-1~deb12u1|
 |openldap|centos:6|openldap 2.4.40|
