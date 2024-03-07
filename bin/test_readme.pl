@@ -11,10 +11,16 @@ for my $line (split /\n/, path('README.md')->slurp) {
     $line =~ s/(^\|)|(\|$)//g;
     $line =~ s/\*//g;
     $line =~ s/MariaDB //;
-    my ($image, $base, $perl, $php, $mysql, $openssl) = split '\|', $line;
-    next if $image =~ /(?:addons|chromedriver|chromiumdriver|openldap|playwright)/;
-    $image =~ s/ .+$//;
-    $mapping{$image} = {perl => $perl, php => $php, mysql => $mysql, openssl => $openssl};
+    my ($image, $base, @rest) = split '\|', $line;
+    next if $image =~ /(?:openldap|chromedriver)/;
+    if ($image =~ /(?:addons|chromiumdriver|playwright)/) {
+        my @extra = split /,\s*/, $rest[0];
+        $mapping{$image} = { map {split / /, $_} @extra };
+    } else {
+        my ($perl, $php, $mysql, $openssl) = @rest;
+        $image =~ s/ .+$//;
+        $mapping{$image} = {perl => $perl, php => $php, mysql => $mysql, openssl => $openssl};
+    }
 }
 
 for my $image (sort keys %mapping) {
@@ -27,14 +33,12 @@ for my $image (sort keys %mapping) {
         }
     }
     my $log = path($logfile)->slurp;
-    my ($perl) = $log =~ /Perl exists \((.+?)\)/;
-    my ($php) = $log =~ /PHP exists \((.+?)\)/;
-    my ($mysql) = $log =~ /(?:MySQL|MariaDB) exists \((.+?)\)/;
-    my ($openssl) = $log =~ /openssl exists \((.+?)\)/;
-    is $perl => $mapping{$image}{perl} => "$image has correct Perl";
-    is $php => $mapping{$image}{php} => "$image has correct PHP";
-    is $mysql => $mapping{$image}{mysql} => "$image has correct MySQL";
-    is $openssl => $mapping{$image}{openssl} => "$image has correct OpenSSL";
+    for my $key (sort keys %{%mapping{$image}}) {
+        my $wanted = $key;
+        $wanted = '(?:mysql|mariadb)' if $key eq 'mysql';
+        my ($version) = $log =~ /$wanted exists \((.+?)\)/i;
+        is $version => $mapping{$image}{$key} => "$image has correct $key";
+    }
 }
 
 done_testing;
