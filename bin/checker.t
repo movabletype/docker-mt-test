@@ -194,12 +194,6 @@ ok $ruby_version, "$image_name: ruby exists ($ruby_version)";
 my ($fluentd_version) = `fluentd --version 2>&1` =~ /fluentd (\d+\.\d+\.\d+)/;
 ok $fluentd_version, "$image_name: fluentd exists ($fluentd_version)";
 
-my ($vsftpd_version) = `/usr/sbin/vsftpd -version 2>&1` =~ /version (\d+\.\d+\.\d+)/;
-if (!$vsftpd_version) {
-    $vsftpd_version = -f '/usr/sbin/vsftpd' ? 'failed to capture; see output' : 0;
-}
-ok $vsftpd_version, "$image_name: vsftpd exists ($vsftpd_version)";
-
 my ($openssl_version) = Net::SSLeay::SSLeay_version() =~ /OpenSSL (\d+\.\d+\.\d+\w*)/i;
 ok $openssl_version, "$image_name: openssl exists ($openssl_version)";
 
@@ -230,6 +224,27 @@ if ($image_name =~ /oracle/) {
 
 if (`which sendmail`) {
     ok !system('sendmail', '-bd'), "start sendmail daemon" or diag $!;
+}
+
+if ($image_name =~ /chrom/) {
+    my ($chromedriver_version) = `/usr/bin/chromedriver -v` =~ /ChromeDriver ([0-9.]+)/;
+    ok $chromedriver_version, "$image_name: chromedriver exists ($chromedriver_version)";
+}
+
+if ($image_name =~ /playwright/) {
+    my ($playwright_version) = `/usr/bin/playwright --version` =~ /Version ([0-9.]+)/;
+    ok $playwright_version, "$image_name: playwright exists ($playwright_version)";
+    my ($node_version) = `node -v` =~ /v([0-9.]+)/;
+    ok $node_version, "$image_name: node exists ($node_version)";
+}
+
+if ($image_name =~ /addons/) {
+    my ($vsftpd_version) = `/usr/sbin/vsftpd -v 0>&1 2>&1` =~ /version (\d+\.\d+\.\d+)/;
+    ok $vsftpd_version, "$image_name: vsftpd exists ($vsftpd_version)";
+    my ($proftpd_version) = `/usr/local/sbin/proftpd -v 2>&1` =~ /ProFTPD Version (\d+\..+)/;
+    ok $proftpd_version, "$image_name: proftpd exists ($proftpd_version)";
+    my ($pureftpd_version) = `/usr/local/sbin/pure-ftpd --help 2>&1` =~ /pure-ftpd v(\d+\.\d+.\d+)/;
+    ok $pureftpd_version, "$image_name: pureftpd exists ($pureftpd_version)";
 }
 
 done_testing;
