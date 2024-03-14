@@ -106,7 +106,6 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
-        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -213,7 +212,6 @@ my %Conf = (
             ruby => $ruby_version,
         },
         phpunit => 6,
-        use_cpanm => 1,
         use_archive => 1,
     },
     bionic => {
@@ -366,7 +364,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
-        use_cpanm => 1,
     },
     fedora35 => {
         from => 'fedora:35',
@@ -386,7 +383,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
-        use_cpanm => 1,
     },
     fedora32 => {
         from => 'fedora:32',
@@ -496,7 +492,6 @@ my %Conf = (
         make => {
             ruby => '2.7.8',
         },
-        use_cpanm => 1,
         phpunit => 4,
     },
     centos7 => {
@@ -597,7 +592,6 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
-        use_cpanm => 1,
     },
     rockylinux => {
         from => 'rockylinux:9.2',
@@ -746,7 +740,6 @@ my %Conf = (
             gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
-        use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
     },
@@ -805,7 +798,6 @@ my %Conf = (
         setcap => 1,
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
-        use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
         use_legacy_policies => 1,
@@ -854,7 +846,6 @@ my %Conf = (
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
-        use_cpanm => 1,
     },
     amazonlinux2022 => {
         from => 'amazonlinux:2022',
@@ -935,7 +926,6 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
         release => 19.6,
-        use_cpanm => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
@@ -1016,7 +1006,6 @@ my %Conf = (
         release => 19.6,
         locale_def => 1,
         no_update => 1,
-        use_cpanm => 1,
     },
 );
 
@@ -1143,19 +1132,19 @@ RUN \\
 %   }
     rm -rf /root/patch &&\\
 % }
-% if ($conf->{use_cpanm}) {
- cpanm -v \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
-% if ($conf->{use_cpanm}) {
- cpanm -v --installdeps . \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v --installdeps . \\
 % }
  && rm -rf cpanfile /root/.perl-cpm/
 
@@ -1301,12 +1290,12 @@ RUN\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
-% if ($conf->{use_cpanm}) {
- cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+% } else {
+ cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1314,19 +1303,19 @@ RUN\
 %   }
     rm -rf /root/patch &&\\
 % }
-% if ($conf->{use_cpanm}) {
- cpanm -v \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
-% if ($conf->{use_cpanm}) {
- cpanm --installdeps -v . &&\\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
+% } else {
+ cpanm --installdeps -v . &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
