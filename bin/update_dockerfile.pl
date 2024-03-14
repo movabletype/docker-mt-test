@@ -473,7 +473,9 @@ my %Conf = (
                 CryptX
             )],
             # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
+            # CGI's breakage seems tentative: https://github.com/leejo/CGI.pm/issues/263
             broken => [qw(
+                CGI@4.61
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
