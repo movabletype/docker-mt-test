@@ -27,11 +27,15 @@ my %aliases = qw(
 
     php-5.5 centos6
     php-5.6 jessie
+    php-7.0 stretch
+    php-7.1 centos7
+    php-7.2 bionic
     php-7.3 buster
     php-7.4 fedora32
     php-8.0 fedora35
     php-8.1 fedora37
     php-8.2 fedora39
+    php-8.3 fedora40
 );
 my %aliases_rev;
 while (my ($alias, $name) = each %aliases) {
