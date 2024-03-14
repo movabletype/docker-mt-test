@@ -24,6 +24,7 @@ RUN \
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -skL https://phar.phpunit.de/phpunit-5.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd\
  &&\
@@ -33,14 +34,14 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure YAML::Syck@1.31 XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
- cpm install -g --test --show-build-log-on-failure\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test --show-build-log-on-failure\
+ cpanm -v --installdeps . \
  && rm -rf cpanfile /root/.perl-cpm/
 
 RUN set -ex &&\
