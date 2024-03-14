@@ -209,6 +209,9 @@ ok $zip, "$image_name: has zip $zip";
 my ($unzip) = `unzip --version 2>&1` =~ /UnZip ([0-9.]+)/;
 ok $unzip, "$image_name: has unzip $unzip";
 
+my ($mailpit) = `mailpit version 2>&1` =~ /mailpit v([0-9.]+)/;
+ok $mailpit, "$image_name: has mailpit $mailpit";
+
 my (@icc_profiles) = (`find /usr/share | grep '.icc\$'` // '') =~ /(\w+\.icc)$/gm;
 my $srgb = grep /\bsRGB\.icc$/i, @icc_profiles;
 SKIP: {
