@@ -276,10 +276,14 @@ my %Conf = (
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
             },
-            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja )],
+            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
+        make => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.42',
+        },
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
@@ -296,10 +300,14 @@ my %Conf = (
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+            base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
+        make => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.42',
+        },
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
@@ -1099,7 +1107,7 @@ RUN \\
 %   }
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
- tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
+ tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
@@ -1258,8 +1266,8 @@ RUN\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
 %   }
 %   if ($conf->{make}{GraphicsMagick}) {
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
- tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
+ tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
