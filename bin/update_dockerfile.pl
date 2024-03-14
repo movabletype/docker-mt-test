@@ -1117,6 +1117,7 @@ RUN \\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
@@ -1283,6 +1284,7 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
