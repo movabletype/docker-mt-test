@@ -267,6 +267,25 @@ my %Conf = (
         },
         phpunit => 4,
     },
+    rawhide => {
+        from => 'fedora:rawhide',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora40 => {
         from => 'fedora:40',
         base => 'centos',
