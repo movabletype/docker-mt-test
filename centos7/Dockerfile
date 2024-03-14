@@ -28,6 +28,7 @@ RUN yum -y  install\
  ln -s /usr/bin/php71 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-7.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd\
  &&\
@@ -35,9 +36,9 @@ RUN yum -y  install\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g --show-build-log-on-failure XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpm install -g --test --show-build-log-on-failure SQL::Translator@1.63 Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
- cpm install -g --test --show-build-log-on-failure\
+ cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v SQL::Translator@1.63 Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
+ cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
@@ -45,7 +46,7 @@ RUN yum -y  install\
  TAP::Harness::Env\
  Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- cpm install -g --test --show-build-log-on-failure &&\
+ cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \

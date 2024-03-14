@@ -33,7 +33,7 @@ for my $image (sort keys %mapping) {
         }
     }
     my $log = path($logfile)->slurp;
-    for my $key (sort keys %{%mapping{$image}}) {
+    for my $key (sort keys %{$mapping{$image}}) {
         my $wanted = $key;
         $wanted = '(?:mysql|mariadb)' if $key eq 'mysql';
         my ($version) = $log =~ /$wanted exists \((.+?)\)/i;

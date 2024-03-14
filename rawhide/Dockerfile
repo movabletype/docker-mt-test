@@ -1,13 +1,11 @@
-FROM fedora:36
+FROM fedora:rawhide
 
 WORKDIR /root
 
 COPY ./patch/ /root/patch/
 
-RUN  sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist=https:\/\/mirrorlist.fedoraproject.org/g" /etc/yum.repos.d/fedora-* &&\
-  sed -i -e "s/^#baseurl=http:\/\/download.example\/pub\/fedora/baseurl=https:\/\/archives.fedoraproject.org\/pub\/archive\/fedora/g" /etc/yum.repos.d/fedora-* &&\
- dnf -y  install\
- glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
+RUN dnf -y --nogpgcheck  install\
+ distribution-gpg-keys glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -16,7 +14,7 @@ RUN  sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y update --skip-broken &&\
+ dnf -y --nogpgcheck update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
 # MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\

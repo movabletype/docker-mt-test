@@ -1,12 +1,10 @@
-FROM fedora:36
+FROM fedora:40
 
 WORKDIR /root
 
 COPY ./patch/ /root/patch/
 
-RUN  sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist=https:\/\/mirrorlist.fedoraproject.org/g" /etc/yum.repos.d/fedora-* &&\
-  sed -i -e "s/^#baseurl=http:\/\/download.example\/pub\/fedora/baseurl=https:\/\/archives.fedoraproject.org\/pub\/archive\/fedora/g" /etc/yum.repos.d/fedora-* &&\
- dnf -y  install\
+RUN dnf -y  install\
  glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\

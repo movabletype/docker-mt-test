@@ -35,6 +35,7 @@ RUN yum -y  install\
  ln -s /usr/bin/php74 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd\
  &&\

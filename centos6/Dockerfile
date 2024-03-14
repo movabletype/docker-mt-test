@@ -34,6 +34,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  ln -s /usr/bin/php55 /usr/local/bin/php &&\
  curl -skL https://phar.phpunit.de/phpunit-4.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd\
  &&\
@@ -42,7 +43,7 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -n CryptX XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
+ cpanm -v CGI@4.61 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\

@@ -106,7 +106,6 @@ my %Conf = (
             extra   => [qw( GD )],
         },
         phpunit => 9,
-        use_cpanm => 1,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -213,7 +212,6 @@ my %Conf = (
             ruby => $ruby_version,
         },
         phpunit => 6,
-        use_cpanm => 1,
         use_archive => 1,
     },
     bionic => {
@@ -266,7 +264,45 @@ my %Conf = (
             ruby => '2.7.8',
         },
         phpunit => 4,
-        use_cpanm => 1,
+    },
+    rawhide => {
+        from => 'fedora:rawhide',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+        nogpgcheck => 1,
+    },
+    fedora40 => {
+        from => 'fedora:40',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        patch => ['Test-mysqld-1.0013'],
+        make_dummy_cert => '/usr/bin',
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
     },
     fedora39 => {
         from => 'fedora:39',
@@ -328,7 +364,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
-        use_cpanm => 1,
     },
     fedora35 => {
         from => 'fedora:35',
@@ -348,7 +383,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
-        use_cpanm => 1,
     },
     fedora32 => {
         from => 'fedora:32',
@@ -439,7 +473,9 @@ my %Conf = (
                 CryptX
             )],
             # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
+            # CGI's breakage seems tentative: https://github.com/leejo/CGI.pm/issues/263
             broken => [qw(
+                CGI@4.61
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
@@ -458,7 +494,6 @@ my %Conf = (
         make => {
             ruby => '2.7.8',
         },
-        use_cpanm => 1,
         phpunit => 4,
     },
     centos7 => {
@@ -559,7 +594,6 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
-        use_cpanm => 1,
     },
     rockylinux => {
         from => 'rockylinux:9.2',
@@ -708,7 +742,6 @@ my %Conf = (
             gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
-        use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
     },
@@ -767,7 +800,6 @@ my %Conf = (
         setcap => 1,
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
-        use_cpanm => 1,
         locale_def => 1,
         no_update => 1,
         use_legacy_policies => 1,
@@ -816,7 +848,6 @@ my %Conf = (
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
-        use_cpanm => 1,
     },
     amazonlinux2022 => {
         from => 'amazonlinux:2022',
@@ -897,7 +928,6 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 9,
         release => 19.6,
-        use_cpanm => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
@@ -978,7 +1008,6 @@ my %Conf = (
         release => 19.6,
         locale_def => 1,
         no_update => 1,
-        use_cpanm => 1,
     },
 );
 
@@ -1069,7 +1098,7 @@ RUN \\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
 %   }
 %   if ($conf->{make}{GraphicsMagick}) {
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz &&\\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.gz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
@@ -1088,6 +1117,7 @@ RUN \\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
@@ -1105,19 +1135,19 @@ RUN \\
 %   }
     rm -rf /root/patch &&\\
 % }
-% if ($conf->{use_cpanm}) {
- cpanm -v \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
-% if ($conf->{use_cpanm}) {
- cpanm -v --installdeps . \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v --installdeps . \\
 % }
  && rm -rf cpanfile /root/.perl-cpm/
 
@@ -1173,7 +1203,7 @@ RUN\
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
   % $conf->{installer} = 'dnf';
 % }
- <%= $conf->{installer} // 'yum' %> -y <% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
@@ -1188,7 +1218,7 @@ RUN\
 %   if ($type eq 'amazonlinux') {
  amazon-linux-extras install <%= $repo %> &&\\
 %   } elsif ($conf->{$repo}{rpm}) {
- <%= $conf->{installer} // 'yum' %> -y install <%= $conf->{$repo}{rpm} %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install <%= $conf->{$repo}{rpm} %> &&\\
 %     if ($conf->{$repo}{gpg_key}) {
  rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
 %     }
@@ -1203,9 +1233,9 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y module reset <%= $conf->{$repo}{module}{reset} %> ;\\
     % }
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
-    <%= $conf->{installer} // 'yum' %> -y install\\
+    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install\\
 %   } else {
-    <%= $conf->{installer} // 'yum' %> -y --enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
 %   if ($conf->{$repo}{enable}) {
@@ -1215,7 +1245,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
@@ -1254,6 +1284,7 @@ RUN\
  curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
@@ -1263,12 +1294,12 @@ RUN\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
-% if ($conf->{use_cpanm}) {
- cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+% } else {
+ cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1276,19 +1307,19 @@ RUN\
 %   }
     rm -rf /root/patch &&\\
 % }
-% if ($conf->{use_cpanm}) {
- cpanm -v \\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
+% } else {
+ cpanm -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
-% if ($conf->{use_cpanm}) {
- cpanm --installdeps -v . &&\\
-% } else {
+% if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
+% } else {
+ cpanm --installdeps -v . &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
@@ -1372,8 +1403,8 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora3[0-9]|rockylinux|almalinux)$/) {  ## MySQL 8.*
-echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db}}) { %>community-<% } %>mysql-server.cnf
+% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
+echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
