@@ -250,4 +250,8 @@ if ($image_name =~ /addons/) {
     ok $pureftpd_version, "$image_name: pureftpd exists ($pureftpd_version)";
 }
 
+my @files = grep /[a-z]/, split /\n/, `ls -1a /root/`;
+note explain \@files;
+ok !grep(/\.(?:cpanm|perl-cpm)/, @files), "$image_name: no cpanm|cpm directories" or note explain \@files;
+
 done_testing;
