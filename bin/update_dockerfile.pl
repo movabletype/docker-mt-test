@@ -1157,7 +1157,7 @@ RUN \\
 % } else {
  cpanm -v --installdeps . \\
 % }
- && rm -rf cpanfile /root/.perl-cpm/
+ && rm -rf cpanfile /root/.perl-cpm/ /root/.cpanm /root/.qws
 
 RUN set -ex &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
