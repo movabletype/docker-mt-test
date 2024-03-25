@@ -25,7 +25,7 @@ for my $name (@targets) {
     next if (my $conf = $dockerfile->slurp) =~ /EXPOSE/;
     my $id = substr(md5_hex($conf), 0, 7);
     diag "testing $name";
-    my $res = eval { !system("docker run -it --rm -v\$PWD:/mt -w /mt movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
+    my $res = eval { !system("docker run -it --rm -v\$PWD:/mt -w /mt --entrypoint '' movabletype/test:$name bash -c 'TEST_IMAGE=$name prove -lv bin/checker.t' 2>&1 | tee log/check_$name.log"); };
     my ($has_ok, $has_fail, $has_todo) = (0, 0, 0);
     if ($res) {
         my $log = path("log/check_$name.log")->slurp;

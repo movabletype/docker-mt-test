@@ -14,7 +14,7 @@ Dockerfile to test MT.
 |bullseye|debian:bullseye|*5.32.1*|*7.4.33*|*MariaDB 10.5.23*|1.1.1w|-|
 |fedora35|fedora:35|*5.34.1*|8.0.26|8.0.31|1.1.1q|-|
 |fedora37|fedora:37|*5.36.1*|*8.1.25*|8.0.35|3.0.9|-|
-|fedora39|fedora:39|*5.38.2*|*8.2.16*|*8.0.35*|3.1.1|-|
+|fedora39|fedora:39|*5.38.2*|*8.2.17*|*8.0.35*|3.1.1|-|
 |fedora40|fedora:40|*5.38.2*|*8.3.3*|*8.0.36*|3.2.1|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.33*|*5.7.44*|1.0.2k|-|
 |cloud7 (\*1)|rockylinux:9.2|*5.36.1*|*8.0.30*|*8.0.36*|3.0.7|-|
@@ -55,6 +55,6 @@ Dockerfile to test MT.
 |addons|movabletype/test:buster|vsftpd 3.0.3, proftpd 1.3.8b, pureftpd 1.0.50|
 |addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.8b, pureftpd 1.0.50|
 |chromedriver|fedora:32|chromedriver 90.0.4430.93|
-|chromiumdriver|movabletype/test:bookworm|chromedriver 122.0.6261.111|
+|chromiumdriver|movabletype/test:bookworm|chromedriver 122.0.6261.128|
 |openldap|centos:6|openldap 2.4.40|
 |playwright|movabletype/test:buster|node 20.11.1, playwright 1.42.1|

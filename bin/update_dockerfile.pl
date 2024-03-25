@@ -323,7 +323,7 @@ my %Conf = (
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+            base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
@@ -1157,7 +1157,7 @@ RUN \\
 % } else {
  cpanm -v --installdeps . \\
 % }
- && rm -rf cpanfile /root/.perl-cpm/
+ && rm -rf cpanfile /root/.perl-cpm/ /root/.cpanm /root/.qws
 
 RUN set -ex &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
