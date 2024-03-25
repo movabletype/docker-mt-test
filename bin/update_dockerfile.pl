@@ -323,7 +323,7 @@ my %Conf = (
                 'procps'       => 'perl-Unix-Process',
                 'phpunit' => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
+            base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
         },
         patch => ['Test-mysqld-1.0013'],
         make_dummy_cert => '/usr/bin',
