@@ -85,7 +85,7 @@ my %Conf = (
         },
     },
     sid => {
-        from => 'debian:sid-slim',
+        from => 'debian:sid',
         base => 'debian',
         apt  => {
             _replace => {
