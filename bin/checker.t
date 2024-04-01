@@ -250,6 +250,16 @@ if ($image_name =~ /addons/) {
     ok $pureftpd_version, "$image_name: pureftpd exists ($pureftpd_version)";
 }
 
+# security
+
+my $has_xz = `which xz` =~ /\bxz$/;
+if ($has_xz) {
+    my ($xz_version) = `xz --version` =~ /xz.+?([0-9.]+)/;
+    ok $xz_version !~ /^5\.6\.[01]$/, "$image_name: xz is not affected by CVE-2024-3094 ($xz_version)";
+}
+
+# temporary files
+
 my @files = grep /[a-z]/, split /\n/, `ls -1a /root/`;
 note explain \@files;
 ok !grep(/\.(?:cpanm|perl-cpm)/, @files), "$image_name: no cpanm|cpm directories" or note explain \@files;
