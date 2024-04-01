@@ -21,6 +21,7 @@ for my $line (split /\n/, path('README.md')->slurp) {
         $image =~ s/ .+$//;
         $mapping{$image} = {perl => $perl, php => $php, mysql => $mysql, openssl => $openssl};
     }
+    $mapping{$image}{base} = $base;
 }
 
 for my $image (sort keys %mapping) {
@@ -34,6 +35,12 @@ for my $image (sort keys %mapping) {
     }
     my $log = path($logfile)->slurp;
     for my $key (sort keys %{$mapping{$image}}) {
+        if ($key eq 'base') {
+            my $dockerfile = path("$image/Dockerfile")->slurp;
+            my ($from) = $dockerfile =~ /FROM ([\w:\/]+)/;
+            is $from => $mapping{$image}{$key} => "$image has correct $key";
+            next;
+        }
         my $wanted = $key;
         $wanted = '(?:mysql|mariadb)' if $key eq 'mysql';
         my ($version) = $log =~ /$wanted exists \((.+?)\)/i;
