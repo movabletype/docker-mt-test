@@ -22,6 +22,10 @@ if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
-slapd -h "ldap:/// ldapi:/// ldaps:///" -F /etc/openldap/slapd.d
+if ss -l4 | grep ldap; then
+    true
+else
+    slapd -h "ldap:/// ldapi:/// ldaps:///" -F /etc/openldap/slapd.d
+fi
 
 exec "$@"
