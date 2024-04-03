@@ -3,7 +3,7 @@ FROM movabletype/test:cloud7
 ADD ./ldif/* /root/
 
 RUN dnf install -y \
-  vsftpd ftp gettext openldap-servers openldap-clients &&\
+  vsftpd ftp gettext openldap-servers openldap-clients iproute &&\
  mkdir /var/lib/ldap/jp/ &&\
  chown ldap:ldap /var/lib/ldap/jp/ &&\
  slapd -h "ldap:/// ldapi:/// ldaps:///" -u ldap -F /etc/openldap/slapd.d &&\
