@@ -35,7 +35,7 @@ RUN dnf -y  install\
  mv cpm /usr/local/bin/ &&\
  cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
-      cd /root/patch/Test-mysqld-1.0013 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Test-mysqld-1.0020 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
@@ -45,7 +45,7 @@ RUN dnf -y  install\
  Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --installdeps -v . &&\
- rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws /root/.local
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8
