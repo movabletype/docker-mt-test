@@ -15,7 +15,7 @@ Dockerfile to test MT.
 |fedora35|fedora:35|*5.34.1*|8.0.26|8.0.31|1.1.1q|-|
 |fedora37|fedora:37|*5.36.1*|*8.1.25*|8.0.35|3.0.9|-|
 |fedora39|fedora:39|*5.38.2*|*8.2.17*|*8.0.35*|3.1.1|-|
-|fedora40|fedora:40|*5.38.2*|*8.3.3*|*8.0.36*|3.2.1|-|
+|fedora40|fedora:40|*5.38.2*|*8.3.4*|*8.0.36*|3.2.1|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.33*|*5.7.44*|1.0.2k|-|
 |cloud7 (\*1)|rockylinux:9|*5.36.1*|*8.0.30*|*8.0.36*|3.0.7|-|
 |fedora32 (\*2)|fedora:32|*5.30.3*|7.4.19|8.0.24|1.1.1k|-|
@@ -32,14 +32,14 @@ Dockerfile to test MT.
 |centos8|centos:8|5.26.3|*8.0.30*|8.0.26|1.1.1k|2021-12|
 |fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
 |fedora36|fedora:36|5.34.1|8.1.18|8.0.32|3.0.8|-|
-|rawhide|fedora:rawhide|5.38.2|8.3.4|8.0.36|3.2.1|-|
+|rawhide|fedora:rawhide|5.38.2|8.3.5|8.0.36|3.2.1|-|
 |rockylinux|rockylinux:9|5.32.1|8.1.27|8.0.36|3.0.7|-|
 |almalinux|almalinux:9|5.32.1|8.1.27|8.0.36|3.0.7|-|
 |trusty|ubuntu:trusty|5.18.2|5.5.9|5.5.62|1.0.1f|2019-04|
 |stretch|debian/eol:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
 |bionic|ubuntu:bionic|5.26.1|7.2.24|5.7.42|1.1.1|2023-04|
 |bookworm|debian:bookworm|5.36.0|8.2.7|*MariaDB 10.11.6*|3.0.11|-|
-|sid|debian:sid|5.38.2|8.2.17|MariaDB 10.11.7|3.1.5|-|
+|sid|debian:sid|5.38.2|8.2.17|MariaDB 10.11.7|3.2.2|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*4)|amazonlinux:2022|5.32.1|7.4.19|MariaDB 10.5.13|1.1.1l|-|
 |oracle (\*3)|oraclelinux:7|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
