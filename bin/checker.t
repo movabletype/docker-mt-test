@@ -186,6 +186,9 @@ if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
     my ($file_format) = `mysql -Nse 'select \@\@innodb_file_format'` =~ /(\w+)/;
     my ($file_per_table) = `mysql -Nse 'select \@\@innodb_file_per_table'` =~ /(\w+)/;
     my ($large_prefix) = `mysql -Nse 'select \@\@innodb_large_prefix'` =~ /(\w+)/;
+    $file_format //= '';
+    $file_per_table //= '';
+    $large_prefix //= '';
     note "InnoDB: file format $file_format, file per table $file_per_table, large prefix $large_prefix";
 }
 
