@@ -12,7 +12,7 @@ use File::Temp qw(tempdir);
 use POSIX qw(SIGTERM WNOHANG SIGKILL);
 use Time::HiRes qw(sleep);
 
-our $VERSION = '1.0013';
+our $VERSION = '1.0020';
 
 our $errstr;
 our @SEARCH_PATHS = qw(/usr/local/mysql);
@@ -85,10 +85,17 @@ sub dsn {
         if $self->my_cnf->{port};
     if (defined $args{port}) {
         $args{host} ||= $self->my_cnf->{'bind-address'} || '127.0.0.1';
+        $args{user} ||= 'root';
+        if ($self->_use_unix_socket_auth) {
+            # TODO: Set a password,
+            # <https://mariadb.com/kb/en/authentication-from-mariadb-104/>
+        }
     } else {
         $args{mysql_socket} ||= $self->my_cnf->{socket};
+        if (!$self->_use_unix_socket_auth) {
+            $args{user} ||= 'root';
+        }
     }
-    $args{user} ||= 'root';
     $args{dbname} ||= 'test';
     return 'DBI:mysql:' . join(';', map { "$_=$args{$_}" } sort keys %args);
 }
@@ -133,8 +140,11 @@ sub wait_for_setup {
         unless defined $self->pid;
     my $pid = $self->pid;
     while (! -e $self->my_cnf->{'pid-file'}) {
-        if (waitpid($pid, WNOHANG) > 0) {
+        my $res = waitpid($pid, WNOHANG);
+        if ($res > 0) {
             die "*** failed to launch mysqld ***\n" . $self->read_log;
+        } elsif ($res < 0) {
+            die "*** failed to launch mysqld; waitpid returned $res (is SIGCHLD set to IGNORE?) ***\n" . $self->read_log;
         }
         sleep 0.1;
     }
@@ -168,6 +178,7 @@ sub send_stop_signal {
 sub wait_for_stop {
     my $self = shift;
     local $?; # waitpid may change this value :/
+
     my $ct = 0;
     while (waitpid($self->pid, WNOHANG) <= 0) {
         if ($ct++ > 50) {
@@ -229,9 +240,7 @@ sub setup {
 
         if ($self->use_mysqld_initialize) {
             $cmd .= ' --initialize-insecure';
-            if ($self->copy_data_from &&
-                !(!$self->_is_maria && ($self->_mysql_major_version || 0) >= 8)
-            ) {
+            if ( $self->copy_data_from && $self->_is_ignore_db_dir_required ) {
                 opendir my $dh, $self->copy_data_from
                     or die "failed to open copy_data_from directory @{[$self->copy_data_from]}: $!";
                 while (my $entry = readdir $dh) {
@@ -239,6 +248,9 @@ sub setup {
                     next if $entry =~ /^\.\.?$/;
                     $cmd .= " --ignore-db-dir=$entry"
                 }
+            }
+            if ( $self->_is_ignore_db_dir_required ) {
+                $cmd .= " --ignore-db-dir=tmp --ignore-db-dir=etc --ignore-db-dir=var";
             }
         } else {
             # `abs_path` resolves nested symlinks and returns canonical absolute path
@@ -321,15 +333,41 @@ sub _mysql_version {
     $self->{_mysql_version};
 }
 
+# https://mariadb.com/kb/en/authentication-plugin-unix-socket/
+sub _use_unix_socket_auth {
+    my $self = shift;
+    $self->{_use_unix_socket_auth} = 0;
+    if ($self->_is_maria && defined $self->_mysql_version()) {
+        my ($x, $y, $z) = $self->_mysql_version() =~ /([0-9]+)\.([0-9]+)\.([0-9]+)/;
+        $self->{_use_unix_socket_auth} = ($x > 10 || ($x == 10 && $y > 4)
+            || ($x == 10 && $y == 4 && $z >= 3));
+    }
+    $self->{_use_unix_socket_auth};
+}
+
 sub _mysql_major_version {
     my $ver = shift->_mysql_version;
     return unless $ver;
     +(split /\./, $ver)[0];
 }
 
+sub _is_ignore_db_dir_required {
+    my $self = shift;
+    if ( $self->_is_maria ) {
+        return 0;
+    }
+    if ( $self->_mysql_major_version >= 8 ) {
+        return 0;
+    }
+    if ( $self->_mysql_version =~ /^5\.7\./ ) {
+        return 1;
+    }
+    return 0;
+}
+
 sub _get_path_of {
     my $prog = shift;
-    my $path = `which $prog 2> /dev/null`;
+    my $path = `command -v $prog 2> /dev/null`;
     chomp $path
         if $path;
     $path = ''
@@ -434,7 +472,7 @@ Path to C<mysql_install_db> script or C<mysqld> program bundled to the mysqld di
 
 =head2 dsn
 
-Builds and returns dsn by using given parameters (if any).  Default username is 'root', and dbname is 'test'.
+Builds and returns dsn by using given parameters (if any).  Default username depends on a server version and a socket family.  Default dbname is 'test'.
 
 =head2 pid
 
