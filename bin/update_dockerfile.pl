@@ -754,7 +754,7 @@ my %Conf = (
         no_update => 1,
     },
     cloud7 => {
-        from => 'rockylinux:9.2',
+        from => 'rockylinux:9',
         base => 'centos',
         yum  => {
             _replace => {
@@ -773,9 +773,12 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'giflib-devel' => '',
                 'mysql-devel' => '',
+                'mysql-server' => '',
+                'mysql' => '',
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs => [qw/ ncurses-devel libdb-devel /],
+            db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel /],
         },
         cpan => {
             addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
@@ -784,11 +787,11 @@ my %Conf = (
         make => {
             perl => '5.36.1',
             ImageMagick => '7.0.8-68',
-            GraphicsMagick => '1.3.36',
+            GraphicsMagick => '1.3.40',
         },
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            crb  => [qw( mysql-devel giflib-devel )],
+            crb  => [qw( giflib-devel )],
             epel => [qw( libidn-devel )],
         },
         epel => {
@@ -798,14 +801,13 @@ my %Conf = (
             rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
                 reset => 'php',
-                enable => 'php:remi-8.0',
+                enable => 'php:remi-8.2',
             },
-            php_version => 'php80',
+            php_version => 'php82',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
         patch => ['Test-mysqld-1.0020'],
         installer => 'dnf',
-        setcap => 1,
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
         locale_def => 1,

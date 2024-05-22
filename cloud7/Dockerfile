@@ -1,4 +1,4 @@
-FROM rockylinux:9.2
+FROM rockylinux:9
 
 WORKDIR /root
 
@@ -6,7 +6,7 @@ COPY ./patch/ /root/patch/
 
 RUN dnf -y --allowerasing install\
  glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
- mysql-server mysql\
+ mariadb mariadb-server mariadb-connector-c-devel\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  ncurses-devel libdb-devel libxml2-devel expat-devel openssl-devel openssl gmp-devel\
@@ -14,7 +14,7 @@ RUN dnf -y --allowerasing install\
  mod_ssl vsftpd ftp memcached\
  &&\
     dnf -y --enablerepo=crb install\
- mysql-devel giflib-devel\
+ giflib-devel\
  &&\
  dnf -y install epel-release &&\
     dnf -y --enablerepo=epel install\
@@ -22,7 +22,7 @@ RUN dnf -y --allowerasing install\
  &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm &&\
     dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.0 ;\
+    dnf -y module enable php:remi-8.2 ;\
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
  &&\
@@ -31,15 +31,13 @@ RUN dnf -y --allowerasing install\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.36.1.tar.gz && tar xf perl-5.36.1.tar.gz &&\
  cd perl-5.36.1 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.36/GraphicsMagick-1.3.36.tar.xz &&\
- tar xf GraphicsMagick-1.3.36.tar.xz && cd GraphicsMagick-1.3.36 &&\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.40/GraphicsMagick-1.3.40.tar.xz &&\
+ tar xf GraphicsMagick-1.3.40.tar.xz && cd GraphicsMagick-1.3.40 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  curl -kLO https://imagemagick.org/archive/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
-# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
- setcap -r /usr/libexec/mysqld &&\
  curl -skL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
@@ -104,7 +102,6 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Devel-StackTrace-2.00.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MARKOV/MailTools-2.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MARKSTOS/CGI.pm-3.58.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Compile-0.15.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/File-pushd-1.009.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/MIME-Base64-3.15.tar.gz &&\
@@ -112,6 +109,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DO/DOY/Try-Tiny-0.22.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/C/CO/CORION/parent-0.234.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DM/DMUEY/File-Copy-Recursive-0.38.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/IO-String-1.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTTP-Message-6.06.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/S/SI/SIMBABQUE/URI-5.19.tar.gz &&\
@@ -131,7 +129,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/K/KA/KASEI/Class-Accessor-0.34.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GE/GETTY/HTTP-Body-1.15.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MK/MKUTTER/SOAP-Lite-0.714.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/A/AD/ADAMK/Class-Inspector-1.27.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Class-Inspector-1.36.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TO/TODDR/YAML-Syck-1.27.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/C/CW/CWEST/Net-SMTP-SSL-1.01.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/A/AW/AWESTHOLM/Net-SMTP-TLS-0.12.tar.gz &&\
@@ -151,7 +149,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MANU/Net-IP-1.26.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MR/MRSAM/Net-CIDR-0.17.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/A/AB/ABH/Mozilla-CA-20211001.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/L/LW/LWP/Mozilla-CA-20240313.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/J/JH/JHI/BSD-Resource-1.2910.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/R/RG/RGARCIA/Linux-Pid-0.04.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/F/FU/FUJIWARA/Plack-Middleware-SetLocalEnv-0.02.tar.gz &&\
@@ -165,6 +163,8 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TO/TODDR/IO-Tty-1.14.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/J/JA/JACOBY/Expect-1.35.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/N/NI/NIKOLAS/POSIX-AtFork-0.04.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/S/ST/STBEY/Date-Calc-6.4.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/E/ET/ETHER/Carp-Clan-6.08.tar.gz &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 
 ENV LANG=en_US.UTF-8 \
