@@ -39,7 +39,6 @@ TOKUHIROM/HTTP-Headers-Fast-0.21.tar.gz
 DROLSKY/Devel-StackTrace-2.00.tar.gz
 MARKOV/MailTools-2.08.tar.gz
 MARKSTOS/CGI.pm-3.58.tar.gz
-MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz
 MIYAGAWA/CGI-Compile-0.15.tar.gz
 DAGOLDEN/File-pushd-1.009.tar.gz
 GAAS/MIME-Base64-3.15.tar.gz
@@ -47,6 +46,7 @@ RJBS/MIME-Lite-3.028.tar.gz
 DOY/Try-Tiny-0.22.tar.gz
 CORION/parent-0.234.tar.gz
 DMUEY/File-Copy-Recursive-0.38.tar.gz
+MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz
 GAAS/IO-String-1.08.tar.gz
 GAAS/HTTP-Message-6.06.tar.gz
 SIMBABQUE/URI-5.19.tar.gz
@@ -66,7 +66,7 @@ HELENA/SOAP-Transport-HTTP-Plack-0.03.tar.gz
 KASEI/Class-Accessor-0.34.tar.gz
 GETTY/HTTP-Body-1.15.tar.gz
 MKUTTER/SOAP-Lite-0.714.tar.gz
-ADAMK/Class-Inspector-1.27.tar.gz
+PLICEASE/Class-Inspector-1.36.tar.gz
 TODDR/YAML-Syck-1.27.tar.gz
 CWEST/Net-SMTP-SSL-1.01.tar.gz
 AWESTHOLM/Net-SMTP-TLS-0.12.tar.gz
@@ -87,7 +87,7 @@ MANU/Net-IP-1.26.tar.gz
 MRSAM/Net-CIDR-0.17.tar.gz
 #MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz
 MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz
-ABH/Mozilla-CA-20211001.tar.gz
+LWP/Mozilla-CA-20240313.tar.gz
 JHI/BSD-Resource-1.2910.tar.gz
 RGARCIA/Linux-Pid-0.04.tar.gz
 FUJIWARA/Plack-Middleware-SetLocalEnv-0.02.tar.gz
@@ -101,3 +101,5 @@ PHRED/Archive-Zip-1.68.tar.gz
 TODDR/IO-Tty-1.14.tar.gz
 JACOBY/Expect-1.35.tar.gz
 NIKOLAS/POSIX-AtFork-0.04.tar.gz
+STBEY/Date-Calc-6.4.tar.gz
+ETHER/Carp-Clan-6.08.tar.gz
