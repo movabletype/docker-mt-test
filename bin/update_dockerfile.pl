@@ -787,7 +787,7 @@ my %Conf = (
         make => {
             perl => '5.36.1',
             ImageMagick => '7.0.8-68',
-            GraphicsMagick => '1.3.36',
+            GraphicsMagick => '1.3.40',
         },
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
