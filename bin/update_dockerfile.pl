@@ -808,7 +808,6 @@ my %Conf = (
         cloud_prereqs => 'conf/cloud_prereqs7',
         patch => ['Test-mysqld-1.0020'],
         installer => 'dnf',
-        setcap => 1,
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
         locale_def => 1,
