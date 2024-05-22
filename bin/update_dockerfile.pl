@@ -773,9 +773,12 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'giflib-devel' => '',
                 'mysql-devel' => '',
+                'mysql-server' => '',
+                'mysql' => '',
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs => [qw/ ncurses-devel libdb-devel /],
+            db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel /],
         },
         cpan => {
             addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
@@ -788,7 +791,7 @@ my %Conf = (
         },
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            crb  => [qw( mysql-devel giflib-devel )],
+            crb  => [qw( giflib-devel )],
             epel => [qw( libidn-devel )],
         },
         epel => {
