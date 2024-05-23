@@ -6,7 +6,7 @@ COPY ./patch/ /root/patch/
 
 RUN dnf -y --allowerasing install\
  glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
- mariadb mariadb-server mariadb-connector-c-devel\
+ mariadb mariadb-server mariadb-connector-c-devel mariadb-pam\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  ncurses-devel libdb-devel libxml2-devel expat-devel openssl-devel openssl gmp-devel\
