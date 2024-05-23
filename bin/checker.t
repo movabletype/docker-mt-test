@@ -22,6 +22,24 @@ my $image_name = $ENV{TEST_IMAGE};
 
 diag "\nChecking $image_name";
 
+# temporary files
+
+my @files = grep /[a-z]/, split /\n/, `ls -1a /root/`;
+note explain \@files;
+ok !grep(/\.(?:cpanm|perl-cpm)/, @files), "$image_name: no cpanm|cpm directories" or note explain \@files;
+
+my $entrypoint_is_executed;
+if (-e '/docker-entrypoint.sh' && $image_name !~ /chromedriver/) {
+    my $entrypoint_sh = do { open my $fh, '<', '/docker-entrypoint.sh'; local $/; <$fh> };
+    if ($entrypoint_sh =~ /mysql/ && $image_name !~ /(?:fedora23)/) {
+        my $entrypoint = `/docker-entrypoint.sh`;
+        note $entrypoint;
+        $entrypoint_is_executed = 1;
+    } else {
+        note $entrypoint_sh;
+    }
+}
+
 for my $module (sort keys %prereqs) {
     my $optional = $module =~ s/\?$//;
     my $required = $prereqs{$module};
@@ -181,8 +199,11 @@ SKIP: {
 my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
 my $mysql = $is_maria ? "MariaDB" : "MySQL";
 ok $mysql_version, "$image_name: $mysql exists ($mysql_version)";
-my $sql_mode = `mysql -Nse 'select \@\@sql_mode'`;
+my $sql_mode = `mysql -Nse 'select \@\@sql_mode' 2>&1`;
 note "SQL mode: $sql_mode";
+if ($sql_mode =~ /Can't connect to local MySQL/) {
+    fail "$image_name: failed to connect to local mysql" if $entrypoint_is_executed;
+}
 if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
     my ($file_format) = `mysql -Nse 'select \@\@innodb_file_format'` =~ /(\w+)/;
     my ($file_per_table) = `mysql -Nse 'select \@\@innodb_file_per_table'` =~ /(\w+)/;
@@ -261,11 +282,5 @@ if ($has_xz) {
     my ($xz_version) = `xz --version` =~ /xz.+?([0-9.]+)/;
     ok $xz_version !~ /^5\.6\.[01]$/, "$image_name: xz is not affected by CVE-2024-3094 ($xz_version)";
 }
-
-# temporary files
-
-my @files = grep /[a-z]/, split /\n/, `ls -1a /root/`;
-note explain \@files;
-ok !grep(/\.(?:cpanm|perl-cpm)/, @files), "$image_name: no cpanm|cpm directories" or note explain \@files;
 
 done_testing;
