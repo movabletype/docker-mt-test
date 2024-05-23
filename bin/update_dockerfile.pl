@@ -778,7 +778,7 @@ my %Conf = (
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs => [qw/ ncurses-devel libdb-devel /],
-            db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel /],
+            db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel mariadb-pam /],
         },
         cpan => {
             addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
@@ -1413,11 +1413,22 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud[67]|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:cloud6|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
+sleep 1
+until mysqladmin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
+% } elsif ($type =~ /^(?:cloud7)$/) {  ## MariaDB 10.*
+echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mariadb-server.cnf
+mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
+
+bash -c "cd /usr; mysqld_safe --datadir=/var/lib/mysql --user=mysql &"
 
 sleep 1
 until mysqladmin ping -h localhost --silent; do
