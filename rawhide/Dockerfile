@@ -14,7 +14,7 @@ RUN dnf -y --nogpgcheck  install\
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y --nogpgcheck update --skip-broken &&\
+ dnf -y --nogpgcheck update --skip-unavailable &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  mkdir src && cd src &&\
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.42/GraphicsMagick-1.3.42.tar.xz &&\
@@ -33,7 +33,7 @@ RUN dnf -y --nogpgcheck  install\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
       cd /root/patch/Test-mysqld-1.0020 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\

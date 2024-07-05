@@ -3,7 +3,9 @@ FROM centos:7
 WORKDIR /root
 
 
-RUN yum -y  install\
+RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+ yum -y  install\
  git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  vim nano\
  netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -12,10 +14,14 @@ RUN yum -y  install\
  &&\
  yum -y install http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm &&\
  rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=mysql57-community install\
  mysql-community-server mysql-community-client mysql-community-devel\
  &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=remi,remi-php74 install\
  php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml\
  && yum clean --enablerepo=remi,remi-php74 all &&\

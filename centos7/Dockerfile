@@ -3,7 +3,9 @@ FROM centos:7
 WORKDIR /root
 
 
-RUN yum -y  install\
+RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+ yum -y  install\
  git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb-devel mariadb-server mariadb\
  vim nano\
@@ -12,10 +14,14 @@ RUN yum -y  install\
  mod_ssl vsftpd ftp memcached\
  &&\
  yum -y install epel-release &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=epel install\
  GraphicsMagick-perl GraphicsMagick\
  &&\
  yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm &&\
+  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
+  sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     yum -y --enablerepo=remi,remi-php71 install\
  php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml\
  && yum clean --enablerepo=remi,remi-php71 all &&\
