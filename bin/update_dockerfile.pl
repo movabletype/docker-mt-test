@@ -277,6 +277,9 @@ my %Conf = (
             },
             base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
         },
+        cpan => {
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+        },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
         make => {
