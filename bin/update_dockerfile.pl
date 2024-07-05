@@ -102,8 +102,7 @@ my %Conf = (
             php => [qw( php8.2-mbstring php8.2-xml )],
         },
         cpan => {
-            no_test => [qw( Imager )],
-            extra   => [qw( GD )],
+            no_test => [qw( Imager GD )],
         },
         phpunit => 9,
     },
@@ -277,6 +276,9 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+        },
+        cpan => {
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -1201,7 +1203,7 @@ COPY ./patch/ /root/patch/
 % }
 
 RUN\
-% if ($type =~ /^centos[68]$/) {
+% if ($type =~ /^(?:centos[678]|cloud6)$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
@@ -1232,7 +1234,7 @@ RUN\
 %     if ($conf->{$repo}{gpg_key}) {
  rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
 %     }
-%     if ($type =~ /^centos[68]$/) {
+%     if ($type =~ /^(?:centos[678]|cloud6)$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 %     }
@@ -1255,7 +1257,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update --skip-broken<% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /rawhide/) { %>--skip-unavailable<% } else { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {

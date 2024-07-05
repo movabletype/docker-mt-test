@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/mysql-server.cnf
-mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
+mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
-bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+bash -c "cd /usr; mysqld_safe --datadir=/var/lib/mysql --user=mysql &"
 
 sleep 1
 until mysqladmin ping -h localhost --silent; do
