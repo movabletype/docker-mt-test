@@ -102,8 +102,7 @@ my %Conf = (
             php => [qw( php8.2-mbstring php8.2-xml )],
         },
         cpan => {
-            no_test => [qw( Imager )],
-            extra   => [qw( GD )],
+            no_test => [qw( Imager GD )],
         },
         phpunit => 9,
     },
