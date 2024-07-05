@@ -1201,7 +1201,7 @@ COPY ./patch/ /root/patch/
 % }
 
 RUN\
-% if ($type =~ /^centos[68]$/) {
+% if ($type =~ /^(?:centos[678]|cloud6)$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
@@ -1232,7 +1232,7 @@ RUN\
 %     if ($conf->{$repo}{gpg_key}) {
  rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
 %     }
-%     if ($type =~ /^centos[68]$/) {
+%     if ($type =~ /^(?:centos[678]|cloud6)$/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 %     }
