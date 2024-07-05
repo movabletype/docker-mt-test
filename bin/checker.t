@@ -196,7 +196,7 @@ SKIP: {
     }
 }
 
-my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+Ver.+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
+my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+(?:from|Ver).+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
 my $mysql = $is_maria ? "MariaDB" : "MySQL";
 ok $mysql_version, "$image_name: $mysql exists ($mysql_version)";
 my $sql_mode = `mysql -Nse 'select \@\@sql_mode' 2>&1`;
