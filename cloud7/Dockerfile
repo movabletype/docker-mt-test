@@ -8,7 +8,7 @@ RUN dnf -y --allowerasing install\
  glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
  mariadb mariadb-server mariadb-connector-c-devel mariadb-pam\
  vim nano\
- netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
+ libomp-devel netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
  ncurses-devel libdb-devel libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
@@ -31,8 +31,8 @@ RUN dnf -y --allowerasing install\
  mkdir src && cd src &&\
  curl -kLO http://cpan.metacpan.org/src/5.0/perl-5.36.1.tar.gz && tar xf perl-5.36.1.tar.gz &&\
  cd perl-5.36.1 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.40/GraphicsMagick-1.3.40.tar.xz &&\
- tar xf GraphicsMagick-1.3.40.tar.xz && cd GraphicsMagick-1.3.40 &&\
+ curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
+ tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  curl -kLO https://imagemagick.org/archive/releases/ImageMagick-7.0.8-68.tar.xz &&\
  tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
