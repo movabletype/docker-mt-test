@@ -276,6 +276,7 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
@@ -284,7 +285,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
-            GraphicsMagick => '1.3.42',
+            GraphicsMagick => '1.3.43',
         },
         installer => 'dnf',
         setcap    => 1,
@@ -303,12 +304,13 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
-            GraphicsMagick => '1.3.42',
+            GraphicsMagick => '1.3.43',
         },
         installer => 'dnf',
         setcap    => 1,
@@ -326,12 +328,13 @@ my %Conf = (
                 'phpunit' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
-            GraphicsMagick => '1.3.40',
+            GraphicsMagick => '1.3.43',
         },
         installer => 'dnf',
         setcap    => 1,
@@ -781,6 +784,7 @@ my %Conf = (
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs => [qw/ ncurses-devel libdb-devel /],
             db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel mariadb-pam /],
+            images => [qw( libomp-devel )],
         },
         cpan => {
             addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
@@ -789,7 +793,7 @@ my %Conf = (
         make => {
             perl => '5.36.1',
             ImageMagick => '7.0.8-68',
-            GraphicsMagick => '1.3.40',
+            GraphicsMagick => '1.3.43',
         },
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
@@ -1112,7 +1116,7 @@ RUN \\
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-openmp --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
  curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
