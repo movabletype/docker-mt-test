@@ -1,0 +1,39 @@
+name: movabletype/movabletype
+on:
+  push:
+    branches:
+     - master
+concurrency:
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+env:
+  DOCKER_USERNAME: "${{ secrets.DOCKER_USERNAME }}"
+  DOCKER_PASSWORD: "${{ secrets.DOCKER_PASSWORD }}"
+  GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+jobs:
+  pull-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag:
+          - bullseye
+          - buster
+          - centos7
+          - cloud7
+          - fedora35
+          - fedora37
+          - fedora39
+          - fedora40
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.1.0
+      - name: log in to docker hub
+        run: echo $DOCKER_PASSWORD | docker login --username "$DOCKER_USERNAME" --password-stdin
+      - name: Log in to the Container registry
+        run: echo $GHCR_TOKEN | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: docker pull
+        run: docker pull movabletype/test:${{ matrix.tag }}
+      - name: docker tag
+        run: docker tag movabletype/test:${{ matrix.tag }} ghcr.io/movabletype/movabletype/test:${{ matrix.tag }}
+      - name: docker push
+        run: docker push ghcr.io/movabletype/movabletype/test:${{ matrix.tag }}
