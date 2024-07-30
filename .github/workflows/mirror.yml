@@ -24,6 +24,7 @@ jobs:
           - fedora37
           - fedora39
           - fedora40
+          - chromiumdriver
     steps:
       - name: checkout
         uses: actions/checkout@v4.1.0
