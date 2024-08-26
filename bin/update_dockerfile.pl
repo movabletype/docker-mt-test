@@ -599,7 +599,7 @@ my %Conf = (
             # php-pecl-memcache seems broken
             #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
-            PowerTools => [qw/ giflib-devel /],
+            powertools => [qw/ giflib-devel /],
         },
         make => {
             ruby => $ruby_version,
