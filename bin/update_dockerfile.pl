@@ -866,7 +866,7 @@ my %Conf = (
         phpunit => 9,
     },
     amazonlinux2022 => {
-        from => 'amazonlinux:2022',
+        from => 'amazonlinux:2023',
         base => 'centos',
         yum  => {
             _replace => {
