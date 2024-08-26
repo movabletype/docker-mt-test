@@ -732,6 +732,7 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
+            broken  => [qw( Starman@0.4015 )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
