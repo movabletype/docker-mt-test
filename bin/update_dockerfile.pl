@@ -499,6 +499,7 @@ my %Conf = (
                 DBD::SQLite
                 SQL::Translator@1.63
                 HTML::TreeBuilder::LibXML@0.26
+                Mouse@2.5.10
             )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
