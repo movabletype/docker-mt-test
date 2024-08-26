@@ -887,6 +887,7 @@ my %Conf = (
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
+        allow_erasing => 1,
         phpunit => 9,
         locale_def => 1,
     },
