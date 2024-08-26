@@ -609,6 +609,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
+        installer => 'dnf',
     },
     rockylinux => {
         from => 'rockylinux:9.2',
