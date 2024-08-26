@@ -10,7 +10,7 @@ RUN \
  libdbd-mysql-perl mariadb-server mariadb-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
- libxml2-dev libgmp-dev libssl-dev\
+ libstdc++-14-dev libxml2-dev libgmp-dev libssl-dev\
  php8.2-mbstring php8.2-xml php8.2 php8.2-cli php8.2-mysql php8.2-gd php8.2-memcache\
  ruby ruby-dev\
  apache2 vsftpd ftp memcached\
