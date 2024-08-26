@@ -98,6 +98,7 @@ my %Conf = (
                 'php-memcache'       => 'php8.2-memcache',
                 'phpunit'            => '',
             },
+            libs => [qw( libstdc++-14-dev )],
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php8.2-mbstring php8.2-xml )],
         },
@@ -498,6 +499,7 @@ my %Conf = (
                 DBD::SQLite
                 SQL::Translator@1.63
                 HTML::TreeBuilder::LibXML@0.26
+                Mouse@2.5.10
             )],
             missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
@@ -597,7 +599,7 @@ my %Conf = (
             # php-pecl-memcache seems broken
             #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
-            PowerTools => [qw/ giflib-devel /],
+            powertools => [qw/ giflib-devel /],
         },
         make => {
             ruby => $ruby_version,
@@ -607,6 +609,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit => 9,
         no_best => 1,
+        installer => 'dnf',
     },
     rockylinux => {
         from => 'rockylinux:9.2',
@@ -729,6 +732,7 @@ my %Conf = (
         },
         cpan => {
             missing => [qw( App::cpanminus TAP::Harness::Env )],
+            broken  => [qw( Starman@0.4015 )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
@@ -866,10 +870,13 @@ my %Conf = (
         phpunit => 9,
     },
     amazonlinux2022 => {
-        from => 'amazonlinux:2022',
+        from => 'amazonlinux:2023',
         base => 'centos',
         yum  => {
             _replace => {
+                'mysql' => 'mariadb105',
+                'mysql-server' => 'mariadb105-server',
+                'mysql-devel'  => 'mariadb105-devel',
                 ftp => '',
                 'php-pecl-memcache' => '',
                 'phpunit' => '',
@@ -884,6 +891,7 @@ my %Conf = (
         },
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
+        allow_erasing => 1,
         phpunit => 9,
         locale_def => 1,
     },
@@ -979,8 +987,8 @@ my %Conf = (
             enable => 'ol8_developer_EPEL',
         },
         instantclient => {
-            rpm => 'oracle-instantclient-release-el8',
-            enable => 'ol8_oracle_instantclient21',
+            rpm => 'oracle-instantclient-release-23ai-el8',
+            enable => 'ol8_oracle_instantclient23',
         },
         codeready => {
             enable => 'ol8_codeready_builder',

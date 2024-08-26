@@ -19,10 +19,10 @@ RUN  microdnf -y install dnf &&\
     dnf -y --enablerepo=ol8_developer_EPEL install\
  ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl gd-devel libwebp-devel perl-GD\
  && dnf clean --enablerepo=ol8_developer_EPEL all &&\
- dnf -y install oracle-instantclient-release-el8 &&\
-    dnf -y --enablerepo=ol8_oracle_instantclient21 install\
+ dnf -y install oracle-instantclient-release-23ai-el8 &&\
+    dnf -y --enablerepo=ol8_oracle_instantclient23 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
- && dnf clean --enablerepo=ol8_oracle_instantclient21 all &&\
+ && dnf clean --enablerepo=ol8_oracle_instantclient23 all &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.2 ;\

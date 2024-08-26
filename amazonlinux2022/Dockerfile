@@ -1,11 +1,11 @@
-FROM amazonlinux:2022
+FROM amazonlinux:2023
 
 WORKDIR /root
 
 
-RUN dnf -y  install\
+RUN dnf -y --allowerasing install\
  which hostname glibc-langpack-ja glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
- mariadb105-pam mysql-devel mysql-server mysql\
+ mariadb105-pam mariadb105-devel mariadb105-server mariadb105\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\

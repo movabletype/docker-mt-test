@@ -13,14 +13,14 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
-    dnf -y --enablerepo=PowerTools install\
- giflib-devel\
- &&\
  dnf -y install epel-release &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
     dnf -y --enablerepo=epel install\
  GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick\
+ &&\
+    dnf -y --enablerepo=powertools install\
+ giflib-devel\
  &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\

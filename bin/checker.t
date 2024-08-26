@@ -275,6 +275,11 @@ if ($image_name =~ /addons/) {
     ok $pureftpd_version, "$image_name: pureftpd exists ($pureftpd_version)";
 }
 
+if ($image_name =~ /addons8/) {
+    my ($slapd_version) = `/usr/sbin/slapd -V 2>&1` =~ /OpenLDAP: slapd (\d+\.\d+\.\d+)/s;
+    ok $slapd_version, "$image_name: slapd exists ($slapd_version)";
+}
+
 # security
 
 my $has_xz = `which xz` =~ /\bxz$/;
