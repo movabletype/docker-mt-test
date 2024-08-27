@@ -17,7 +17,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 memcached -d -u root
 
-bash -c "dockerd 2>/dev/null &"
+bash -c "dockerd &"
 
 if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
