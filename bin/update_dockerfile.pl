@@ -281,6 +281,7 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -306,6 +307,9 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
+        },
+        cpan => {
+            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -1050,6 +1054,9 @@ for my $name (@targets) {
     say $name;
     mkdir $name unless -d $name;
     my $conf       = merge_conf($name);
+    if ($conf->{cpan}{temporary}) {
+        say "  temporary: $_" for @{ $conf->{cpan}{temporary} };
+    }
     my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spurt($dockerfile);
@@ -1156,6 +1163,9 @@ RUN \\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
+% if ($conf->{cpan}{temporary}) {
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
@@ -1324,9 +1334,15 @@ RUN\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpm}) {
+% if ($conf->{cpan}{temporary}) {
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
+% if ($conf->{cpan}{temporary}) {
+ <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
  <%= $conf->{cpanm} %> -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
