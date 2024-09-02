@@ -29,10 +29,11 @@ RUN dnf -y --nogpgcheck  install\
  gem install \
   fluentd\
  &&\
- curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
  curl -skL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
+ cpanm -v DBI@1.643 &&\
  cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
       cd /root/patch/Test-mysqld-1.0020 && cpanm --installdeps . && cpanm . && cd /root &&\
