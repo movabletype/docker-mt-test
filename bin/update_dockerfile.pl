@@ -493,6 +493,7 @@ my %Conf = (
             # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
             # CGI's breakage seems tentative: https://github.com/leejo/CGI.pm/issues/263
             broken => [qw(
+                Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004
                 CGI@4.61
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
