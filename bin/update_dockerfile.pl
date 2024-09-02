@@ -445,7 +445,6 @@ my %Conf = (
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 5,
-        no_update => 1,
         cpanm_opt => '--no-lwp',
     },
     centos6 => {
@@ -1275,7 +1274,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /rawhide/) { %>--skip-unavailable<% } else { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /rawhide/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
