@@ -281,6 +281,7 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -306,6 +307,9 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
+        },
+        cpan => {
+            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -445,7 +449,7 @@ my %Conf = (
         installer => 'dnf',
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 5,
-        no_update => 1,
+        cpanm_opt => '--no-lwp',
     },
     centos6 => {
         from => 'centos:6',
@@ -489,6 +493,7 @@ my %Conf = (
             # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
             # CGI's breakage seems tentative: https://github.com/leejo/CGI.pm/issues/263
             broken => [qw(
+                Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004
                 CGI@4.61
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
@@ -510,6 +515,7 @@ my %Conf = (
             ruby => '2.7.8',
         },
         phpunit => 4,
+        cpanm_opt => '--no-lwp',
     },
     centos7 => {
         from => 'centos:7',
@@ -1049,6 +1055,9 @@ for my $name (@targets) {
     say $name;
     mkdir $name unless -d $name;
     my $conf       = merge_conf($name);
+    if ($conf->{cpan}{temporary}) {
+        say "  temporary: $_" for @{ $conf->{cpan}{temporary} };
+    }
     my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spurt($dockerfile);
@@ -1081,6 +1090,10 @@ sub merge_conf {
             }
             $conf{$key}{$subkey} = \@values if @values;
         }
+    }
+    $conf{cpanm} = 'cpanm';
+    if ($conf{cpanm_opt}) {
+        $conf{cpanm} .= ' ' . $conf{cpanm_opt};
     }
     \%conf;
 }
@@ -1147,22 +1160,25 @@ RUN \\
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
 % }
  &&\\
- curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
+% if ($conf->{cpan}{temporary}) {
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
-      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
+      cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v \\
+ <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1171,7 +1187,7 @@ RUN \\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v --installdeps . \\
+ <%= $conf->{cpanm} %> -v --installdeps . \\
 % }
  && rm -rf cpanfile /root/.perl-cpm/ /root/.cpanm /root/.qws
 
@@ -1269,7 +1285,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /rawhide/) { %>--skip-unavailable<% } else { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /rawhide/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
@@ -1314,27 +1330,33 @@ RUN\
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
 % }
  &&\\
- curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && mv cpanm /usr/local/bin &&\\
+ curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
  curl -skL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpm}) {
+% if ($conf->{cpan}{temporary}) {
+ cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
- cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+% if ($conf->{cpan}{temporary}) {
+ <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+% }
+ <%= $conf->{cpanm} %> -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
-      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
+      cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v \\
+ <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1343,13 +1365,13 @@ RUN\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
 % } else {
- cpanm --installdeps -v . &&\\
+ <%= $conf->{cpanm} %> --installdeps -v . &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
 # use cpanm to avoid strong caching of cpm
 %   for my $prereq (@cloud_prereqs) {
- cpanm -nfv <%= $prereq %> &&\\
+ <%= $conf->{cpanm} %> -nfv <%= $prereq %> &&\\
 %   }
 % }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
@@ -1405,7 +1427,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpanm --installdeps -n . --cpanfile=t/cpanfile
+    <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
@@ -1464,7 +1486,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpanm --installdeps -n . --cpanfile=t/cpanfile
+    <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
