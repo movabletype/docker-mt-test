@@ -446,6 +446,7 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit => 5,
         no_update => 1,
+        cpanm_opt => '--no-lwp',
     },
     centos6 => {
         from => 'centos:6',
@@ -510,6 +511,7 @@ my %Conf = (
             ruby => '2.7.8',
         },
         phpunit => 4,
+        cpanm_opt => '--no-lwp',
     },
     centos7 => {
         from => 'centos:7',
@@ -1082,6 +1084,10 @@ sub merge_conf {
             $conf{$key}{$subkey} = \@values if @values;
         }
     }
+    $conf{cpanm} = 'cpanm';
+    if ($conf{cpanm_opt}) {
+        $conf{cpanm} .= ' ' . $conf{cpanm_opt};
+    }
     \%conf;
 }
 
@@ -1155,14 +1161,14 @@ RUN \\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
-      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
+      cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v \\
+ <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1171,7 +1177,7 @@ RUN \\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v --installdeps . \\
+ <%= $conf->{cpanm} %> -v --installdeps . \\
 % }
  && rm -rf cpanfile /root/.perl-cpm/ /root/.cpanm /root/.qws
 
@@ -1322,19 +1328,19 @@ RUN\
  cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
  cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % } else {
- cpanm -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpanm -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ <%= $conf->{cpanm} %> -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
+ <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
-      cd /root/patch/<%= $patch %> && cpanm --installdeps . && cpanm . && cd /root &&\\
+      cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
 %   }
     rm -rf /root/patch &&\\
 % }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
- cpanm -v \\
+ <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
@@ -1343,13 +1349,13 @@ RUN\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
 % } else {
- cpanm --installdeps -v . &&\\
+ <%= $conf->{cpanm} %> --installdeps -v . &&\\
 % }
 % if ($conf->{cloud_prereqs}) {
 %   my @cloud_prereqs = main::load_prereqs($conf->{cloud_prereqs});
 # use cpanm to avoid strong caching of cpm
 %   for my $prereq (@cloud_prereqs) {
- cpanm -nfv <%= $prereq %> &&\\
+ <%= $conf->{cpanm} %> -nfv <%= $prereq %> &&\\
 %   }
 % }
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
@@ -1405,7 +1411,7 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
-    cpanm --installdeps -n . --cpanfile=t/cpanfile
+    <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
@@ -1464,7 +1470,7 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    cpanm --installdeps -n . --cpanfile=t/cpanfile
+    <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
 exec "$@"
