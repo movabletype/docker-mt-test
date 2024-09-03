@@ -1,4 +1,4 @@
-FROM movabletype/test:buster
+FROM movabletype/test:bullseye
 
 RUN apt-get update &&\
  curl -sL https://deb.nodesource.com/setup_lts.x | bash - &&\

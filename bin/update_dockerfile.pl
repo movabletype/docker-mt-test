@@ -32,13 +32,10 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            ## HTML::TreeBuilder is here due to a (hopefully tentative) 02packages issue
             broken  => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
-                HTML::TreeBuilder::LibXML@0.27
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -69,13 +66,10 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            ## HTML::TreeBuilder is here due to a (hopefully tentative) 02packages issue
             broken  => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
-                HTML::TreeBuilder::LibXML@0.27
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -281,7 +275,6 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
-            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -307,9 +300,6 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
-        },
-        cpan => {
-            temporary => [qw( DBI@1.643 )],
         },
         patch => ['Test-mysqld-1.0020'],
         make_dummy_cert => '/usr/bin',
@@ -491,10 +481,8 @@ my %Conf = (
                 CryptX
             )],
             # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
-            # CGI's breakage seems tentative: https://github.com/leejo/CGI.pm/issues/263
             broken => [qw(
                 Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004
-                CGI@4.61
                 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
                 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
                 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
@@ -506,7 +494,6 @@ my %Conf = (
                 HTML::TreeBuilder::LibXML@0.26
                 Mouse@2.5.10
             )],
-            missing => [qw( App::cpanminus DBD::SQLite )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
             },
@@ -737,7 +724,7 @@ my %Conf = (
             libs => [qw( gd-devel libstdc++-static )],
         },
         cpan => {
-            missing => [qw( App::cpanminus TAP::Harness::Env )],
+            missing => [qw( TAP::Harness::Env )],
             broken  => [qw( Starman@0.4015 )],
             _replace => {
                 'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
@@ -797,11 +784,14 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
+            addons => [qw(
+                Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
+            )],
         },
         phpunit => 9,
         make => {
-            perl => '5.36.1',
+            perl => '5.38.2',
             ImageMagick => '7.0.8-68',
             GraphicsMagick => '1.3.43',
         },
