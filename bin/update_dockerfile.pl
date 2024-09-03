@@ -791,7 +791,7 @@ my %Conf = (
         },
         phpunit => 9,
         make => {
-            perl => '5.36.1',
+            perl => '5.38.2',
             ImageMagick => '7.0.8-68',
             GraphicsMagick => '1.3.43',
         },
