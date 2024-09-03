@@ -36,7 +36,6 @@ my %Conf = (
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -71,7 +70,6 @@ my %Conf = (
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons  => [qw( Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -787,7 +785,10 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            addons  => [qw( Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir )],
+            addons => [qw(
+                Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
+            )],
         },
         phpunit => 9,
         make => {
