@@ -33,9 +33,8 @@ RUN \
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure YAML::Syck@1.31 XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
+ cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm -v \
- Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\

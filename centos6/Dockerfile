@@ -43,13 +43,11 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm --no-lwp -n CryptX XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm --no-lwp -v Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004 CGI@4.61 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Mouse@2.5.10 Archive::Zip@1.65 DBD::mysql@4.050 HTML::TreeBuilder::LibXML@0.27 &&\
+ cpanm --no-lwp -v Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Mouse@2.5.10 Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm --no-lwp -v \
- Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers\
  pQuery\
  JSON::XS Starman Plack::Middleware::ReverseProxy\
  JavaScript::Minifier CSS::Minifier\
- App::cpanminus DBD::SQLite\
  Fluent::Logger\
  && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
  cpanm --no-lwp --installdeps -v . &&\
