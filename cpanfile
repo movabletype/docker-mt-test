@@ -1,3 +1,4 @@
+requires 'Data::Dump';
 requires 'Data::Section::Simple';
 requires 'LWP::UserAgent';
 requires 'Mojo::Template';
