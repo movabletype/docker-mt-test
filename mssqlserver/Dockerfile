@@ -55,7 +55,6 @@ ENV LANG=en_US.UTF-8 \
     APACHE_PID_FILE=/var/run/apache2.pid \
     APACHE_LOCK_DIR=/var/lock/apache2 \
     APACHE_CONF_DIR=/etc/apache2 \
-    ACCEPT_EULA=1 \
     MSSQL_SA_PASSWORD=Password.1 \
     MSSQL_PID=Developer \
     MT_TEST_ODBCDRIVER="ODBC Driver 18 for SQL Server" \
