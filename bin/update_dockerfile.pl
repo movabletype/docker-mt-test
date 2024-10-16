@@ -1050,15 +1050,15 @@ for my $name (@targets) {
     }
     my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
-    path("$name/Dockerfile")->spurt($dockerfile);
-    path("$name/docker-entrypoint.sh")->spurt($entrypoint)->chmod(0755);
+    path("$name/Dockerfile")->spew($dockerfile);
+    path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
     if ($conf->{patch}) {
         require File::Copy::Recursive;
         for my $target (@{$conf->{patch}}) {
             path("$name/patch")->make_path;
             File::Copy::Recursive::dircopy("patch/$target", "$name/patch/$target");
         }
-        path("$name/patch/.gitignore")->spurt('*');
+        path("$name/patch/.gitignore")->spew('*');
     }
 }
 

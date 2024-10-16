@@ -1,7 +1,7 @@
 requires 'Data::Dump';
 requires 'Data::Section::Simple';
 requires 'LWP::UserAgent';
-requires 'Mojo::Template';
+requires 'Mojolicious', '9.34';
 requires 'Parallel::ForkManager';
 requires 'TAP::Parser';
 requires 'Term::ANSIColor';
