@@ -1087,11 +1087,47 @@ for my $name (@targets) {
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spew($dockerfile);
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
+    path("$name/patch")->remove_tree if -d path("$name/patch");
     if ($conf->{patch}) {
         require File::Copy::Recursive;
+        require Parse::Distname;
+        require LWP::UserAgent;
+        require JSON::XS;
+        path("$name/patch")->make_path;
         for my $target (@{$conf->{patch}}) {
-            path("$name/patch")->make_path;
-            File::Copy::Recursive::dircopy("patch/$target", "$name/patch/$target");
+            my @patch_files = map {$_->realpath} path("patch/$target")->list->each;
+            next unless @patch_files;
+
+            my $info = Parse::Distname->new("$target.tar.gz");
+            my ($dist, $version) = ($info->dist, $info->version);
+            my $ua = LWP::UserAgent->new;
+            my $res = $ua->get("https://api.cpanauthors.org/v5/dist/$dist/releases");
+            die "$dist is not found" unless $res->is_success;
+            my $releases = JSON::XS::decode_json($res->decoded_content)->{data};
+            my $warn_obsolete;
+            my $path;
+            for my $release (@$releases) {
+                if ($release->{version} eq $version) {
+                    $path = Parse::Distname->new("$release->{author}/$target.tar.gz")->{cpan_path};
+                    last;
+                }
+                next if $release->{version} =~ /_/;
+                print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
+            }
+            die "$dist-$version is not found" unless $path;
+            $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", "$name/patch/$target.tar.gz");
+            die "Failed to mirror $path" unless $res->is_success;
+            {
+                require File::pushd;
+                my $guard = File::pushd::pushd("$name/patch");
+                print STDERR "Extracting $target.tar.gz\n";
+                system("tar xf $target.tar.gz") and die "Failed to extract $target";
+                chdir $target or die "Failed to chdir to $name/patch/$target";
+                for my $patch_file (@patch_files) {
+                    print STDERR "Applying $patch_file\n";
+                    system("patch -p1 < $patch_file") and die "Failed to apply $patch_file to $target";
+                }
+            }
         }
         path("$name/patch/.gitignore")->spew('*');
     }
@@ -1138,6 +1174,10 @@ __DATA__
 FROM <%= $conf->{from} %>
 
 WORKDIR /root
+
+% if ($conf->{patch}) {
+COPY ./patch/ /root/patch/
+% }
 
 RUN \\
 % if ($conf->{use_archive}) {
