@@ -103,8 +103,9 @@ my %Conf = (
             php => [qw( php8.2-mbstring php8.2-xml )],
         },
         cpan => {
-            no_test => [qw( Imager GD )],
+            no_test => [qw( GD )],
         },
+        patch => ['Imager-1.024'],
         phpunit => 9,
     },
     bookworm => {
@@ -288,6 +289,7 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
+        patch => ['Imager-1.024'],
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
