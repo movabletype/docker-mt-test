@@ -1,7 +1,7 @@
 diff --git a/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm b/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm
 index 62b860d..09f5ba0 100644
---- a/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm
-+++ b/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm
+--- a/lib/Test/mysqld.pm
++++ b/lib/Test/mysqld.pm
 @@ -9,7 +9,7 @@ use Cwd;
  use DBI;
  use File::Copy::Recursive qw(dircopy);

@@ -1,8 +1,11 @@
 requires 'Data::Dump';
 requires 'Data::Section::Simple';
+requires 'File::pushd';
+requires 'JSON::XS';
 requires 'LWP::UserAgent';
 requires 'Mojolicious', '9.34';
 requires 'Parallel::ForkManager';
+requires 'Parse::Distname';
 requires 'TAP::Parser';
 requires 'Term::ANSIColor';
 requires 'Test::More', '0.88';

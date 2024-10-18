@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/mysql-server.cnf
+echo 'require_secure_transport = true' >> /etc/my.cnf.d/mysql-server.cnf
+echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
