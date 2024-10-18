@@ -784,7 +784,7 @@ my %Conf = (
             php_version => 'php74',
         },
         'mysql57-community' => {
-            rpm => 'http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            rpm => 'https://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
             gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
@@ -1197,27 +1197,27 @@ RUN \\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
- curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
+ curl -LO https://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
 %   }
 %   if ($conf->{make}{GraphicsMagick}) {
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
+ curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
- curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
+ curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -kLO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
 % }
 % if ($conf->{phpunit}) {
- curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
@@ -1226,8 +1226,8 @@ RUN \\
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
 % }
  &&\\
- curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
- curl -skL --compressed https://git.io/cpm > cpm &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{cpan}{temporary}) {
@@ -1249,7 +1249,7 @@ RUN \\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
@@ -1360,21 +1360,21 @@ RUN\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
- curl -kLO http://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
+ curl -LO https://cpan.metacpan.org/src/5.0/perl-<%= $conf->{make}{perl} %>.tar.gz && tar xf perl-<%= $conf->{make}{perl} %>.tar.gz &&\\
  cd perl-<%= $conf->{make}{perl} %> && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\\
 %   }
 %   if ($conf->{make}{GraphicsMagick}) {
- curl -kLO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
+ curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
- curl -kLO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
+ curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -kLO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
@@ -1387,7 +1387,7 @@ RUN\
  setcap -r /usr/libexec/mysqld &&\\
 % }
 % if ($conf->{phpunit}) {
- curl -skL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
+ curl -sL https://phar.phpunit.de/phpunit-<%= $conf->{phpunit} %>.phar > phpunit && chmod +x phpunit &&\\
  mv phpunit /usr/local/bin/ &&\\
 % }
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
@@ -1396,8 +1396,8 @@ RUN\
   <%= join " ", @{ $conf->{gem}{$key} } %>\\
 % }
  &&\\
- curl -skL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
- curl -skL --compressed https://git.io/cpm > cpm &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpm}) {
@@ -1427,7 +1427,7 @@ RUN\
 % for my $key (sort keys %{ $conf->{cpan} }) {
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
- && curl -skLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
 % } else {
