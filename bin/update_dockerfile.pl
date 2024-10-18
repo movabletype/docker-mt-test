@@ -1383,7 +1383,7 @@ RUN\
  ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
 % }
 % if ($conf->{setcap}) {
-# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
+%# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
  setcap -r /usr/libexec/mysqld &&\\
 % }
 % if ($conf->{phpunit}) {
