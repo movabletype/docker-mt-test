@@ -32,8 +32,11 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+            ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
+            ## https://github.com/libwww-perl/HTML-Form/issues/50
             broken  => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
+                HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             bcompat => [qw( pQuery )],
@@ -66,8 +69,11 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
+            ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
+            ## https://github.com/libwww-perl/HTML-Form/issues/50
             broken  => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
+                HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
             bcompat => [qw( pQuery )],
