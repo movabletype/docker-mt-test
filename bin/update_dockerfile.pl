@@ -287,6 +287,33 @@ my %Conf = (
         phpunit => 9,
         nogpgcheck => 1,
     },
+    fedora41 => {
+        from => 'fedora:41',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql' => 'community-mysql',
+                'mysql-server' => 'community-mysql-server',
+                'mysql-devel'  => 'community-mysql-devel',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit' => '',
+            },
+            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
+        },
+        cpan => {
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+        },
+        make_dummy_cert => '/usr/bin',
+        make => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.43',
+        },
+        patch => ['Imager-1.024', 'Test-mysqld-1.0020'],
+        installer => 'dnf',
+        setcap    => 1,
+        phpunit => 9,
+    },
     fedora40 => {
         from => 'fedora:40',
         base => 'centos',
