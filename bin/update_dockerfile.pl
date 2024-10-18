@@ -294,6 +294,7 @@ my %Conf = (
         setcap    => 1,
         phpunit => 9,
         nogpgcheck => 1,
+        mysql_require_secure_transport => 1,
     },
     fedora41 => {
         from => 'fedora:41',
@@ -1515,7 +1516,12 @@ until mysqladmin ping -h localhost --silent; do
     sleep 1
 done
 % } elsif ($type =~ /^(?:cloud6|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
+% if ($conf->{mysql_require_secure_transport}) {
+echo 'require_secure_transport = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
+echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
+% } else {
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
+% }
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
