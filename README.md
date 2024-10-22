@@ -28,20 +28,13 @@ Dockerfile to test MT.
 |-|-|-|-|-|-|-|
 |centos6 (\*2)|centos:6|*5.10.1*|*5.5.38*|*5.1.73*|1.0.1e|2020-11|
 |centos8|centos:8|5.26.3|*8.0.30*|8.0.26|1.1.1k|2021-12|
-|fedora23|fedora:23|5.22.2|5.6.29|*5.6.33*|1.0.2j|2016-12|
 |fedora32 (\*2)|fedora:32|*5.30.3*|7.4.19|8.0.24|1.1.1k|-|
-|fedora36|fedora:36|5.34.1|8.1.18|8.0.32|3.0.8|-|
 |rawhide|fedora:rawhide|5.40.0|8.4.0|8.0.39|3.2.2|-|
 |rockylinux|rockylinux:9|5.32.1|8.1.30|8.0.36|3.0.7|-|
-|trusty|ubuntu:trusty|5.18.2|5.5.9|5.5.62|1.0.1f|2019-04|
-|jessie (\*2)|debian/eol:jessie|5.20.2|*5.6.40*|*5.5.62*|1.0.1t|2020-06 (LTS)|
-|stretch|debian/eol:stretch|5.24.1|*7.0.33*|*MariaDB 10.1.48*|1.1.0l|2022-01 (LTS)|
-|bionic|ubuntu:bionic|5.26.1|7.2.24|5.7.42|1.1.1|2023-04|
 |bookworm|debian:bookworm|5.36.0|8.2.24|*MariaDB 10.11.6*|3.0.14|-|
 |sid|debian:sid|5.40.0|8.2.24|MariaDB 11.4.3|3.3.2|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*4)|amazonlinux:2023|5.32.1|8.3.7|MariaDB 10.5.25|3.0.8|-|
-|oracle (\*3)|oraclelinux:7|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |oracle8 (\*3)|oraclelinux:8|5.26.3|8.2.24|MariaDB 10.3.39|1.1.1k|-|
 
 \*2 These images were used to test older versions of MT.
@@ -52,9 +45,6 @@ Dockerfile to test MT.
 
 |image name|base image|extra packages|
 |-|-|-|
-|addons|movabletype/test:buster|vsftpd 3.0.3, proftpd 1.3.8b, pureftpd 1.0.50|
 |addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.8b, pureftpd 1.0.50, slapd 2.6.6|
-|chromedriver|fedora:32|chromedriver 90.0.4430.93|
 |chromiumdriver|movabletype/test:bullseye|chromedriver 120.0.6099.224|
-|openldap|centos:6|openldap 2.4.40|
 |playwright|movabletype/test:bullseye|node 20.18.0, playwright 1.48.1|
