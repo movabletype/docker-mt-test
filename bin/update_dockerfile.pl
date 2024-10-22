@@ -161,111 +161,6 @@ my %Conf = (
         },
         phpunit => 9,
     },
-    jessie => {
-        from => 'debian/eol:jessie-slim',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'php'          => 'php5',
-                'php-cli'      => 'php5-cli',
-                'php-mysqlnd'  => 'php5-mysqlnd',
-                'php-gd'       => 'php5-gd',
-                'php-memcache' => 'php5-memcache',
-                'libgd-dev'    => 'libgd2-xpm-dev',
-                'ruby' => '',
-                'ruby-dev' => '',
-            },
-        },
-        cpan => {
-            no_test => [qw( YAML::Syck@1.31 )],
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for jessie is too old (0.4.1 as of this writing)
-            },
-        },
-        apache => {
-            enmod => [qw( php5 )],
-        },
-        make => {
-            ruby => '2.7.8',
-        },
-        phpunit => 5,
-        use_archive => 1,
-    },
-    stretch => {
-        from => 'debian/eol:stretch-slim',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'libgd-dev'          => 'libgd2-xpm-dev',
-                'libmysqlclient-dev' => 'libmysql++-dev',
-                'ruby' => '',
-                'ruby-dev' => '',
-            },
-            php => [qw/ php-mbstring /],
-        },
-        cpan => {
-            no_test => [qw( YAML::Syck@1.31 )],
-        },
-        apache => {
-            enmod => [qw( php7.0 )],
-        },
-        make => {
-            ruby => $ruby_version,
-        },
-        phpunit => 6,
-        use_archive => 1,
-    },
-    bionic => {
-        from => 'ubuntu:bionic',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'php-mysqlnd' => 'php-mysql',
-                'phpunit' => '',
-                'ruby' => '',
-                'ruby-dev' => '',
-            },
-            php => [qw( php-mbstring php-xml )]
-        },
-        apache => {
-            enmod => [qw( php7.2 )],
-        },
-        make => {
-            ruby => $ruby_version,
-        },
-        phpunit => 8,
-    },
-    trusty => {
-        from => 'ubuntu:trusty',
-        base => 'debian',
-        apt  => {
-            _replace => {
-                'php'                => 'php5',
-                'php-cli'            => 'php5-cli',
-                'php-mysqlnd'        => 'php5-mysql',
-                'php-gd'             => 'php5-gd',
-                'php-memcache'       => 'php5-memcache',
-                'libgd-dev'          => 'libgd2-xpm-dev',
-                'libmysqlclient-dev' => 'libmysql++-dev',
-                'libpng-dev'         => 'libpng12-dev',
-                'ruby' => '',
-                'ruby-dev' => '',
-            },
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for trusty is too old (0.4.0 as of this writing)
-            },
-            broken => [qw( SQL::Translator@1.63 )],
-        },
-        apache => {
-            enmod => [qw( php5 )],
-        },
-        make => {
-            ruby => '2.7.8',
-        },
-        phpunit => 4,
-    },
     rawhide => {
         from => 'fedora:rawhide',
         base => 'centos',
@@ -390,25 +285,6 @@ my %Conf = (
         setcap    => 1,
         phpunit => 9,
     },
-    fedora36 => {
-        from => 'fedora:36',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql' => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
-            },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
-        },
-        patch => ['Test-mysqld-1.0020'],
-        make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        setcap    => 1,
-        phpunit => 9,
-    },
     fedora35 => {
         from => 'fedora:35',
         base => 'centos',
@@ -450,32 +326,6 @@ my %Conf = (
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
-    },
-    fedora23 => {
-        from => 'fedora:23',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql' => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'ruby' => '',
-                'ruby-devel' => '',
-            },
-            base => [qw( hostname )],
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for fedora23 is too old (0.4.4 as of this writing)
-            },
-        },
-        make => {
-            ruby => $ruby_version,
-        },
-        installer => 'dnf',
-        make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 5,
-        cpanm_opt => '--no-lwp',
     },
     centos6 => {
         from => 'centos:6',
