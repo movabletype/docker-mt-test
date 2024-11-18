@@ -230,15 +230,16 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        repo => {
-            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
-        },
-        mysql84 => {
-            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
-            enable => 'mysql-8.4-lts-community',
-        },
+#        repo => {
+#            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+#        },
+#        mysql84 => {
+#            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
+#            enable => 'mysql-8.4-lts-community',
+#        },
         patch => ['Imager-1.024', 'Test-mysqld-1.0020'],
         installer => 'dnf',
+        setcap => 1,
         phpunit => 9,
     },
     fedora40 => {
