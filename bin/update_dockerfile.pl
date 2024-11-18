@@ -161,6 +161,18 @@ my %Conf = (
         },
         phpunit => 9,
     },
+    noble => {
+        from => 'ubuntu:noble',
+        base => 'debian',
+        apt  => {
+            php => [qw( php-mbstring php-xml )],
+        },
+        cpan => {
+            no_test => [qw(GD)],
+        },
+        patch => ['Test-mysqld-1.0020'],
+        phpunit => 9,
+    },
     rawhide => {
         from => 'fedora:rawhide',
         base => 'centos',
