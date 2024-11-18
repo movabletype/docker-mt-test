@@ -6,6 +6,7 @@ use warnings;
 use Data::Section::Simple qw/get_data_section/;
 use Mojo::Template;
 use Mojo::File qw/path/;
+use File::Basename;
 
 my $ruby_version = '3.1.4';
 
@@ -161,6 +162,22 @@ my %Conf = (
         },
         phpunit => 9,
     },
+    noble => {
+        from => 'ubuntu:noble',
+        base => 'debian',
+        apt  => {
+            php => [qw( php-mbstring php-xml )],
+        },
+        repo => {
+            # taken from https://dev.mysql.com/downloads/repo/apt/
+            mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb',
+        },
+        cpan => {
+            no_test => [qw(GD)],
+        },
+        patch => ['Test-mysqld-1.0020'],
+        phpunit => 9,
+    },
     rawhide => {
         from => 'fedora:rawhide',
         base => 'centos',
@@ -213,9 +230,15 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+        },
         patch => ['Imager-1.024', 'Test-mysqld-1.0020'],
         installer => 'dnf',
-        setcap    => 1,
         phpunit => 9,
     },
     fedora40 => {
@@ -981,13 +1004,24 @@ WORKDIR /root
 
 % if ($conf->{patch}) {
 COPY ./patch/ /root/patch/
-% }
 
+% }
 RUN \\
 % if ($conf->{use_archive}) {
   sed -i -E 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
   sed -i -E 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list &&\\
   sed -i -E 's/^.+\-updates.+//' /etc/apt/sources.list &&\\
+% }
+% if ($conf->{repo}) {
+ apt-get update &&\\
+ DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
+ apt-get --no-install-recommends -y install curl wget gnupg ca-certificates lsb-release &&\\
+%   for my $key (keys %{$conf->{repo}}) {
+%     my $deb = $conf->{repo}{$key};
+      curl -LO <%= $deb %> &&\\
+      DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes dpkg -i <%= File::Basename::basename($deb) %> &&\\
+      rm <%= File::Basename::basename($deb) %> &&\\
+%   }
 % }
  apt-get update &&\\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
@@ -1282,7 +1316,15 @@ find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
-% if ($type =~ /sid|bookworm|bullseye/) {
+% if ($conf->{repo}{mysql84}) {
+bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
+sleep 1
+until mysqladmin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
+% } elsif ($type =~ /sid|bookworm|bullseye/) {
 service mariadb start
 % } else {
 service mysql start
