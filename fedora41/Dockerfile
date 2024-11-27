@@ -6,7 +6,6 @@ COPY ./patch/ /root/patch/
 
 RUN dnf -y  install\
  distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
- community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
@@ -14,6 +13,10 @@ RUN dnf -y  install\
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
+ dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm &&\
+    dnf -y --enablerepo=mysql-8.4-lts-community install\
+ mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
+ && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
  dnf -y update --skip-unavailable &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  mkdir src && cd src &&\
@@ -21,7 +24,6 @@ RUN dnf -y  install\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --without-gs --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- setcap -r /usr/libexec/mysqld &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
