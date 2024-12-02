@@ -106,7 +106,6 @@ my %Conf = (
         cpan => {
             no_test => [qw( GD )],
         },
-        patch => ['Imager-1.024'],
         phpunit => 9,
     },
     bookworm => {
@@ -175,7 +174,7 @@ my %Conf = (
         cpan => {
             no_test => [qw(GD)],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         phpunit => 9,
     },
     rawhide => {
@@ -195,13 +194,12 @@ my %Conf = (
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        patch => ['Imager-1.024'],
         installer => 'dnf',
         setcap    => 1,
         phpunit => 9,
@@ -234,10 +232,12 @@ my %Conf = (
             mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
         },
         mysql84 => {
-            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc41-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
         },
-        patch => ['Imager-1.024', 'Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
         phpunit => 9,
     },
@@ -255,7 +255,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -279,7 +279,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -302,7 +302,7 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -321,7 +321,7 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -553,7 +553,7 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
@@ -674,7 +674,7 @@ my %Conf = (
             php_version => 'php82',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
@@ -752,64 +752,6 @@ my %Conf = (
         allow_erasing => 1,
         phpunit => 9,
         locale_def => 1,
-    },
-    oracle => {
-        from => 'oraclelinux:7-slim',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql' => 'mariadb',
-                'mysql-server' => 'mariadb-server',
-                'mysql-devel'  => 'mariadb-devel',
-                'php' => '',
-                'php-gd' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'giflib-devel' => '',
-                'gd-devel' => '',
-                'libwebp-devel' => '',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
-                'icc-profiles-openicc' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
-                'clang' => '',
-            },
-            base   => [qw( which )],
-            server => [qw( httpd )],
-        },
-        epel => {
-            rpm => 'oracle-epel-release-el7',
-            enable => 'ol7_developer_EPEL',
-        },
-        ol7_developer_php74 => {
-            rpm => 'oracle-php-release-el7',
-            enable => 'ol7_developer_php74',
-        },
-        instantclient => {
-            rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
-        },
-        repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel libstdc++-static )],
-            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
-            epel => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
-        },
-        cpan => {
-            no_test => [qw( DBI Test::NoWarnings )],
-            missing => [qw( DBD::Oracle )],
-            broken => [qw( SQL::Translator@1.63 )],
-            _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
-            },
-        },
-        make => {
-            ruby => '2.7.8',
-        },
-        make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 9,
-        release => 19.6,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
