@@ -1,5 +1,5 @@
-diff --git a/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm b/patch/Test-mysqld-1.0020/lib/Test/mysqld.pm
-index 62b860d..09f5ba0 100644
+diff --git a/lib/Test/mysqld.pm b/lib/Test/mysqld.pm
+index ba39690..031385e 100644
 --- a/lib/Test/mysqld.pm
 +++ b/lib/Test/mysqld.pm
 @@ -9,7 +9,7 @@ use Cwd;
@@ -10,8 +10,8 @@ index 62b860d..09f5ba0 100644
 +use POSIX qw(SIGTERM WNOHANG SIGKILL);
  use Time::HiRes qw(sleep);
  
- our $VERSION = '1.0020';
-@@ -179,7 +179,11 @@ sub wait_for_stop {
+ my $driver = 'mysql';
+@@ -195,7 +195,11 @@ sub wait_for_stop {
      my $self = shift;
      local $?; # waitpid may change this value :/
  
