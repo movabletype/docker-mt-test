@@ -174,7 +174,7 @@ my %Conf = (
         cpan => {
             no_test => [qw(GD)],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         phpunit => 9,
     },
     rawhide => {
@@ -194,7 +194,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -235,7 +235,7 @@ my %Conf = (
             rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
         phpunit => 9,
     },
@@ -253,7 +253,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -277,7 +277,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -300,7 +300,7 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -319,7 +319,7 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
@@ -551,7 +551,7 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
@@ -672,7 +672,7 @@ my %Conf = (
             php_version => 'php82',
         },
         cloud_prereqs => 'conf/cloud_prereqs7',
-        patch => ['Test-mysqld-1.0020'],
+        patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
         make_dummy_cert => '/usr/bin',
         allow_erasing => 1,
