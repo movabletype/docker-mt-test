@@ -232,8 +232,10 @@ my %Conf = (
             mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
         },
         mysql84 => {
-            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc40-1.noarch.rpm',
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc41-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
         },
         patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
