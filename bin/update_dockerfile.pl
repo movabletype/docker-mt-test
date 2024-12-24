@@ -106,6 +106,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( GD )],
         },
+        patch => [qw(Crypt-DES-2.07)],
         phpunit => 11,
     },
     bookworm => {
@@ -194,7 +195,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -237,7 +238,7 @@ my %Conf = (
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
         phpunit => 11,
     },
@@ -255,7 +256,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
