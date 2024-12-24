@@ -106,7 +106,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( GD )],
         },
-        phpunit => 9,
+        phpunit => 11,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -121,7 +121,7 @@ my %Conf = (
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
-        phpunit => 9,
+        phpunit => 11,
     },
     bullseye => {
         from => 'debian:bullseye-slim',
@@ -175,7 +175,7 @@ my %Conf = (
             no_test => [qw(GD)],
         },
         patch => ['Test-mysqld-1.0030'],
-        phpunit => 9,
+        phpunit => 11,
     },
     rawhide => {
         from => 'fedora:rawhide',
@@ -202,7 +202,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
         nogpgcheck => 1,
         mysql_require_secure_transport => 1,
     },
@@ -239,7 +239,7 @@ my %Conf = (
         },
         patch => ['Test-mysqld-1.0030'],
         installer => 'dnf',
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora40 => {
         from => 'fedora:40',
@@ -263,7 +263,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora39 => {
         from => 'fedora:39',
@@ -287,7 +287,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora37 => {
         from => 'fedora:37',
@@ -306,7 +306,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 10,
     },
     fedora35 => {
         from => 'fedora:35',
@@ -557,7 +557,7 @@ my %Conf = (
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 9,
+        phpunit => 10,
         allow_erasing => 1,
     },
     cloud6 => {
@@ -651,7 +651,7 @@ my %Conf = (
                 Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
             )],
         },
-        phpunit => 9,
+        phpunit => 11,
         make => {
             perl => '5.38.2',
             ImageMagick => '7.0.8-68',
@@ -750,7 +750,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         allow_erasing => 1,
-        phpunit => 9,
+        phpunit => 11,
         locale_def => 1,
     },
     oracle8 => {
@@ -827,7 +827,7 @@ my %Conf = (
             ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
-        phpunit => 9,
+        phpunit => 11,
         installer => 'microdnf',
         release => 19.6,
         locale_def => 1,
