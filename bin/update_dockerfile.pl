@@ -859,7 +859,7 @@ for my $name (@targets) {
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
     path("$name/patch")->remove_tree if -d path("$name/patch");
     if ($conf->{patch}) {
-        require File::Copy::Recursive;
+        require File::Copy;
         require Parse::Distname;
         require LWP::UserAgent;
         require JSON::XS;
@@ -868,25 +868,33 @@ for my $name (@targets) {
             my @patch_files = map {$_->realpath} path("patch/$target")->list->each;
             next unless @patch_files;
 
-            my $info = Parse::Distname->new("$target.tar.gz");
-            my ($dist, $version) = ($info->dist, $info->version);
-            my $ua = LWP::UserAgent->new;
-            my $res = $ua->get("https://api.cpanauthors.org/v5/dist/$dist/releases");
-            die "$dist is not found" unless $res->is_success;
-            my $releases = JSON::XS::decode_json($res->decoded_content)->{data};
-            my $warn_obsolete;
-            my $path;
-            for my $release (@$releases) {
-                if ($release->{version} eq $version) {
-                    $path = Parse::Distname->new("$release->{author}/$target.tar.gz")->{cpan_path};
-                    last;
+            my $tarball = path("patch/$target.tar.gz");
+            unless (-f $tarball) {
+                my $info = Parse::Distname->new("$tarball");
+                my ($dist, $version) = ($info->dist, $info->version);
+                my $ua = LWP::UserAgent->new;
+                print STDERR "fetching $tarball information\n";
+                my $res = $ua->get("https://fastapi.metacpan.org/v1/release/_search?q=distribution:$dist&sort=date:desc");
+                die "$dist is not found" unless $res->is_success;
+                my $releases = JSON::XS::decode_json($res->decoded_content)->{hits}{hits};
+                my $warn_obsolete;
+                my $path;
+                for my $release (@$releases) {
+                    my $source = $release->{_source};
+                    if ($source->{version} eq $version) {
+                        $path = Parse::Distname->new($source->{download_url})->{cpan_path};
+                        last;
+                    }
+                    next if $info->{version} =~ /_/;
+                    print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
                 }
-                next if $release->{version} =~ /_/;
-                print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
+                die "$dist-$version is not found" unless $path;
+                print STDERR "mirroring $tarball\n";
+                $res = $ua->mirror($source->{download_url}, $tarball);
+                # $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", $tarball);
+                die "Failed to mirror $path" unless $res->is_success;
             }
-            die "$dist-$version is not found" unless $path;
-            $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", "$name/patch/$target.tar.gz");
-            die "Failed to mirror $path" unless $res->is_success;
+            File::Copy::copy("patch/$target.tar.gz", "$name/patch/$target.tar.gz");
             {
                 require File::pushd;
                 my $guard = File::pushd::pushd("$name/patch");
