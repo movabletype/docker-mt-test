@@ -4,18 +4,18 @@ use Test::More;
 use version;
 
 my %prereqs = (
-    'Archive::Tar' => '',
-    'Archive::Zip' => '<= 1.65?(cloud6|cloud7|addons)',
-    'DBD::mysql' => '4.000',
-    'DBI' => '1.633',
-    'GD' => 0,
-    'Graphics::Magick' => 0,
-    'Image::Magick?' => 0,
-    'Image::Magick::Q16?' => 0,
+    'Archive::Tar'            => '',
+    'Archive::Zip'            => '<= 1.65?(cloud6|cloud7|addons)',
+    'DBD::mysql'              => '4.000',
+    'DBI'                     => '1.633',
+    'GD'                      => 0,
+    'Graphics::Magick'        => 0,
+    'Image::Magick?'          => 0,
+    'Image::Magick::Q16?'     => 0,
     'Image::Magick::Q16HDRI?' => 0,
-    'Imager' => 0,
-    'Net::SSLeay' => '1.85',
-    'IO::Socket::SSL' => '2.058',
+    'Imager'                  => 0,
+    'Net::SSLeay'             => '1.85',
+    'IO::Socket::SSL'         => '2.058',
 );
 
 my $image_name = $ENV{TEST_IMAGE};
@@ -56,7 +56,7 @@ for my $module (sort keys %prereqs) {
         if (my $condition = $1) {
             $todo = 0 if $image_name !~ /$condition/;
         }
-        SKIP: {
+    SKIP: {
             local $TODO = 'may fail' if $todo;
             my ($op, $required_version);
             if ($required =~ / /) {
@@ -74,33 +74,33 @@ for my $module (sort keys %prereqs) {
 my ($perl_version) = `perl -v` =~ /v(5\.\d+\.\d+)/;
 ok $perl_version, "$image_name: Perl exists ($perl_version)";
 
-my $gd_version = eval { GD::LIBGD_VERSION() } || 0;
+my $gd_version     = eval { GD::LIBGD_VERSION() }  || 0;
 my $gd_version_str = eval { GD::VERSION_STRING() } || 'unknown';
 note "$image_name: GD version $gd_version ($gd_version_str)";
 if ($gd_version >= 2.0101) {
-    ok eval { GD::supportsFileType('test.gif') }, "$image_name: GD supports GIF";
-    ok eval { GD::supportsFileType('test.png') }, "$image_name: GD supports PNG";
-    ok eval { GD::supportsFileType('test.jpg') }, "$image_name: GD supports JPEG";
-    ok eval { GD::supportsFileType('test.bmp') }, "$image_name: GD supports BMP";
+    ok eval { GD::supportsFileType('test.gif') },  "$image_name: GD supports GIF";
+    ok eval { GD::supportsFileType('test.png') },  "$image_name: GD supports PNG";
+    ok eval { GD::supportsFileType('test.jpg') },  "$image_name: GD supports JPEG";
+    ok eval { GD::supportsFileType('test.bmp') },  "$image_name: GD supports BMP";
     ok eval { GD::supportsFileType('test.webp') }, "$image_name: GD supports WEBP";
 }
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
-my %imager_supports = map {$_ => 1} Imager->read_types;
-ok $imager_supports{gif}, "$image_name: Imager supports GIF";
-ok $imager_supports{png}, "$image_name: Imager supports PNG";
+my %imager_supports = map { $_ => 1 } Imager->read_types;
+ok $imager_supports{gif},  "$image_name: Imager supports GIF";
+ok $imager_supports{png},  "$image_name: Imager supports PNG";
 ok $imager_supports{jpeg}, "$image_name: Imager supports JPEG";
-ok $imager_supports{bmp}, "$image_name: Imager supports BMP";
+ok $imager_supports{bmp},  "$image_name: Imager supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' unless $has_imager_webp;
     ok $imager_supports{webp}, "$image_name: Imager supports WebP";
 }
 
-my %imagemagick_supports = map {$_ => 1} Image::Magick->QueryFormat;
-ok $imagemagick_supports{gif}, "$image_name: ImageMagick supports GIF";
-ok $imagemagick_supports{png}, "$image_name: ImageMagick supports PNG";
+my %imagemagick_supports = map { $_ => 1 } Image::Magick->QueryFormat;
+ok $imagemagick_supports{gif},  "$image_name: ImageMagick supports GIF";
+ok $imagemagick_supports{png},  "$image_name: ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "$image_name: ImageMagick supports JPEG";
-ok $imagemagick_supports{bmp}, "$image_name: ImageMagick supports BMP";
+ok $imagemagick_supports{bmp},  "$image_name: ImageMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty)$/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
@@ -108,11 +108,11 @@ SKIP: {
 my $imagemagick_depth = Image::Magick->new->Get('depth');
 is $imagemagick_depth => '16', "$image_name: ImageMagick Quantum Depth: Q$imagemagick_depth";
 
-my %graphicsmagick_supports = map {$_ => 1} Graphics::Magick->QueryFormat;
-ok $graphicsmagick_supports{gif}, "$image_name: GraphicsMagick supports GIF";
-ok $graphicsmagick_supports{png}, "$image_name: GraphicsMagick supports PNG";
+my %graphicsmagick_supports = map { $_ => 1 } Graphics::Magick->QueryFormat;
+ok $graphicsmagick_supports{gif},  "$image_name: GraphicsMagick supports GIF";
+ok $graphicsmagick_supports{png},  "$image_name: GraphicsMagick supports PNG";
 ok $graphicsmagick_supports{jpeg}, "$image_name: GraphicsMagick supports JPEG";
-ok $graphicsmagick_supports{bmp}, "$image_name: GraphicsMagick supports BMP";
+ok $graphicsmagick_supports{bmp},  "$image_name: GraphicsMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /centos6|jessie|trusty/;
     ok $graphicsmagick_supports{webp}, "$image_name: GraphicsMagick supports WebP";
@@ -134,21 +134,25 @@ ok $php_version, "$image_name: PHP exists ($php_version)";
 (my $php_version_number = $php_version) =~ s/\.\d+$//;
 
 my $phpinfo = `php -i`;
-ok $phpinfo =~ /(?:Multibyte decoding support using mbstring => enabled|Zend Multibyte Support => provided by mbstring|mbstring extension makes use of "streamable kanji code filter and converter")/, "$image_name: PHP has mbstring";
-ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
-ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
-ok $phpinfo =~ /GIF Read Support => enabled/, "$image_name: PHP supports GIF read";
+ok $phpinfo =~ /(?:
+    Multibyte[ ]decoding[ ]support[ ]using[ ]mbstring[ ]=>[ ]enabled |
+    Zend[ ]Multibyte[ ]Support[ ]=>[ ]provided[ ]by[ ]mbstring |
+    mbstring[ ]extension[ ]makes[ ]use[ ]of[ ]"streamable[ ]kanji[ ]code[ ]filter[ ]and[ ]converter"
+)/x, "$image_name: PHP has mbstring";
+ok $phpinfo =~ /PDO drivers => .*?mysql/,       "$image_name: PHP has PDO mysql driver";
+ok $phpinfo =~ /GD Support => enabled/,         "$image_name: PHP has GD";
+ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
+ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
-ok $phpinfo =~ /JPEG Support => enabled/, "$image_name: PHP supports JPEG";
-ok $phpinfo =~ /PNG Support => enabled/, "$image_name: PHP supports PNG";
-ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
+ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG";
+ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
+ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
 SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
 if ($image_name =~ /oracle/) {
-    ok $phpinfo =~ /oci8/, "$image_name: PHP supports oci8";
+    ok $phpinfo =~ /oci8/,              "$image_name: PHP supports oci8";
     ok $phpinfo =~ /PDO drivers .*oci/, "$image_name: PHP PDO supports oci";
 }
 
@@ -209,12 +213,12 @@ if ($sql_mode =~ /Can't connect to local MySQL/) {
     fail "$image_name: failed to connect to local mysql" if $entrypoint_is_executed;
 }
 if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
-    my ($file_format) = `mysql -Nse 'select \@\@innodb_file_format'` =~ /(\w+)/;
+    my ($file_format)    = `mysql -Nse 'select \@\@innodb_file_format'`    =~ /(\w+)/;
     my ($file_per_table) = `mysql -Nse 'select \@\@innodb_file_per_table'` =~ /(\w+)/;
-    my ($large_prefix) = `mysql -Nse 'select \@\@innodb_large_prefix'` =~ /(\w+)/;
-    $file_format //= '';
+    my ($large_prefix)   = `mysql -Nse 'select \@\@innodb_large_prefix'`   =~ /(\w+)/;
+    $file_format    //= '';
     $file_per_table //= '';
-    $large_prefix //= '';
+    $large_prefix   //= '';
     note "InnoDB: file format $file_format, file per table $file_per_table, large prefix $large_prefix";
 }
 
@@ -232,7 +236,7 @@ ok $locale =~ /ja_JP\.utf8/, "$image_name: has Japanese locale" or warn $locale;
 my ($tar) = `tar --version 2>&1` =~ /\A\w*tar (.+?[0-9.]+)/;
 ok $tar, "$image_name: has tar $tar";
 
-my ($zip) = `zip --version 2>&1` =~ /This is Zip ([0-9.]+)/;;
+my ($zip) = `zip --version 2>&1` =~ /This is Zip ([0-9.]+)/;
 ok $zip, "$image_name: has zip $zip";
 
 my ($unzip) = `unzip --version 2>&1` =~ /UnZip ([0-9.]+)/;
@@ -246,7 +250,7 @@ my $srgb = grep /\bsRGB\.icc$/i, @icc_profiles;
 SKIP: {
     local $TODO = 'CentOS 6 has no icc profile packages' if $image_name =~ /centos6/;
     ok @icc_profiles, "$image_name: has " . join(",", @icc_profiles);
-    ok $srgb, "$image_name: has sRGB.icc";
+    ok $srgb,         "$image_name: has sRGB.icc";
 }
 
 if ($image_name =~ /oracle/) {
