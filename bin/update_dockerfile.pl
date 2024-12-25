@@ -8,7 +8,7 @@ use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
 
-my $ruby_version = '3.1.4';
+my $ruby_version = '3.1.6';
 
 my %Conf = (
     debian => {
@@ -92,21 +92,22 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'php'                => 'php8.2',
-                'php-cli'            => 'php8.2-cli',
-                'php-mysqlnd'        => 'php8.2-mysql',
-                'php-gd'             => 'php8.2-gd',
-                'php-memcache'       => 'php8.2-memcache',
+                'php'                => 'php8.4',
+                'php-cli'            => 'php8.4-cli',
+                'php-mysqlnd'        => 'php8.4-mysql',
+                'php-gd'             => 'php8.4-gd',
+                'php-memcache'       => 'php8.4-memcache',
                 'phpunit'            => '',
             },
             libs => [qw( libstdc++-14-dev )],
             db => [qw( libdbd-mysql-perl )],
-            php => [qw( php8.2-mbstring php8.2-xml )],
+            php => [qw( php8.4-mbstring php8.4-xml )],
         },
         cpan => {
             no_test => [qw( GD )],
         },
-        phpunit => 9,
+        patch => [qw(Crypt-DES-2.07)],
+        phpunit => 11,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -121,7 +122,7 @@ my %Conf = (
             db => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
-        phpunit => 9,
+        phpunit => 11,
     },
     bullseye => {
         from => 'debian:bullseye-slim',
@@ -175,7 +176,7 @@ my %Conf = (
             no_test => [qw(GD)],
         },
         patch => ['Test-mysqld-1.0030'],
-        phpunit => 9,
+        phpunit => 11,
     },
     rawhide => {
         from => 'fedora:rawhide',
@@ -194,7 +195,7 @@ my %Conf = (
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -202,7 +203,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
         nogpgcheck => 1,
         mysql_require_secure_transport => 1,
     },
@@ -237,9 +238,9 @@ my %Conf = (
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora40 => {
         from => 'fedora:40',
@@ -255,7 +256,7 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make => {
             # package is broken for unknown reason
@@ -263,7 +264,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora39 => {
         from => 'fedora:39',
@@ -287,7 +288,7 @@ my %Conf = (
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 11,
     },
     fedora37 => {
         from => 'fedora:37',
@@ -306,7 +307,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 9,
+        phpunit => 10,
     },
     fedora35 => {
         from => 'fedora:35',
@@ -557,7 +558,7 @@ my %Conf = (
         installer               => 'dnf',
         setcap                  => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 9,
+        phpunit => 10,
         allow_erasing => 1,
     },
     cloud6 => {
@@ -651,7 +652,7 @@ my %Conf = (
                 Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
             )],
         },
-        phpunit => 9,
+        phpunit => 11,
         make => {
             perl => '5.38.2',
             ImageMagick => '7.0.8-68',
@@ -750,7 +751,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer => 'dnf',
         allow_erasing => 1,
-        phpunit => 9,
+        phpunit => 11,
         locale_def => 1,
     },
     oracle8 => {
@@ -827,7 +828,7 @@ my %Conf = (
             ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
-        phpunit => 9,
+        phpunit => 11,
         installer => 'microdnf',
         release => 19.6,
         locale_def => 1,
@@ -858,7 +859,7 @@ for my $name (@targets) {
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
     path("$name/patch")->remove_tree if -d path("$name/patch");
     if ($conf->{patch}) {
-        require File::Copy::Recursive;
+        require File::Copy;
         require Parse::Distname;
         require LWP::UserAgent;
         require JSON::XS;
@@ -867,25 +868,33 @@ for my $name (@targets) {
             my @patch_files = map {$_->realpath} path("patch/$target")->list->each;
             next unless @patch_files;
 
-            my $info = Parse::Distname->new("$target.tar.gz");
-            my ($dist, $version) = ($info->dist, $info->version);
-            my $ua = LWP::UserAgent->new;
-            my $res = $ua->get("https://api.cpanauthors.org/v5/dist/$dist/releases");
-            die "$dist is not found" unless $res->is_success;
-            my $releases = JSON::XS::decode_json($res->decoded_content)->{data};
-            my $warn_obsolete;
-            my $path;
-            for my $release (@$releases) {
-                if ($release->{version} eq $version) {
-                    $path = Parse::Distname->new("$release->{author}/$target.tar.gz")->{cpan_path};
-                    last;
+            my $tarball = path("patch/$target.tar.gz");
+            unless (-f $tarball) {
+                my $info = Parse::Distname->new("$tarball");
+                my ($dist, $version) = ($info->dist, $info->version);
+                my $ua = LWP::UserAgent->new;
+                print STDERR "fetching $tarball information\n";
+                my $res = $ua->get("https://fastapi.metacpan.org/v1/release/_search?q=distribution:$dist&sort=date:desc");
+                die "$dist is not found" unless $res->is_success;
+                my $releases = JSON::XS::decode_json($res->decoded_content)->{hits}{hits};
+                my $warn_obsolete;
+                my $path;
+                for my $release (@$releases) {
+                    my $source = $release->{_source};
+                    if ($source->{version} eq $version) {
+                        $path = Parse::Distname->new($source->{download_url})->{cpan_path};
+                        last;
+                    }
+                    next if $info->{version} =~ /_/;
+                    print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
                 }
-                next if $release->{version} =~ /_/;
-                print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
+                die "$dist-$version is not found" unless $path;
+                print STDERR "mirroring $tarball\n";
+                $res = $ua->mirror($source->{download_url}, $tarball);
+                # $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", $tarball);
+                die "Failed to mirror $path" unless $res->is_success;
             }
-            die "$dist-$version is not found" unless $path;
-            $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", "$name/patch/$target.tar.gz");
-            die "Failed to mirror $path" unless $res->is_success;
+            File::Copy::copy("patch/$target.tar.gz", "$name/patch/$target.tar.gz");
             {
                 require File::pushd;
                 my $guard = File::pushd::pushd("$name/patch");

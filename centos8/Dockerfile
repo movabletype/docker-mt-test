@@ -33,8 +33,8 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  dnf -y update --skip-broken --nobest &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  mkdir src && cd src &&\
- curl -LO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.4.tar.gz && tar xf ruby-3.1.4.tar.gz &&\
- cd ruby-3.1.4 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz && tar xf ruby-3.1.6.tar.gz &&\
+ cd ruby-3.1.6 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  setcap -r /usr/libexec/mysqld &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\

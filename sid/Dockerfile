@@ -2,6 +2,8 @@ FROM debian:sid
 
 WORKDIR /root
 
+COPY ./patch/ /root/patch/
+
 RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
@@ -11,12 +13,12 @@ RUN \
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libstdc++-14-dev libxml2-dev libgmp-dev libssl-dev\
- php8.2-mbstring php8.2-xml php8.2 php8.2-cli php8.2-mysql php8.2-gd php8.2-memcache\
+ php8.4-mbstring php8.4-xml php8.4 php8.4-cli php8.4-mysql php8.4-gd php8.4-memcache\
  ruby ruby-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
- curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
@@ -28,6 +30,8 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure GD XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+      cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
+    rm -rf /root/patch &&\
  cpanm -v \
  pQuery\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
