@@ -890,10 +890,10 @@ for my $name (@targets) {
                     next if $info->{version} =~ /_/;
                     print STDERR "$dist is not the latest\n" unless $warn_obsolete++;
                 }
-                die "$dist-$version is not found" unless $path;
+                die "$dist-$version is not found" unless $url;
                 print STDERR "mirroring $tarball\n";
                 $res = $ua->mirror($url, $tarball);
-                die "Failed to mirror $path" unless $res->is_success;
+                die "Failed to mirror $url" unless $res->is_success;
             }
             File::Copy::copy("patch/$target.tar.gz", "$name/patch/$target.tar.gz");
             {
