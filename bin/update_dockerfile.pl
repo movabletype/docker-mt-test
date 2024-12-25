@@ -878,11 +878,13 @@ for my $name (@targets) {
                 die "$dist is not found" unless $res->is_success;
                 my $releases = JSON::XS::decode_json($res->decoded_content)->{hits}{hits};
                 my $warn_obsolete;
-                my $path;
+                my $url;
                 for my $release (@$releases) {
                     my $source = $release->{_source};
                     if ($source->{version} eq $version) {
-                        $path = Parse::Distname->new($source->{download_url})->{cpan_path};
+                        $url = $source->{download_url};
+                        # my $path = Parse::Distname->new($source->{download_url})->{cpan_path};
+                        # $url = "https://backpan.cpanauthors.org/authors/id/$path";
                         last;
                     }
                     next if $info->{version} =~ /_/;
@@ -890,8 +892,7 @@ for my $name (@targets) {
                 }
                 die "$dist-$version is not found" unless $path;
                 print STDERR "mirroring $tarball\n";
-                $res = $ua->mirror($source->{download_url}, $tarball);
-                # $res = $ua->mirror("https://backpan.cpanauthors.org/authors/id/$path", $tarball);
+                $res = $ua->mirror($url, $tarball);
                 die "Failed to mirror $path" unless $res->is_success;
             }
             File::Copy::copy("patch/$target.tar.gz", "$name/patch/$target.tar.gz");
