@@ -35,7 +35,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
             ## https://github.com/libwww-perl/HTML-Form/issues/50
-            broken  => [qw(
+            broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
                 HTTP::Message@6.46
             )],
@@ -72,7 +72,7 @@ my %Conf = (
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
             ## https://github.com/libwww-perl/HTML-Form/issues/50
-            broken  => [qw(
+            broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
                 HTTP::Message@6.46
             )],
@@ -90,23 +90,23 @@ my %Conf = (
         base => 'debian',
         apt  => {
             _replace => {
-                'mysql-server'       => 'mariadb-server',
-                'mysql-client'       => 'mariadb-client',
-                'php'                => 'php8.4',
-                'php-cli'            => 'php8.4-cli',
-                'php-mysqlnd'        => 'php8.4-mysql',
-                'php-gd'             => 'php8.4-gd',
-                'php-memcache'       => 'php8.4-memcache',
-                'phpunit'            => '',
+                'mysql-server' => 'mariadb-server',
+                'mysql-client' => 'mariadb-client',
+                'php'          => 'php8.4',
+                'php-cli'      => 'php8.4-cli',
+                'php-mysqlnd'  => 'php8.4-mysql',
+                'php-gd'       => 'php8.4-gd',
+                'php-memcache' => 'php8.4-memcache',
+                'phpunit'      => '',
             },
             libs => [qw( libstdc++-14-dev )],
-            db => [qw( libdbd-mysql-perl )],
-            php => [qw( php8.4-mbstring php8.4-xml )],
+            db   => [qw( libdbd-mysql-perl )],
+            php  => [qw( php8.4-mbstring php8.4-xml )],
         },
         cpan => {
             no_test => [qw( GD )],
         },
-        patch => [qw(Crypt-DES-2.07)],
+        patch   => [qw(Crypt-DES-2.07)],
         phpunit => 11,
     },
     bookworm => {
@@ -119,7 +119,7 @@ my %Conf = (
                 'libmysqlclient-dev' => '',
                 'phpunit'            => '',
             },
-            db => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
         phpunit => 11,
@@ -134,7 +134,7 @@ my %Conf = (
                 'libmysqlclient-dev' => '',
                 'phpunit'            => '',
             },
-            db => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
         phpunit => 9,
@@ -147,11 +147,11 @@ my %Conf = (
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
                 'libmysqlclient-dev' => '',
-                'phpunit' => '',
-                'ruby' => '',
-                'ruby-dev' => '',
+                'phpunit'            => '',
+                'ruby'               => '',
+                'ruby-dev'           => '',
             },
-            db => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl )],
             php => [qw( php-mbstring php-xml )],
         },
         apache => {
@@ -175,7 +175,7 @@ my %Conf = (
         cpan => {
             no_test => [qw(GD)],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch   => ['Test-mysqld-1.0030'],
         phpunit => 11,
     },
     rawhide => {
@@ -183,28 +183,28 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
-            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
-        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
-        make => {
+        make            => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        installer => 'dnf',
-        setcap    => 1,
-        phpunit => 11,
-        nogpgcheck => 1,
+        installer                      => 'dnf',
+        setcap                         => 1,
+        phpunit                        => 11,
+        nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
     fedora41 => {
@@ -212,20 +212,20 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => '',
+                'mysql'        => '',
                 'mysql-server' => '',
                 'mysql-devel'  => '',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
-            base => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         make_dummy_cert => '/usr/bin',
-        make => {
+        make            => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
@@ -234,112 +234,112 @@ my %Conf = (
         },
         mysql84 => {
             # taken from https://dev.mysql.com/downloads/repo/yum/
-            rpm => 'https://dev.mysql.com/get/mysql84-community-release-fc41-1.noarch.rpm',
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc41-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
         },
-        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit => 11,
+        phpunit   => 11,
     },
     fedora40 => {
         from => 'fedora:40',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
+            base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
-        make => {
+        make            => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 11,
+        phpunit   => 11,
     },
     fedora39 => {
         from => 'fedora:39',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
-            base => [qw( glibc-langpack-en glibc-langpack-ja xz )],
+            base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
-        make => {
+        make            => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
         installer => 'dnf',
         setcap    => 1,
-        phpunit => 11,
+        phpunit   => 11,
     },
     fedora37 => {
         from => 'fedora:37',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        setcap    => 1,
-        phpunit => 10,
+        installer       => 'dnf',
+        setcap          => 1,
+        phpunit         => 10,
     },
     fedora35 => {
         from => 'fedora:35',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
+                'phpunit'      => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
-        patch => ['Test-mysqld-1.0030'],
+        patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        setcap    => 1,
-        phpunit => 9,
+        installer       => 'dnf',
+        setcap          => 1,
+        phpunit         => 9,
     },
     fedora32 => {
         from => 'fedora:32',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'community-mysql',
+                'mysql'        => 'community-mysql',
                 'mysql-server' => 'community-mysql-server',
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
-                'phpunit' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'phpunit'      => '',
+                'ruby'         => '',
+                'ruby-devel'   => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
@@ -347,30 +347,30 @@ my %Conf = (
             ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        setcap    => 1,
-        phpunit => 9,
+        installer       => 'dnf',
+        setcap          => 1,
+        phpunit         => 9,
     },
     centos6 => {
         from => 'centos:6',
         base => 'centos',
         yum  => {
             _replace => {
-                'php-mysqlnd' => 'php-mysql',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'libwebp-devel' => '',
+                'php-mysqlnd'          => 'php-mysql',
+                'GraphicsMagick'       => '',
+                'GraphicsMagick-perl'  => '',
+                'php'                  => '',
+                'php-cli'              => '',
+                'php-mysqlnd'          => '',
+                'php-mbstring'         => '',
+                'php-gd'               => '',
+                'php-pecl-memcache'    => '',
+                'phpunit'              => '',
+                'libwebp-devel'        => '',
                 'icc-profiles-openicc' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
-                'clang' => '',
+                'ruby'                 => '',
+                'ruby-devel'           => '',
+                'clang'                => '',
             },
             libs => [qw( perl-XML-Parser )],
         },
@@ -382,8 +382,8 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
-            enable => 'remi,remi-php55',
+            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
+            enable      => 'remi,remi-php55',
             php_version => 'php55',
         },
         cpan => {
@@ -405,35 +405,35 @@ my %Conf = (
                 Mouse@2.5.10
             )],
             _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for centos6/epel is too old (0.4.3 as of this writing)
+                'Imager::File::WEBP' => '',    # libwebp for centos6/epel is too old (0.4.3 as of this writing)
             },
         },
         make => {
             ruby => '2.7.8',
         },
-        phpunit => 4,
+        phpunit   => 4,
         cpanm_opt => '--no-lwp',
     },
     centos7 => {
         from => 'centos:7',
         base => 'centos',
         yum  => {
-            libs => [qw( libstdc++-static )],
+            libs     => [qw( libstdc++-static )],
             _replace => {
-                'mysql' => 'mariadb',
-                'mysql-server' => 'mariadb-server',
-                'mysql-devel'  => 'mariadb-devel',
-                'GraphicsMagick' => '',
+                'mysql'               => 'mariadb',
+                'mysql-server'        => 'mariadb-server',
+                'mysql-devel'         => 'mariadb-devel',
+                'GraphicsMagick'      => '',
                 'GraphicsMagick-perl' => '',
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'php'                 => '',
+                'php-cli'             => '',
+                'php-mysqlnd'         => '',
+                'php-mbstring'        => '',
+                'php-gd'              => '',
+                'php-pecl-memcache'   => '',
+                'phpunit'             => '',
+                'ruby'                => '',
+                'ruby-devel'          => '',
             },
         },
         repo => {
@@ -444,21 +444,21 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php71',
+            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
+            enable      => 'remi,remi-php71',
             php_version => 'php71',
         },
         cpan => {
-            broken => [qw( SQL::Translator@1.63 )],
-            missing => [qw( TAP::Harness::Env )],
+            broken   => [qw( SQL::Translator@1.63 )],
+            missing  => [qw( TAP::Harness::Env )],
             _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for centos7/updates is too old (0.3.0 as of this writing)
+                'Imager::File::WEBP' => '',    # libwebp for centos7/updates is too old (0.3.0 as of this writing)
             },
         },
         make => {
             ruby => '2.7.8',
         },
-        phpunit => 7,
+        phpunit    => 7,
         locale_def => 1,
     },
     centos8 => {
@@ -466,23 +466,23 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'ssh' => '',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
-                'ImageMagick' => '',
-                'ImageMagick-perl' => '',
-                'perl-GD' => '',
-                'giflib-devel' => '',
+                'php'                  => '',
+                'php-cli'              => '',
+                'php-mysqlnd'          => '',
+                'php-mbstring'         => '',
+                'php-gd'               => '',
+                'php-pecl-memcache'    => '',
+                'phpunit'              => '',
+                'ssh'                  => '',
+                'GraphicsMagick'       => '',
+                'GraphicsMagick-perl'  => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
+                'perl-GD'              => '',
+                'giflib-devel'         => '',
                 'icc-profiles-openicc' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'ruby'                 => '',
+                'ruby-devel'           => '',
             },
             base => [qw/ glibc-langpack-ja /],
         },
@@ -490,9 +490,9 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
-                reset => 'php',
+                reset  => 'php',
                 enable => 'php:remi-8.0',
             },
             php_version => 'php80',
@@ -501,40 +501,40 @@ my %Conf = (
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
             # php-pecl-memcache seems broken
             #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
+            remi       => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
             powertools => [qw/ giflib-devel /],
         },
         make => {
             ruby => $ruby_version,
         },
-        installer               => 'dnf',
-        setcap                  => 1,
+        installer       => 'dnf',
+        setcap          => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 9,
-        no_best => 1,
-        installer => 'dnf',
+        phpunit         => 9,
+        no_best         => 1,
+        installer       => 'dnf',
     },
     rockylinux => {
         from => 'rockylinux:9.2',
         base => 'centos',
         yum  => {
             _replace => {
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'ssh' => '',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
-                'ImageMagick' => '',
-                'ImageMagick-perl' => '',
-                'perl-GD' => '',
-                'giflib-devel' => '',
+                'php'                  => '',
+                'php-cli'              => '',
+                'php-mysqlnd'          => '',
+                'php-mbstring'         => '',
+                'php-gd'               => '',
+                'php-pecl-memcache'    => '',
+                'phpunit'              => '',
+                'ssh'                  => '',
+                'GraphicsMagick'       => '',
+                'GraphicsMagick-perl'  => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
+                'perl-GD'              => '',
+                'giflib-devel'         => '',
                 'icc-profiles-openicc' => '',
-                'mysql-devel' => '',
+                'mysql-devel'          => '',
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source libdb-devel /],
         },
@@ -542,9 +542,9 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
-                reset => 'php',
+                reset  => 'php',
                 enable => 'php:remi-8.1',
             },
             php_version => 'php81',
@@ -554,96 +554,96 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
-        patch => ['Test-mysqld-1.0030'],
-        installer               => 'dnf',
-        setcap                  => 1,
+        patch           => ['Test-mysqld-1.0030'],
+        installer       => 'dnf',
+        setcap          => 1,
         make_dummy_cert => '/usr/bin',
-        phpunit => 10,
-        allow_erasing => 1,
+        phpunit         => 10,
+        allow_erasing   => 1,
     },
     cloud6 => {
         from => 'centos:7',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => '',
-                'mysql-server' => '',
-                'mysql-devel'  => '',
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'perl-GD' => '',
-                'ImageMagick' => '',
-                'ImageMagick-perl' => '',
-                'GraphicsMagick' => '',
+                'mysql'               => '',
+                'mysql-server'        => '',
+                'mysql-devel'         => '',
+                'php'                 => '',
+                'php-cli'             => '',
+                'php-mysqlnd'         => '',
+                'php-mbstring'        => '',
+                'php-gd'              => '',
+                'php-pecl-memcache'   => '',
+                'phpunit'             => '',
+                'perl-GD'             => '',
+                'ImageMagick'         => '',
+                'ImageMagick-perl'    => '',
+                'GraphicsMagick'      => '',
                 'GraphicsMagick-perl' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'ruby'                => '',
+                'ruby-devel'          => '',
             },
             libs => [qw( gd-devel libstdc++-static )],
         },
         cpan => {
-            missing => [qw( TAP::Harness::Env )],
-            broken  => [qw( Starman@0.4015 )],
+            missing  => [qw( TAP::Harness::Env )],
+            broken   => [qw( Starman@0.4015 )],
             _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
+                'Imager::File::WEBP' => '',    # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
             },
             no_test => [qw( GD )],
         },
         phpunit => 9,
-        make => {
-            perl => '5.28.2',
-            ImageMagick => '7.0.8-68',
+        make    => {
+            perl           => '5.28.2',
+            ImageMagick    => '7.0.8-68',
             GraphicsMagick => '1.3.36',
-            ruby => '2.7.8',
+            ruby           => '2.7.8',
         },
         repo => {
             'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
+            remi                => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable => 'remi,remi-php74',
+            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
+            enable      => 'remi,remi-php74',
             php_version => 'php74',
         },
         'mysql57-community' => {
-            rpm => 'https://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
+            rpm     => 'https://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
             gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
         },
         cloud_prereqs => 'conf/cloud_prereqs6',
-        locale_def => 1,
-        no_update => 1,
+        locale_def    => 1,
+        no_update     => 1,
     },
     cloud7 => {
         from => 'rockylinux:9',
         base => 'centos',
         yum  => {
             _replace => {
-                'php' => '',
-                'php-cli' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-gd' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'perl-GD' => '',
-                'ImageMagick' => '',
-                'ImageMagick-perl' => '',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
+                'php'                  => '',
+                'php-cli'              => '',
+                'php-mysqlnd'          => '',
+                'php-mbstring'         => '',
+                'php-gd'               => '',
+                'php-pecl-memcache'    => '',
+                'phpunit'              => '',
+                'perl-GD'              => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
+                'GraphicsMagick'       => '',
+                'GraphicsMagick-perl'  => '',
                 'icc-profiles-openicc' => '',
-                'giflib-devel' => '',
-                'mysql-devel' => '',
-                'mysql-server' => '',
-                'mysql' => '',
+                'giflib-devel'         => '',
+                'mysql-devel'          => '',
+                'mysql-server'         => '',
+                'mysql'                => '',
             },
-            base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
-            libs => [qw/ ncurses-devel libdb-devel /],
-            db   => [qw/ mariadb mariadb-server mariadb-connector-c-devel mariadb-pam /],
+            base   => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
+            libs   => [qw/ ncurses-devel libdb-devel /],
+            db     => [qw/ mariadb mariadb-server mariadb-connector-c-devel mariadb-pam /],
             images => [qw( libomp-devel )],
         },
         cpan => {
@@ -653,9 +653,9 @@ my %Conf = (
             )],
         },
         phpunit => 11,
-        make => {
-            perl => '5.38.2',
-            ImageMagick => '7.0.8-68',
+        make    => {
+            perl           => '5.38.2',
+            ImageMagick    => '7.0.8-68',
             GraphicsMagick => '1.3.43',
         },
         repo => {
@@ -667,20 +667,20 @@ my %Conf = (
             rpm => 'epel-release',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
-                reset => 'php',
+                reset  => 'php',
                 enable => 'php:remi-8.2',
             },
             php_version => 'php82',
         },
-        cloud_prereqs => 'conf/cloud_prereqs7',
-        patch => ['Test-mysqld-1.0030'],
-        installer => 'dnf',
-        make_dummy_cert => '/usr/bin',
-        allow_erasing => 1,
-        locale_def => 1,
-        no_update => 1,
+        cloud_prereqs       => 'conf/cloud_prereqs7',
+        patch               => ['Test-mysqld-1.0030'],
+        installer           => 'dnf',
+        make_dummy_cert     => '/usr/bin',
+        allow_erasing       => 1,
+        locale_def          => 1,
+        no_update           => 1,
         use_legacy_policies => 1,
     },
     amazonlinux => {
@@ -688,29 +688,29 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'mariadb',
-                'mysql-server' => 'mariadb-server',
-                'mysql-devel'  => 'mariadb-devel',
-                'GraphicsMagick' => '',
+                'mysql'               => 'mariadb',
+                'mysql-server'        => 'mariadb-server',
+                'mysql-devel'         => 'mariadb-devel',
+                'GraphicsMagick'      => '',
                 'GraphicsMagick-perl' => '',
-                'php' => '',
-                'php-mysqlnd' => '',
-                'php-gd' => '',
-                'php-mbstring' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'php'                 => '',
+                'php-mysqlnd'         => '',
+                'php-gd'              => '',
+                'php-mbstring'        => '',
+                'php-pecl-memcache'   => '',
+                'phpunit'             => '',
+                'ruby'                => '',
+                'ruby-devel'          => '',
             },
             base   => [qw( which hostname glibc-langpack-ja )],
-            server => [qw( httpd )], ## for mod_ssl
+            server => [qw( httpd )],                              ## for mod_ssl
         },
         cpan => {
             _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for amazonlinux is too old (0.3.0)
+                'Imager::File::WEBP' => '',                       # libwebp for amazonlinux is too old (0.3.0)
             },
             no_test => [qw( XML::DOM )],
-            broken => [qw( SQL::Translator@1.63 )],
+            broken  => [qw( SQL::Translator@1.63 )],
         },
         'GraphicsMagick1.3' => {
             enable => 'amzn2extra-GraphicsMagick1.3',
@@ -720,28 +720,28 @@ my %Conf = (
         },
         repo => {
             'GraphicsMagick1.3' => [qw( GraphicsMagick-perl GraphicsMagick )],
-            'php7.4' => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
+            'php7.4'            => [qw( php php-mysqlnd php-gd php-mbstring php-xml )],
         },
         make => {
             ruby => $ruby_version,
         },
         make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit => 9,
+        phpunit         => 9,
     },
     amazonlinux2022 => {
         from => 'amazonlinux:2023',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'mariadb105',
-                'mysql-server' => 'mariadb105-server',
-                'mysql-devel'  => 'mariadb105-devel',
-                ftp => '',
+                'mysql'             => 'mariadb105',
+                'mysql-server'      => 'mariadb105-server',
+                'mysql-devel'       => 'mariadb105-devel',
+                ftp                 => '',
                 'php-pecl-memcache' => '',
-                'phpunit' => '',
+                'phpunit'           => '',
             },
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
-            server => [qw( httpd )], ## for mod_ssl
+            server => [qw( httpd )],                                                  ## for mod_ssl
             db     => [qw( mariadb105-pam )],
             php    => [qw( php-cli php-xml php-json )],
         },
@@ -749,55 +749,55 @@ my %Conf = (
             fluentd => [qw(json)],
         },
         make_dummy_cert => '/usr/bin',
-        installer => 'dnf',
-        allow_erasing => 1,
-        phpunit => 11,
-        locale_def => 1,
+        installer       => 'dnf',
+        allow_erasing   => 1,
+        phpunit         => 11,
+        locale_def      => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql' => 'mariadb',
-                'mysql-server' => 'mariadb-server',
-                'mysql-devel'  => 'mariadb-devel',
-                'php' => '',
-                'php-gd' => '',
-                'php-mysqlnd' => '',
-                'php-mbstring' => '',
-                'php-pecl-memcache' => '',
-                'phpunit' => '',
-                'giflib-devel' => '',
-                'gd-devel' => '',
-                'libwebp-devel' => '',
-                'ImageMagick' => '',
-                'ImageMagick-perl' => '',
-                'GraphicsMagick' => '',
-                'GraphicsMagick-perl' => '',
+                'mysql'                => 'mariadb',
+                'mysql-server'         => 'mariadb-server',
+                'mysql-devel'          => 'mariadb-devel',
+                'php'                  => '',
+                'php-gd'               => '',
+                'php-mysqlnd'          => '',
+                'php-mbstring'         => '',
+                'php-pecl-memcache'    => '',
+                'phpunit'              => '',
+                'giflib-devel'         => '',
+                'gd-devel'             => '',
+                'libwebp-devel'        => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
+                'GraphicsMagick'       => '',
+                'GraphicsMagick-perl'  => '',
                 'icc-profiles-openicc' => '',
-                'perl-GD' => '',
-                'ruby' => '',
-                'ruby-devel' => '',
+                'perl-GD'              => '',
+                'ruby'                 => '',
+                'ruby-devel'           => '',
             },
             base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
         },
         epel => {
-            rpm => 'oracle-epel-release-el8',
+            rpm    => 'oracle-epel-release-el8',
             enable => 'ol8_developer_EPEL',
         },
         instantclient => {
-            rpm => 'oracle-instantclient-release-23ai-el8',
+            rpm    => 'oracle-instantclient-release-23ai-el8',
             enable => 'ol8_oracle_instantclient23',
         },
         codeready => {
             enable => 'ol8_codeready_builder',
         },
         remi => {
-            rpm => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
             module => {
-                reset => 'php',
+                reset  => 'php',
                 enable => 'php:remi-8.2',
             },
             php_version => 'php82',
@@ -814,25 +814,25 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
+            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
             codeready => [qw( giflib-devel )],
         },
         cpan => {
-            no_test => [qw( DBI Test::NoWarnings )],
-            missing => [qw( DBD::Oracle )],
+            no_test  => [qw( DBI Test::NoWarnings )],
+            missing  => [qw( DBD::Oracle )],
             _replace => {
-                'Imager::File::WEBP' => '',   # libwebp for oracle is too old (0.3.0 as of this writing)
+                'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
             },
         },
         make => {
             ruby => $ruby_version,
         },
         make_dummy_cert => '/usr/bin',
-        phpunit => 11,
-        installer => 'microdnf',
-        release => 19.6,
-        locale_def => 1,
-        no_update => 1,
+        phpunit         => 11,
+        installer       => 'microdnf',
+        release         => 19.6,
+        locale_def      => 1,
+        no_update       => 1,
     },
 );
 
@@ -844,16 +844,16 @@ for my $name (@targets) {
         say "unknown target: $name";
         next;
     }
-    my $base = $Conf{$name}{base};
-    my $template    = $templates->{$name} || $templates->{$base};
+    my $base        = $Conf{$name}{base};
+    my $template    = $templates->{$name}              || $templates->{$base};
     my $ep_template = $templates->{"$name-entrypoint"} || $templates->{"$base-entrypoint"};
     say $name;
     mkdir $name unless -d $name;
-    my $conf       = merge_conf($name);
+    my $conf = merge_conf($name);
     if ($conf->{cpan}{temporary}) {
         say "  temporary: $_" for @{ $conf->{cpan}{temporary} };
     }
-    my $dockerfile = Mojo::Template->new->render($template, $name, $conf);
+    my $dockerfile = Mojo::Template->new->render($template,    $name, $conf);
     my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
     path("$name/Dockerfile")->spew($dockerfile);
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
@@ -864,8 +864,8 @@ for my $name (@targets) {
         require LWP::UserAgent;
         require JSON::XS;
         path("$name/patch")->make_path;
-        for my $target (@{$conf->{patch}}) {
-            my @patch_files = map {$_->realpath} path("patch/$target")->list->each;
+        for my $target (@{ $conf->{patch} }) {
+            my @patch_files = map { $_->realpath } path("patch/$target")->list->each;
             next unless @patch_files;
 
             my $tarball = path("patch/$target.tar.gz");
@@ -879,6 +879,7 @@ for my $name (@targets) {
                 my $releases = JSON::XS::decode_json($res->decoded_content)->{hits}{hits};
                 my $warn_obsolete;
                 my $url;
+
                 for my $release (@$releases) {
                     my $source = $release->{_source};
                     if ($source->{version} eq $version) {
@@ -913,7 +914,7 @@ for my $name (@targets) {
 }
 
 sub merge_conf {
-    my $name  = shift;
+    my $name = shift;
     my %conf = %{ $Conf{$name} // {} };
     my $base = $conf{base} or return \%conf;
     for my $key (keys %{ $Conf{$base} }) {
@@ -939,11 +940,11 @@ sub merge_conf {
 }
 
 sub load_prereqs {
-    my $file = shift;
-    my @dists = grep {defined $_ && $_ ne '' && !/^#/} split /\n/, path($file)->slurp;
+    my $file  = shift;
+    my @dists = grep { defined $_ && $_ ne '' && !/^#/ } split /\n/, path($file)->slurp;
     # Use cpan.metacpan.org explicitly as it is actually a backpan
     # (CDN-based) www.cpan.org does not serve some of the older prereqs anymore (which should be updated anyway)
-    return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_} @dists;
+    return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_ } @dists;
 }
 
 __DATA__

@@ -9,10 +9,10 @@ use Mojo::File qw/path/;
 use LWP::UserAgent;
 use TAP::Parser;
 use Term::ANSIColor qw/colorstrip colored/;
-use Digest::MD5 qw/md5_hex/;
-use File::Copy qw/copy/;
+use Digest::MD5     qw/md5_hex/;
+use File::Copy      qw/copy/;
 
-GetOptions( backup => \my $backup );
+GetOptions(backup => \my $backup);
 
 my @targets = @ARGV ? @ARGV : glob "*";
 
@@ -31,7 +31,7 @@ for my $name (@targets) {
         my $log = path("log/check_$name.log")->slurp;
         $log = colorstrip($log);
         if ($log) {
-            my $parser = TAP::Parser->new({source => $log});
+            my $parser = TAP::Parser->new({ source => $log });
             while (my $result = $parser->next) {
                 next unless $result->is_test;
                 if ($result->is_ok) {
@@ -68,7 +68,7 @@ done_testing;
 
 diag "summary";
 for my $name (sort keys %summary) {
-    my ($ok, $fail, $todo) = @{$summary{$name}};
+    my ($ok, $fail, $todo) = @{ $summary{$name} };
     my $message = "$name ok: $ok fail: $fail todo: $todo";
     $message = colored(['red'], $message) if $fail || !$ok;
     diag $message;

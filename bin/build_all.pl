@@ -5,11 +5,11 @@ use strict;
 use warnings;
 use Parallel::ForkManager;
 use Getopt::Long qw/:config pass_through/;
-use Mojo::File qw/path/;
+use Mojo::File   qw/path/;
 
 GetOptions(
-    'no_cache|no-cache' => \my $no_cache,
-    'workers=i'         => \my $workers,
+    'no_cache|no-cache'                 => \my $no_cache,
+    'workers=i'                         => \my $workers,
     'errored|errored_only|errored-only' => \my $errored_only,
 );
 
@@ -33,9 +33,10 @@ my %aliases = qw(
     php-8.3 fedora40
 );
 my %aliases_rev;
+
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];
-    push @{$aliases_rev{$name}}, $alias;
+    push @{ $aliases_rev{$name} }, $alias;
 }
 
 my @targets = @ARGV ? @ARGV : glob "*";
@@ -45,9 +46,9 @@ for my $name (@targets) {
     next unless -f "$name/Dockerfile";
     next if $errored_only && !-f "log/build_error_$name.log";
     say $name;
-    my $pid = $pm->start and next;
+    my $pid  = $pm->start and next;
     my $tags = "--tag movabletype/test:$name";
-    for my $t (@{$aliases_rev{$name} || []}) {
+    for my $t (@{ $aliases_rev{$name} || [] }) {
         $tags .= " --tag movabletype/test:$t";
     }
     system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
@@ -56,9 +57,9 @@ for my $name (@targets) {
         if ($log =~ /No package (.+) available/) {
             rename "log/build_$name.log" => "log/build_warn_$name.log";
         } else {
-            unlink "log/build_warn_$name.log"
+            unlink "log/build_warn_$name.log";
         }
-        unlink "log/build_error_$name.log"
+        unlink "log/build_error_$name.log";
     } else {
         rename "log/build_$name.log" => "log/build_error_$name.log";
     }

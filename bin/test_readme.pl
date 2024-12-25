@@ -7,19 +7,19 @@ use Data::Dump qw/dump/;
 my %mapping;
 for my $line (split /\n/, path('README.md')->slurp) {
     next unless $line =~ /^\|/;
-    next if $line =~ /^\|(?:\-|image name)/;
-    $line =~ s/(^\|)|(\|$)//g;
-    $line =~ s/\*//g;
-    $line =~ s/MariaDB //;
+    next if $line     =~ /^\|(?:\-|image name)/;
+    $line             =~ s/(^\|)|(\|$)//g;
+    $line             =~ s/\*//g;
+    $line             =~ s/MariaDB //;
     my ($image, $base, @rest) = split '\|', $line;
     next if $image =~ /(?:openldap|chromedriver)/;
     if ($image =~ /(?:addons|chromiumdriver|playwright)/) {
         my @extra = split /,\s*/, $rest[0];
-        $mapping{$image} = { map {split / /, $_} @extra };
+        $mapping{$image} = { map { split / /, $_ } @extra };
     } else {
         my ($perl, $php, $mysql, $openssl) = @rest;
         $image =~ s/ .+$//;
-        $mapping{$image} = {perl => $perl, php => $php, mysql => $mysql, openssl => $openssl};
+        $mapping{$image} = { perl => $perl, php => $php, mysql => $mysql, openssl => $openssl };
     }
     $mapping{$image}{base} = $base;
 }
@@ -34,7 +34,7 @@ for my $image (sort keys %mapping) {
         }
     }
     my $log = path($logfile)->slurp;
-    for my $key (sort keys %{$mapping{$image}}) {
+    for my $key (sort keys %{ $mapping{$image} }) {
         if ($key eq 'base') {
             my $dockerfile = path("$image/Dockerfile")->slurp;
             my ($from) = $dockerfile =~ /FROM ([\w:\/]+)/;
