@@ -17,7 +17,7 @@ RUN dnf -y  install\
  dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  setcap -r /usr/libexec/mysqld &&\
- curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-10.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
