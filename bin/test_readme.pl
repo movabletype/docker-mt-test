@@ -37,7 +37,7 @@ for my $image (sort keys %mapping) {
     for my $key (sort keys %{ $mapping{$image} }) {
         if ($key eq 'base') {
             my $dockerfile = path("$image/Dockerfile")->slurp;
-            my ($from) = $dockerfile =~ /FROM ([\w:\/]+)/;
+            my ($from) = $dockerfile =~ /FROM ([\w:\/-]+)/;
             is $from => $mapping{$image}{$key} => "$image has correct $key";
             next;
         }
