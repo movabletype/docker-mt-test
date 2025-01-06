@@ -40,6 +40,10 @@ my %Conf = (
                 HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons => [qw(
+                AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid Data::Section::Simple
+            )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -77,6 +81,10 @@ my %Conf = (
                 HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons => [qw(
+                AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid Data::Section::Simple
+            )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
