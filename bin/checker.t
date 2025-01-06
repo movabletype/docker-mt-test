@@ -141,12 +141,18 @@ ok $phpinfo =~ /(?:
 )/x, "$image_name: PHP has mbstring";
 ok $phpinfo =~ /PDO drivers => .*?mysql/,       "$image_name: PHP has PDO mysql driver";
 ok $phpinfo =~ /GD Support => enabled/,         "$image_name: PHP has GD";
-ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
+SKIP: {
+    local $TODO = 'php for CentOS6 does not support DOM/XML' if $image_name =~ /centos6/;
+    ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
+}
 ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
-ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
+SKIP: {
+    local $TODO = 'php for CentOS6 does not support WebP' if $image_name =~ /centos6/;
+    ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
+}
 SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
