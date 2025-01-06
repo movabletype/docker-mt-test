@@ -10,12 +10,12 @@ Dockerfile to test MT.
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
 |centos7|centos:7|5.16.3|*7.1.33*|*MariaDB 5.5.68*|1.0.2k|2024-06|
-|buster|debian:buster|*5.28.1*|*7.3.31*|*MariaDB 10.3.39*|1.1.1n|2022-01|
-|bullseye|debian:bullseye|*5.32.1*|*7.4.33*|*MariaDB 10.5.26*|1.1.1w|-|
+|buster|debian:buster-slim|*5.28.1*|*7.3.31*|*MariaDB 10.3.39*|1.1.1n|2022-01|
+|bullseye|debian:bullseye-slim|*5.32.1*|*7.4.33*|*MariaDB 10.5.26*|1.1.1w|-|
 |fedora35|fedora:35|*5.34.1*|8.0.26|8.0.31|1.1.1q|-|
 |fedora37|fedora:37|*5.36.1*|*8.1.25*|8.0.35|3.0.9|-|
 |fedora39|fedora:39|5.38.2|*8.2.25*|8.0.39|3.1.4|-|
-|fedora40|fedora:40|*5.38.2*|8.3.14|*8.0.40*|3.2.2|-|
+|fedora40|fedora:40|*5.38.2*|8.3.15|*8.0.40*|3.2.2|-|
 |fedora41|fedora:41|*5.40.0*|*8.3.15*|*8.4.3*|3.2.2|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.33*|*5.7.44*|1.0.2k|-|
 |cloud7 (\*1)|rockylinux:9|5.38.2|8.2.27|MariaDB 10.5.22|3.2.2|-|
@@ -26,12 +26,12 @@ Dockerfile to test MT.
 
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
-|centos6 (\*2)|centos:6|*5.10.1*|*5.5.38*|*5.1.73*|1.0.1e|2020-11|
+|centos6 (\*2)|centos:6|*5.10.1*|*5.3.3*|*5.1.73*|1.0.1e|2020-11|
 |centos8|centos:8|5.26.3|*8.0.30*|8.0.26|1.1.1k|2021-12|
 |fedora32 (\*2)|fedora:32|*5.30.3*|7.4.19|8.0.24|1.1.1k|-|
-|rawhide|fedora:rawhide|5.40.0|8.4.2|8.0.40|3.2.2|-|
+|rawhide|fedora:rawhide|5.40.0|8.4.3|8.0.40|3.2.2|-|
 |rockylinux|rockylinux:9|5.32.1|8.1.31|8.0.36|3.2.2|-|
-|bookworm|debian:bookworm|5.36.0|8.2.26|*MariaDB 10.11.6*|3.0.15|-|
+|bookworm|debian:bookworm-slim|5.36.0|8.2.26|*MariaDB 10.11.6*|3.0.15|-|
 |sid|debian:sid|5.40.0|8.4.2|MariaDB 11.4.4|3.3.2|-|
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.3|3.0.13|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|

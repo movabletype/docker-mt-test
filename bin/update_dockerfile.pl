@@ -40,6 +40,10 @@ my %Conf = (
                 HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons => [qw(
+                AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid Data::Section::Simple
+            )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -77,6 +81,10 @@ my %Conf = (
                 HTTP::Message@6.46
             )],
             extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons => [qw(
+                AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
+                Net::LDAP Linux::Pid Data::Section::Simple
+            )],
             bcompat => [qw( pQuery )],
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
@@ -359,12 +367,6 @@ my %Conf = (
                 'php-mysqlnd'          => 'php-mysql',
                 'GraphicsMagick'       => '',
                 'GraphicsMagick-perl'  => '',
-                'php'                  => '',
-                'php-cli'              => '',
-                'php-mysqlnd'          => '',
-                'php-mbstring'         => '',
-                'php-gd'               => '',
-                'php-pecl-memcache'    => '',
                 'phpunit'              => '',
                 'libwebp-devel'        => '',
                 'icc-profiles-openicc' => '',
@@ -376,15 +378,9 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
-            remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
-        },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
-            enable      => 'remi,remi-php55',
-            php_version => 'php55',
         },
         cpan => {
             no_test => [qw(
