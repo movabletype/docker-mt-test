@@ -367,12 +367,6 @@ my %Conf = (
                 'php-mysqlnd'          => 'php-mysql',
                 'GraphicsMagick'       => '',
                 'GraphicsMagick-perl'  => '',
-                'php'                  => '',
-                'php-cli'              => '',
-                'php-mysqlnd'          => '',
-                'php-mbstring'         => '',
-                'php-gd'               => '',
-                'php-pecl-memcache'    => '',
                 'phpunit'              => '',
                 'libwebp-devel'        => '',
                 'icc-profiles-openicc' => '',
@@ -384,15 +378,9 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
-            remi => [qw( php55-php php55-php-mbstring php55-php-mysqlnd php55-php-gd php55-php-pecl-memcache php55-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
-        },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-6.rpm',
-            enable      => 'remi,remi-php55',
-            php_version => 'php55',
         },
         cpan => {
             no_test => [qw(
