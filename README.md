@@ -18,7 +18,7 @@ Dockerfile to test MT.
 |fedora40|fedora:40|*5.38.2*|8.3.15|*8.0.40*|3.2.2|-|
 |fedora41|fedora:41|*5.40.0*|*8.3.15*|*8.4.3*|3.2.2|-|
 |cloud6 (\*1)|centos:7|*5.28.2*|*7.4.33*|*5.7.44*|1.0.2k|-|
-|cloud7 (\*1)|rockylinux:9|5.38.2|8.2.27|MariaDB 10.5.22|3.2.2|-|
+|cloud7 (\*1)|rockylinux/rockylinux:9|5.38.2|8.2.27|MariaDB 10.5.22|3.2.2|-|
 
 \*1 These images are not used in the MT cloud, but the well-known modules should have the same version (except for those used only in tests).
 
@@ -30,7 +30,7 @@ Dockerfile to test MT.
 |centos8|centos:8|5.26.3|*8.0.30*|8.0.26|1.1.1k|2021-12|
 |fedora32 (\*2)|fedora:32|*5.30.3*|7.4.19|8.0.24|1.1.1k|-|
 |rawhide|fedora:rawhide|5.40.0|8.4.3|8.0.40|3.2.2|-|
-|rockylinux|rockylinux:9|5.32.1|8.1.31|8.0.36|3.2.2|-|
+|rockylinux|rockylinux/rockylinux:9|5.32.1|8.1.31|8.0.36|3.2.2|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.26|*MariaDB 10.11.6*|3.0.15|-|
 |sid|debian:sid|5.40.0|8.4.2|MariaDB 11.4.4|3.3.2|-|
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.3|3.0.13|-|
@@ -50,3 +50,15 @@ Dockerfile to test MT.
 |addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.8b, pureftpd 1.0.50, slapd 2.6.6|
 |chromiumdriver|movabletype/test:bullseye|chromedriver 120.0.6099.224|
 |playwright|movabletype/test:bullseye|node 22.12.0, playwright 1.49.1|
+
+## How to update
+
+```
+$ perl bin/update_dockerfile.pl
+$ perl bin/build_all.pl (with or without --no-cache)
+$ perl bin/check_all.pl
+$ perl bin/test_readme.pl
+$ perl bin/push_all.pl
+
+then, make a pull request, review, and merge it to mirror the uploaded images.
+```
