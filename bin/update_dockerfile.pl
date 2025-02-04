@@ -511,7 +511,7 @@ my %Conf = (
         installer       => 'dnf',
     },
     rockylinux => {
-        from => 'rockylinux:9.2',
+        from => 'rockylinux/rockylinux:9.5',
         base => 'centos',
         yum  => {
             _replace => {
@@ -615,7 +615,7 @@ my %Conf = (
         no_update     => 1,
     },
     cloud7 => {
-        from => 'rockylinux:9',
+        from => 'rockylinux/rockylinux:9.5',
         base => 'centos',
         yum  => {
             _replace => {

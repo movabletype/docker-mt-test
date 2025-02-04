@@ -1,4 +1,4 @@
-FROM rockylinux:9.2
+FROM rockylinux/rockylinux:9.5
 
 WORKDIR /root
 
