@@ -10,7 +10,7 @@ for my $line (split /\n/, path('README.md')->slurp) {
     next if $line     =~ /^\|(?:\-|image name)/;
     $line             =~ s/(^\|)|(\|$)//g;
     $line             =~ s/\*//g;
-    $line             =~ s/MariaDB //;
+    $line             =~ s/(?:MariaDB|Postgres) //;
     my ($image, $base, @rest) = split '\|', $line;
     next if $image =~ /(?:openldap|chromedriver)/;
     if ($image =~ /(?:addons|chromiumdriver|playwright)/) {
@@ -42,7 +42,7 @@ for my $image (sort keys %mapping) {
             next;
         }
         my $wanted = $key;
-        $wanted = '(?:mysql|mariadb)' if $key eq 'mysql';
+        $wanted = '(?:mysql|mariadb|postgresql)' if $key eq 'mysql';
         my ($version) = $log =~ /$wanted exists \((.+?)\)/i;
         is $version => $mapping{$image}{$key} => "$image has correct $key";
     }

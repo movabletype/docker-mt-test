@@ -33,14 +33,14 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
-            ## https://github.com/libwww-perl/HTML-Form/issues/50
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
-                HTTP::Message@6.46
             )],
-            extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons => [qw(
+            # Imager 1.026 breaks Imager::File::WEBP
+            # cf. https://github.com/tonycoz/imager/issues/538
+            temporary => [qw( Imager@1.025 )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -74,14 +74,14 @@ my %Conf = (
             ## fragile tests, or broken by other modules (Atom, Pulp)
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
-            ## cf latest HTTP::Message itself is not broken but breaks HTML::Form
-            ## https://github.com/libwww-perl/HTML-Form/issues/50
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
-                HTTP::Message@6.46
             )],
-            extra   => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons => [qw(
+            # Imager 1.026 breaks Imager::File::WEBP
+            # cf. https://github.com/tonycoz/imager/issues/538
+            temporary => [qw( Imager@1.025 )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -888,6 +888,41 @@ my %Conf = (
         locale_def      => 1,
         no_update       => 1,
     },
+    postgresql => {
+        from => 'fedora:41',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'php-mysqlnd'  => '',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit'      => '',
+            },
+            db     => [qw( postgresql postgresql-server libpq-devel )],
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
+            php    => [qw( php-pgsql )],
+        },
+        cpan => {
+            _replace => {
+                'App::Prove::Plugin::MySQLPool' => '',
+                'Test::mysqld'                  => '',
+                'DBD::mysql@4.050'              => '',
+            },
+            db => [qw( DBD::Pg Test::PostgreSQL )],
+        },
+        remove_from_cpanfile => [qw( DBD::mysql App::Prove::Plugin::MySQLPool )],
+        make_dummy_cert      => '/usr/bin',
+        make                 => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.43',
+        },
+        patch     => ['Crypt-DES-2.07'],
+        installer => 'dnf',
+        phpunit   => 11,
+    },
 );
 
 my $templates = get_data_section();
@@ -1094,6 +1129,9 @@ RUN \\
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+% if ($conf->{remove_from_cpanfile}) {
+ perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' cpanfile &&\\
+% }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
@@ -1195,7 +1233,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9])/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
@@ -1272,6 +1310,9 @@ RUN\
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+% if ($conf->{remove_from_cpanfile}) {
+ perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' cpanfile &&\\
+% }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
 % } else {
@@ -1345,6 +1386,9 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
+% if ($conf->{remove_from_cpanfile}) {
+    perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' t/cpanfile &&\\
+% }
     <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
@@ -1398,19 +1442,39 @@ done
 
 % if ($type eq 'centos6') {
 mysql -e "create database if not exists mt_test character set utf8;"
-% } else {
+% } elsif ($type ne 'postgresql') {
 mysql -e "create database mt_test character set utf8;"
 % }
+% if ($type eq 'postgresql') {
+export PGDATA=/var/lib/postgresql/data
+install --verbose --directory --owner postgres --group postgres --mode 1777 /var/lib/postgresql
+install --verbose --directory --owner postgres --group postgres --mode 3777 /var/run/postgresql
+
+su -c 'initdb --show' postgres
+
+su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
+
+su -c 'createuser mt' postgres
+su -c 'createdb -O mt mt_test' postgres
+% } else {
 % if ($type ne 'centos6') {
 mysql -e "create user mt@localhost;"
 % }
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+% }
 
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
+% if ($conf->{remove_from_cpanfile}) {
+    perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' t/cpanfile &&\\
+% }
     <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
+
+% if ($type eq 'postgresql') {
+export MT_TEST_BACKEND=Pg
+% }
 
 exec "$@"
 
