@@ -1129,6 +1129,9 @@ RUN \\
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+% if ($conf->{remove_from_cpanfile}) {
+ perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' cpanfile &&\\
+% }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure\\
 % } else {
@@ -1307,6 +1310,9 @@ RUN\
  <%= join " ", @{ $conf->{cpan}{$key} } %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
+% if ($conf->{remove_from_cpanfile}) {
+ perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' cpanfile &&\\
+% }
 % if ($conf->{use_cpm}) {
  cpm install -g --test --show-build-log-on-failure &&\\
 % } else {
@@ -1380,6 +1386,9 @@ mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 if [ -f t/cpanfile ]; then
+% if ($conf->{remove_from_cpanfile}) {
+    perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' t/cpanfile &&\\
+% }
     <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
 
