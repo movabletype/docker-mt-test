@@ -3,10 +3,13 @@ use warnings;
 use Test::More;
 use version;
 
+my $image_name = $ENV{TEST_IMAGE};
+
+diag "\nChecking $image_name";
+
 my %prereqs = (
     'Archive::Tar'            => '',
     'Archive::Zip'            => '<= 1.65?(cloud6|cloud7|addons)',
-    'DBD::mysql'              => '4.000',
     'DBI'                     => '1.633',
     'GD'                      => 0,
     'Graphics::Magick'        => 0,
@@ -18,9 +21,11 @@ my %prereqs = (
     'IO::Socket::SSL'         => '2.058',
 );
 
-my $image_name = $ENV{TEST_IMAGE};
-
-diag "\nChecking $image_name";
+if ($image_name eq 'postgresql') {
+    $prereqs{'DBD::Pg'} = 0;
+} else {
+    $prereqs{'DBD::mysql'} = '4.000';
+}
 
 # temporary files
 
@@ -139,11 +144,15 @@ ok $phpinfo =~ /(?:
     Zend[ ]Multibyte[ ]Support[ ]=>[ ]provided[ ]by[ ]mbstring |
     mbstring[ ]extension[ ]makes[ ]use[ ]of[ ]"streamable[ ]kanji[ ]code[ ]filter[ ]and[ ]converter"
 )/x, "$image_name: PHP has mbstring";
-ok $phpinfo =~ /PDO drivers => .*?mysql/,       "$image_name: PHP has PDO mysql driver";
-ok $phpinfo =~ /GD Support => enabled/,         "$image_name: PHP has GD";
+if ($image_name eq 'postgresql') {
+    ok $phpinfo =~ /PDO drivers => .*?pgsql/, "$image_name: PHP has PDO pgsql driver";
+} else {
+    ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
+}
+ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
 SKIP: {
     local $TODO = 'php for CentOS6 does not support DOM/XML' if $image_name =~ /centos6/;
-    ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
+    ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
 }
 ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
@@ -151,7 +160,7 @@ ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG"
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
 SKIP: {
     local $TODO = 'php for CentOS6 does not support WebP' if $image_name =~ /centos6/;
-    ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
+    ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
 }
 SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
@@ -192,40 +201,45 @@ SKIP: {
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
     if ($php_version_number >= 8.2) {
-        is substr($phpunit, 0, 2) => 11, "phpunit 11 (11.x.x) for php >= 8.2 ($php_version)";
+        is substr($phpunit, 0, 2) => 11, "$image_name: phpunit 11 (11.x.x) for php >= 8.2 ($php_version)";
     } elsif ($php_version_number >= 8.1) {
-        is substr($phpunit, 0, 2) => 10, "phpunit 10 (10.x.x) for php >= 8.1 ($php_version)";
+        is substr($phpunit, 0, 2) => 10, "$image_name: phpunit 10 (10.x.x) for php >= 8.1 ($php_version)";
     } elsif ($php_version_number >= 7.3) {
-        is substr($phpunit, 0, 1) => 9, "phpunit 9 (9.5.x) for php >= 7.3 ($php_version)";
+        is substr($phpunit, 0, 1) => 9, "$image_name: phpunit 9 (9.5.x) for php >= 7.3 ($php_version)";
     } elsif ($php_version_number >= 7.2) {
-        is substr($phpunit, 0, 1) => 8, "phpunit 8 (8.5.21) for php >= 7.2 ($php_version)";
+        is substr($phpunit, 0, 1) => 8, "$image_name: phpunit 8 (8.5.21) for php >= 7.2 ($php_version)";
     } elsif ($php_version_number >= 7.1) {
-        is substr($phpunit, 0, 1) => 7, "phpunit 7 (7.5.20) for php >= 7.1 ($php_version)";
+        is substr($phpunit, 0, 1) => 7, "$image_name: phpunit 7 (7.5.20) for php >= 7.1 ($php_version)";
     } elsif ($php_version_number >= 7.0) {
-        is substr($phpunit, 0, 1) => 6, "phpunit 6 (6.5.14) for php >= 7.0 ($php_version)";
+        is substr($phpunit, 0, 1) => 6, "$image_name: phpunit 6 (6.5.14) for php >= 7.0 ($php_version)";
     } elsif ($php_version_number >= 5.6) {
-        is substr($phpunit, 0, 1) => 5, "phpunit 5 (5.7.27) for php >= 5.6 ($php_version)";
+        is substr($phpunit, 0, 1) => 5, "$image_name: phpunit 5 (5.7.27) for php >= 5.6 ($php_version)";
     } else {
-        is substr($phpunit, 0, 1) => 4, "phpunit 4 (4.8.36) for php >= 5.3 ($php_version)";
+        is substr($phpunit, 0, 1) => 4, "$image_name: phpunit 4 (4.8.36) for php >= 5.3 ($php_version)";
     }
 }
 
-my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+(?:from|Ver).+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
-my $mysql = $is_maria ? "MariaDB" : "MySQL";
-ok $mysql_version, "$image_name: $mysql exists ($mysql_version)";
-my $sql_mode = `mysql -Nse 'select \@\@sql_mode' 2>&1`;
-note "SQL mode: $sql_mode";
-if ($sql_mode =~ /Can't connect to local MySQL/) {
-    fail "$image_name: failed to connect to local mysql" if $entrypoint_is_executed;
-}
-if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
-    my ($file_format)    = `mysql -Nse 'select \@\@innodb_file_format'`    =~ /(\w+)/;
-    my ($file_per_table) = `mysql -Nse 'select \@\@innodb_file_per_table'` =~ /(\w+)/;
-    my ($large_prefix)   = `mysql -Nse 'select \@\@innodb_large_prefix'`   =~ /(\w+)/;
-    $file_format    //= '';
-    $file_per_table //= '';
-    $large_prefix   //= '';
-    note "InnoDB: file format $file_format, file per table $file_per_table, large prefix $large_prefix";
+if ($image_name eq 'postgresql') {
+    my ($postgresql_version) = `su -c 'postgres --version' postgres 2>/dev/null` =~ /postgres .+?(\d+\.\d+)/;
+    ok $postgresql_version, "$image_name: postgresql exists ($postgresql_version)";
+} else {
+    my ($mysql_version, $is_maria) = `mysql --verbose --help 2>/dev/null` =~ /mysql\s+(?:from|Ver).+?(\d+\.\d+\.\d+).+?(MariaDB)?/;
+    my $mysql = $is_maria ? "MariaDB" : "MySQL";
+    ok $mysql_version, "$image_name: $mysql exists ($mysql_version)";
+    my $sql_mode = `mysql -Nse 'select \@\@sql_mode' 2>&1`;
+    note "SQL mode: $sql_mode";
+    if ($sql_mode =~ /Can't connect to local MySQL/) {
+        fail "$image_name: failed to connect to local mysql" if $entrypoint_is_executed;
+    }
+    if ($mysql_version =~ /^5\.[567]\./ or $mysql_version =~ /^10\.[0123]\./) {
+        my ($file_format)    = `mysql -Nse 'select \@\@innodb_file_format'`    =~ /(\w+)/;
+        my ($file_per_table) = `mysql -Nse 'select \@\@innodb_file_per_table'` =~ /(\w+)/;
+        my ($large_prefix)   = `mysql -Nse 'select \@\@innodb_large_prefix'`   =~ /(\w+)/;
+        $file_format    //= '';
+        $file_per_table //= '';
+        $large_prefix   //= '';
+        note "InnoDB: file format $file_format, file per table $file_per_table, large prefix $large_prefix";
+    }
 }
 
 my ($ruby_version) = `ruby --version 2>&1` =~ /ruby (\d+\.\d+.\d+)/;
