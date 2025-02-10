@@ -1233,7 +1233,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9])/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
