@@ -1442,19 +1442,39 @@ done
 
 % if ($type eq 'centos6') {
 mysql -e "create database if not exists mt_test character set utf8;"
-% } else {
+% } elsif ($type ne 'postgresql') {
 mysql -e "create database mt_test character set utf8;"
 % }
+% if ($type eq 'postgresql') {
+export PGDATA=/var/lib/postgresql/data
+install --verbose --directory --owner postgres --group postgres --mode 1777 /var/lib/postgresql
+install --verbose --directory --owner postgres --group postgres --mode 3777 /var/run/postgresql
+
+su -c 'initdb --show' postgres
+
+su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
+
+su -c 'createuser mt' postgres
+su -c 'createdb -O mt mt_test' postgres
+% } else {
 % if ($type ne 'centos6') {
 mysql -e "create user mt@localhost;"
 % }
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+% }
 
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
+% if ($conf->{remove_from_cpanfile}) {
+    perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' t/cpanfile &&\\
+% }
     <%= $conf->{cpanm} %> --installdeps -n . --cpanfile=t/cpanfile
 fi
+
+% if ($type eq 'postgresql') {
+export MT_TEST_BACKEND=Pg
+% }
 
 exec "$@"
 
