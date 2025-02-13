@@ -7,6 +7,7 @@ install --verbose --directory --owner postgres --group postgres --mode 1777 /var
 install --verbose --directory --owner postgres --group postgres --mode 3777 /var/run/postgresql
 
 su -c 'initdb --show' postgres
+su -c 'initdb -D /var/lib/postgresql/data' postgres
 
 su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
 
