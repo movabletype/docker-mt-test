@@ -36,7 +36,7 @@ Dockerfile to test MT.
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.3|3.0.13|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2022 (\*4)|amazonlinux:2023|5.32.1|8.3.7|MariaDB 10.5.25|3.0.8|-|
-|postgresql|fedora:41|5.40.1|8.3.16|Postgres 16.3|3.2.2|-|
+|postgresql|fedora:41|5.40.1|8.3.17|Postgres 16.3|3.2.4|-|
 |oracle (\*3)|oraclelinux:7-slim|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |oracle8 (\*3)|oraclelinux:8-slim|5.26.3|8.2.27|MariaDB 10.3.39|1.1.1k|-|
 
