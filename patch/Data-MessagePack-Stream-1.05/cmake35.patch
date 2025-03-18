@@ -1,0 +1,12 @@
+diff --git a/builder/MyBuilder.pm b/builder/MyBuilder.pm
+index a96b04c..61bd1e1 100644
+--- a/builder/MyBuilder.pm
++++ b/builder/MyBuilder.pm
+@@ -36,6 +36,7 @@ sub _build_msgpack {
+         -DMSGPACK_ENABLE_CXX=OFF
+         -DMSGPACK_BUILD_EXAMPLES=OFF
+         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
++        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+     );
+     chdir "msgpack-$MSGPACK_VERSION";
+     my $ok = $self->do_system($self->_cmake, @opt, ".");
