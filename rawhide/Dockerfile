@@ -5,7 +5,7 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y --nogpgcheck  install\
- distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix\
+ distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
  libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -32,18 +32,20 @@ RUN dnf -y --nogpgcheck  install\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+ cpanm -n CryptX App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Data-MessagePack-Stream-1.05 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
+ JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ perl -i -nE 'print unless /(?:YAML::Syck)/' cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 

@@ -5,7 +5,7 @@ WORKDIR /root
 
 RUN  microdnf -y install dnf &&\
  dnf -y  install\
- which glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ which glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
@@ -45,11 +45,11 @@ RUN  microdnf -y install dnf &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -n DBI Test::NoWarnings XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JSON::XS Starman Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  DBD::Oracle\
  Fluent::Logger\

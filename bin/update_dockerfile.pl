@@ -15,7 +15,7 @@ my %Conf = (
         apt => {
             base => [qw(
                 ca-certificates netbase git make cmake gcc clang curl ssh locales perl
-                zip unzip bzip2 procps ssl-cert postfix
+                zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules
             )],
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
@@ -36,11 +36,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
-            # Imager 1.026 breaks Imager::File::WEBP
-            # cf. https://github.com/tonycoz/imager/issues/538
-            temporary => [qw( Imager@1.025 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons    => [qw(
+            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -56,7 +53,7 @@ my %Conf = (
         yum => {
             base => [qw(
                 git make cmake gcc clang curl perl perl-core
-                tar zip unzip bzip2 which procps postfix
+                tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
@@ -77,11 +74,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
-            # Imager 1.026 breaks Imager::File::WEBP
-            # cf. https://github.com/tonycoz/imager/issues/538
-            temporary => [qw( Imager@1.025 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
-            addons    => [qw(
+            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -201,11 +195,13 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            # https://github.com/DCIT/perl-CryptX/issues/118
+            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
         },
-        patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
-        make_dummy_cert => '/usr/bin',
-        make            => {
+        remove_from_cpanfile => [qw( YAML::Syck )],
+        patch                => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        make_dummy_cert      => '/usr/bin',
+        make                 => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },

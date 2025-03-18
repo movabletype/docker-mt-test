@@ -14,7 +14,7 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
+ ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
@@ -35,13 +35,13 @@ RUN \
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure GD XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+ cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy\
+ JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

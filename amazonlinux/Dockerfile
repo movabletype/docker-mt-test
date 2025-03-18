@@ -4,7 +4,7 @@ WORKDIR /root
 
 
 RUN yum -y  install\
- which hostname glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ which hostname glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
  mariadb-devel mariadb-server mariadb\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -36,11 +36,11 @@ RUN yum -y  install\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -n XML::DOM XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v SQL::Translator@1.63 Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+ cpanm -v SQL::Translator@1.63 Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JSON::XS Starman Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\

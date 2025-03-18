@@ -6,7 +6,7 @@ WORKDIR /root
 RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\
  yum -y  install\
- git make cmake gcc curl perl perl-core tar zip unzip bzip2 which procps postfix\
+ git make cmake gcc curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
  mysql-devel mysql-server mysql\
  vim nano\
  ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel\
@@ -37,11 +37,11 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm --no-lwp -n CryptX XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm --no-lwp -v Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Mouse@2.5.10 Archive::Zip@1.65 DBD::mysql@4.050 HTTP::Message@6.46 &&\
+ cpanm --no-lwp -v Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004 Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315 Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952 Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001 Pod::Coverage::TrustPod@0.100005 Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25 Plack@1.0050 DBD::SQLite SQL::Translator@1.63 HTML::TreeBuilder::LibXML@0.26 Mouse@2.5.10 Archive::Zip@1.65 DBD::mysql@4.050 &&\
  cpanm --no-lwp -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- JSON::XS Starman Plack::Middleware::ReverseProxy\
+ JSON::XS Starman Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
