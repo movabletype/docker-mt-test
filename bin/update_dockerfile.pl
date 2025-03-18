@@ -15,7 +15,7 @@ my %Conf = (
         apt => {
             base => [qw(
                 ca-certificates netbase git make cmake gcc clang curl ssh locales perl
-                zip unzip bzip2 procps ssl-cert postfix
+                zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules
             )],
             images => [qw(
                 perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
@@ -56,7 +56,7 @@ my %Conf = (
         yum => {
             base => [qw(
                 git make cmake gcc clang curl perl perl-core
-                tar zip unzip bzip2 which procps postfix
+                tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain
             )],
             images => [qw(
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
