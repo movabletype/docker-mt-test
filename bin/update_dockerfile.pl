@@ -195,11 +195,13 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            # https://github.com/DCIT/perl-CryptX/issues/118
+            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
         },
-        patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
-        make_dummy_cert => '/usr/bin',
-        make            => {
+        remove_from_cpanfile => [qw( YAML::Syck )],
+        patch                => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        make_dummy_cert      => '/usr/bin',
+        make                 => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
