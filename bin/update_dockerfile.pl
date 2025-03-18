@@ -39,7 +39,7 @@ my %Conf = (
             # Imager 1.026 breaks Imager::File::WEBP
             # cf. https://github.com/tonycoz/imager/issues/538
             temporary => [qw( Imager@1.025 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
@@ -80,7 +80,7 @@ my %Conf = (
             # Imager 1.026 breaks Imager::File::WEBP
             # cf. https://github.com/tonycoz/imager/issues/538
             temporary => [qw( Imager@1.025 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
