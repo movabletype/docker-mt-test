@@ -214,6 +214,10 @@ my %Conf = (
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
             no_weak_deps => 1,
+            fix_release_version => {
+                version => 42,
+                repo    => 'mysql-community.repo',
+            },
         },
         installer                      => 'dnf',
         setcap                         => 1,
@@ -1268,6 +1272,9 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install\\
 %   } else {
+%     if (my $fix = $conf->{$repo}{fix_release_version}) {
+    sed -i -e 's/\$releasever/<%= $fix->{version} %>/' /etc/yum.repos.d/<%= $fix->{repo} %> &&\
+%     }
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
