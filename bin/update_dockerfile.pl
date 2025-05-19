@@ -36,6 +36,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
+            # breaking EV, hence AnyEvent
+            temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
@@ -74,6 +76,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
+            # breaking EV, hence AnyEvent
+            temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
