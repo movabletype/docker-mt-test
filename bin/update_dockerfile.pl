@@ -185,9 +185,9 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit'      => '',
             },
@@ -204,6 +204,15 @@ my %Conf = (
         make                 => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
+        },
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
         },
         installer                      => 'dnf',
         setcap                         => 1,
