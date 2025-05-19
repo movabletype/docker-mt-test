@@ -243,6 +243,7 @@ my %Conf = (
             rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
+            no_weak_deps => 1,
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
@@ -1257,7 +1258,7 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install\\
 %   } else {
-    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
 %   if ($conf->{$repo}{enable}) {
