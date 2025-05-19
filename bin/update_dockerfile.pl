@@ -247,6 +247,7 @@ my %Conf = (
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
         phpunit   => 11,
+        use_ipv4  => 1,
     },
     fedora41 => {
         from => 'fedora:41',
@@ -1224,7 +1225,7 @@ RUN\
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
   % $conf->{installer} = 'dnf';
 % }
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
+ <%= $conf->{installer} // 'yum' %> <%= $conf->{use_ipv4} ? '--setopt=ip_resolve=4 ' : '' %>-y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
