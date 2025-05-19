@@ -220,7 +220,6 @@ my %Conf = (
             },
         },
         installer                      => 'dnf',
-        setcap                         => 1,
         phpunit                        => 11,
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
