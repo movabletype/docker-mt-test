@@ -213,6 +213,7 @@ my %Conf = (
             rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
+            no_weak_deps => 1,
         },
         installer                      => 'dnf',
         setcap                         => 1,
