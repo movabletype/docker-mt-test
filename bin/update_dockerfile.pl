@@ -201,6 +201,7 @@ my %Conf = (
         remove_from_cpanfile => [qw( YAML::Syck )],
         patch                => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
         make_dummy_cert      => '/usr/bin',
+        create_make_dummy_cert => 1,
         make                 => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
@@ -1048,6 +1049,10 @@ for my $name (@targets) {
         }
         path("$name/patch/.gitignore")->spew('*');
     }
+    if ($conf->{create_make_dummy_cert}) {
+        my $script = Mojo::Template->new->render($templates->{'make-dummy-cert'});
+        path("$name/patch/make-dummy-cert")->spew($script);
+    }
 }
 
 sub merge_conf {
@@ -1121,6 +1126,9 @@ RUN \\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
+% if ($conf->{create_make_dummy_cert}) {
+ cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1289,6 +1297,9 @@ RUN\
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
   update-crypto-policies --set legacy &&\\
+% }
+% if ($conf->{create_make_dummy_cert}) {
+ cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -1530,3 +1541,32 @@ export MT_TEST_BACKEND=Pg
 
 exec "$@"
 
+@@ make-dummy-cert
+#!/bin/sh
+umask 077
+
+answers() {
+        echo --
+        echo SomeState
+        echo SomeCity
+        echo SomeOrganization
+        echo SomeOrganizationalUnit
+        echo localhost.localdomain
+        echo root@localhost.localdomain
+}
+
+if [ $# -eq 0 ] ; then
+        echo $"Usage: `basename $0` filename [...]"
+        exit 0
+fi
+
+for target in $@ ; do
+        PEM1=`/bin/mktemp /tmp/openssl.XXXXXX`
+        PEM2=`/bin/mktemp /tmp/openssl.XXXXXX`
+        trap "rm -f $PEM1 $PEM2" SIGINT
+        answers | /usr/bin/openssl req -newkey rsa:2048 -keyout $PEM1 -nodes -x509 -days 365 -out $PEM2 2> /dev/null
+        cat $PEM1 >  ${target}
+        echo ""   >> ${target}
+        cat $PEM2 >> ${target}
+        rm -f $PEM1 $PEM2
+done
