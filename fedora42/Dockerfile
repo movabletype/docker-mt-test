@@ -1,10 +1,10 @@
-FROM fedora:rawhide
+FROM fedora:42
 
 WORKDIR /root
 
 COPY ./patch/ /root/patch/
 
-RUN dnf -y --nogpgcheck  install\
+RUN dnf --setopt=ip_resolve=4 -y  install\
  distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  vim nano\
  libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
@@ -13,13 +13,12 @@ RUN dnf -y --nogpgcheck  install\
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y --nogpgcheck install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
-    sed -i -e 's/\$releasever/42/' /etc/yum.repos.d/mysql-community.repo &&    dnf -y --nogpgcheck --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+ dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
+    dnf -y --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
  mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
  && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
- dnf -y --nogpgcheck update --skip-unavailable &&\
+ dnf -y update --skip-unavailable &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
- cp /root/patch/make-dummy-cert /usr/bin && chmod +x /usr/bin/make-dummy-cert &&\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
@@ -40,7 +39,6 @@ RUN dnf -y --nogpgcheck  install\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
-      cd /root/patch/Data-MessagePack-Stream-1.05 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\

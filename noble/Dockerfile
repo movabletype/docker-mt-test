@@ -34,6 +34,7 @@ RUN \
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
+ cpm install -g --test --show-build-log-on-failure ExtUtils::ParseXS@3.51 &&\
  cpm install -g --show-build-log-on-failure GD XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
@@ -58,11 +59,7 @@ RUN set -ex &&\
  make-ssl-cert generate-default-snakeoil &&\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' &&\
- perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \
-   my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \
-   $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \
-   open my $fh, ">", $inifile or die $!; print $fh $ini'
-
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \

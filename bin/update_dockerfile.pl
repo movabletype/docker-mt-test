@@ -36,8 +36,10 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
-            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons => [qw(
+            # breaking EV, hence AnyEvent
+            temporary => [qw( ExtUtils::ParseXS@3.51 )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -74,8 +76,10 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.050
             )],
-            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons => [qw(
+            # breaking EV, hence AnyEvent
+            temporary => [qw( ExtUtils::ParseXS@3.51 )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -185,9 +189,54 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit'      => '',
+            },
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
+        },
+        cpan => {
+            # https://github.com/DCIT/perl-CryptX/issues/118
+            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
+        },
+        remove_from_cpanfile   => [qw( YAML::Syck )],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        make_dummy_cert        => '/usr/bin',
+        create_make_dummy_cert => 1,
+        make                   => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.43',
+        },
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
+            no_weak_deps        => 1,
+            fix_release_version => {
+                version => 42,
+                repo    => 'mysql-community.repo',
+            },
+        },
+        installer                      => 'dnf',
+        phpunit                        => 11,
+        nogpgcheck                     => 1,
+        mysql_require_secure_transport => 1,
+    },
+    fedora42 => {
+        from => 'fedora:42',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit'      => '',
             },
@@ -199,17 +248,25 @@ my %Conf = (
             no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
         },
         remove_from_cpanfile => [qw( YAML::Syck )],
-        patch                => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
         make_dummy_cert      => '/usr/bin',
         make                 => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        installer                      => 'dnf',
-        setcap                         => 1,
-        phpunit                        => 11,
-        nogpgcheck                     => 1,
-        mysql_require_secure_transport => 1,
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
+            no_weak_deps => 1,
+        },
+        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        installer => 'dnf',
+        phpunit   => 11,
+        use_ipv4  => 1,
     },
     fedora41 => {
         from => 'fedora:41',
@@ -354,57 +411,6 @@ my %Conf = (
         installer       => 'dnf',
         setcap          => 1,
         phpunit         => 9,
-    },
-    centos6 => {
-        from => 'centos:6',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'php-mysqlnd'          => 'php-mysql',
-                'GraphicsMagick'       => '',
-                'GraphicsMagick-perl'  => '',
-                'phpunit'              => '',
-                'libwebp-devel'        => '',
-                'icc-profiles-openicc' => '',
-                'ruby'                 => '',
-                'ruby-devel'           => '',
-                'clang'                => '',
-            },
-            libs => [qw( perl-XML-Parser )],
-        },
-        repo => {
-            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
-        },
-        epel => {
-            rpm => 'epel-release',
-        },
-        cpan => {
-            no_test => [qw(
-                CryptX
-            )],
-            # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
-            broken => [qw(
-                Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004
-                Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
-                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
-                Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
-                Pod::Coverage::TrustPod@0.100005
-                Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
-                Plack@1.0050
-                DBD::SQLite
-                SQL::Translator@1.63
-                HTML::TreeBuilder::LibXML@0.26
-                Mouse@2.5.10
-            )],
-            _replace => {
-                'Imager::File::WEBP' => '',    # libwebp for centos6/epel is too old (0.4.3 as of this writing)
-            },
-        },
-        make => {
-            ruby => '2.7.8',
-        },
-        phpunit   => 4,
-        cpanm_opt => '--no-lwp',
     },
     centos7 => {
         from => 'centos:7',
@@ -996,6 +1002,10 @@ for my $name (@targets) {
         }
         path("$name/patch/.gitignore")->spew('*');
     }
+    if ($conf->{create_make_dummy_cert}) {
+        my $script = Mojo::Template->new->render($templates->{'make-dummy-cert'});
+        path("$name/patch/make-dummy-cert")->spew($script);
+    }
 }
 
 sub merge_conf {
@@ -1069,6 +1079,9 @@ RUN \\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
+% if ($conf->{create_make_dummy_cert}) {
+ cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1145,11 +1158,7 @@ RUN set -ex &&\\
  make-ssl-cert generate-default-snakeoil &&\\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \\
    's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' &&\\
- perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
-   my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; \\
-   $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
-   open my $fh, ">", $inifile or die $!; print $fh $ini'
-
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8 \\
@@ -1187,7 +1196,7 @@ RUN\
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
   % $conf->{installer} = 'dnf';
 % }
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
+ <%= $conf->{installer} // 'yum' %> <%= $conf->{use_ipv4} ? '--setopt=ip_resolve=4 ' : '' %>-y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
@@ -1219,7 +1228,10 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y module enable <%= $conf->{$repo}{module}{enable} %> ;\\
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install\\
 %   } else {
-    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %> install\\
+%     if (my $fix = $conf->{$repo}{fix_release_version}) {
+    sed -i -e 's/\$releasever/<%= $fix->{version} %>/' /etc/yum.repos.d/<%= $fix->{repo} %> &&\
+%     }
+    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
 %   if ($conf->{$repo}{enable}) {
@@ -1234,6 +1246,9 @@ RUN\
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
   update-crypto-policies --set legacy &&\\
+% }
+% if ($conf->{create_make_dummy_cert}) {
+ cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -1334,10 +1349,7 @@ RUN set -ex &&\\
   perl -i -pe \\
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \\
     /etc/httpd/conf/httpd.conf &&\\
-  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; \\
-    my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; \\
-    $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; \\
-    open my $fh, ">", $inifile; print $fh $ini' &&\\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\\
   sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 % # cf https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html
@@ -1475,3 +1487,32 @@ export MT_TEST_BACKEND=Pg
 
 exec "$@"
 
+@@ make-dummy-cert
+#!/bin/sh
+umask 077
+
+answers() {
+        echo --
+        echo SomeState
+        echo SomeCity
+        echo SomeOrganization
+        echo SomeOrganizationalUnit
+        echo localhost.localdomain
+        echo root@localhost.localdomain
+}
+
+if [ $# -eq 0 ] ; then
+        echo $"Usage: `basename $0` filename [...]"
+        exit 0
+fi
+
+for target in $@ ; do
+        PEM1=`/bin/mktemp /tmp/openssl.XXXXXX`
+        PEM2=`/bin/mktemp /tmp/openssl.XXXXXX`
+        trap "rm -f $PEM1 $PEM2" SIGINT
+        answers | /usr/bin/openssl req -newkey rsa:2048 -keyout $PEM1 -nodes -x509 -days 365 -out $PEM2 2> /dev/null
+        cat $PEM1 >  ${target}
+        echo ""   >> ${target}
+        cat $PEM2 >> ${target}
+        rm -f $PEM1 $PEM2
+done
