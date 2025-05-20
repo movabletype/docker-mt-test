@@ -254,13 +254,13 @@ my %Conf = (
             GraphicsMagick => '1.3.43',
         },
         repo => {
-            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+            mysql93 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
         },
-        mysql84 => {
+        mysql93 => {
             # taken from https://dev.mysql.com/downloads/repo/yum/
-            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
-            enable => 'mysql-8.4-lts-community',
-            # enable => 'mysql-innovation-community',
+            rpm          => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            disable      => 'mysql-8.4-lts-community',
+            enable       => 'mysql-innovation-community',
             no_weak_deps => 1,
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
@@ -1231,7 +1231,7 @@ RUN\
 %     if (my $fix = $conf->{$repo}{fix_release_version}) {
     sed -i -e 's/\$releasever/<%= $fix->{version} %>/' /etc/yum.repos.d/<%= $fix->{repo} %> &&\
 %     }
-    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
+    <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{disable} ? ' --disablerepo='.$conf->{$repo}{disable} : '' %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
  <%= join " ", @{$conf->{repo}{$repo}} %>\\
 %   if ($conf->{$repo}{enable}) {
