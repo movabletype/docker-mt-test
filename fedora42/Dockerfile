@@ -1,0 +1,69 @@
+FROM fedora:42
+
+WORKDIR /root
+
+COPY ./patch/ /root/patch/
+
+RUN dnf --setopt=ip_resolve=4 -y  install\
+ distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
+ vim nano\
+ libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+ libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
+ ruby ruby-devel\
+ mod_ssl vsftpd ftp memcached\
+ &&\
+ dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
+    dnf -y --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+ mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
+ && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
+ dnf -y update --skip-unavailable &&\
+ dnf clean all && rm -rf /var/cache/dnf &&\
+ mkdir src && cd src &&\
+ curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
+ tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
+ curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ mv phpunit /usr/local/bin/ &&\
+ (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
+ gem install \
+  fluentd\
+ &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL --compressed https://git.io/cpm > cpm &&\
+ chmod +x cpm &&\
+ mv cpm /usr/local/bin/ &&\
+ cpanm -v ExtUtils::ParseXS@3.51 &&\
+ cpanm -n CryptX App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
+      cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
+    rm -rf /root/patch &&\
+ cpanm -v \
+ AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
+ pQuery\
+ JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib\
+ JavaScript::Minifier CSS::Minifier\
+ Fluent::Logger\
+ && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
+ perl -i -nE 'print unless /(?:YAML::Syck)/' cpanfile &&\
+ cpanm --installdeps -v . &&\
+ rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
+
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
+
+RUN set -ex &&\
+  perl -i -pe \
+   's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
+    /etc/httpd/conf/httpd.conf &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\
+  sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
+
+RUN cd /usr/bin && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\
+  perl -i -pe 's!SSLCertificateKeyFile /etc/pki/tls/private/localhost.key!!' \
+  /etc/httpd/conf.d/ssl.conf && cd $WORKDIR
+
+COPY ./docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
