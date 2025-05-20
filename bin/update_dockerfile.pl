@@ -38,8 +38,8 @@ my %Conf = (
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
-            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons => [qw(
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -78,8 +78,8 @@ my %Conf = (
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
-            extra  => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons => [qw(
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -202,11 +202,11 @@ my %Conf = (
             # https://github.com/DCIT/perl-CryptX/issues/118
             no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
         },
-        remove_from_cpanfile => [qw( YAML::Syck )],
-        patch                => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
-        make_dummy_cert      => '/usr/bin',
+        remove_from_cpanfile   => [qw( YAML::Syck )],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
-        make                 => {
+        make                   => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
@@ -218,7 +218,7 @@ my %Conf = (
             rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
             enable => 'mysql-8.4-lts-community',
             # enable => 'mysql-innovation-community',
-            no_weak_deps => 1,
+            no_weak_deps        => 1,
             fix_release_version => {
                 version => 42,
                 repo    => 'mysql-community.repo',
