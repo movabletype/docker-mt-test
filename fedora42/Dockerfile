@@ -14,9 +14,9 @@ RUN dnf --setopt=ip_resolve=4 -y  install\
  mod_ssl vsftpd ftp memcached\
  &&\
  dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
-    dnf -y --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+    dnf -y --enablerepo=mysql-innovation-community --disablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
  mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
- && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
+ && dnf clean --enablerepo=mysql-innovation-community all &&\
  dnf -y update --skip-unavailable &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
  mkdir src && cd src &&\
