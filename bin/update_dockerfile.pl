@@ -412,57 +412,6 @@ my %Conf = (
         setcap          => 1,
         phpunit         => 9,
     },
-    centos6 => {
-        from => 'centos:6',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'php-mysqlnd'          => 'php-mysql',
-                'GraphicsMagick'       => '',
-                'GraphicsMagick-perl'  => '',
-                'phpunit'              => '',
-                'libwebp-devel'        => '',
-                'icc-profiles-openicc' => '',
-                'ruby'                 => '',
-                'ruby-devel'           => '',
-                'clang'                => '',
-            },
-            libs => [qw( perl-XML-Parser )],
-        },
-        repo => {
-            epel => [qw( GraphicsMagick-perl GraphicsMagick libwebp-devel clang )],
-        },
-        epel => {
-            rpm => 'epel-release',
-        },
-        cpan => {
-            no_test => [qw(
-                CryptX
-            )],
-            # DBD::SQLite is not broken by itself; SQL::Translator requires newer DBD::SQLite
-            broken => [qw(
-                Test::MockModule@v0.176.0 Data::OptList@0.113 Sub::Exporter@0.990 Data::Section@0.200007 Software::License@0.104004
-                Test::Deep@1.130 Email::MIME::ContentType@1.026 Email::MIME::Encodings@1.315
-                Email::MessageID@1.406 Email::Date::Format@1.005 Email::Simple@2.217 Email::MIME@1.952
-                Data::OptList@0.112 Sub::Exporter@0.987 IO::Socket::IP@0.41 Mixin::Linewise::Readers@0.108 Pod::Eventual@0.094001
-                Pod::Coverage::TrustPod@0.100005
-                Math::GMP@2.22 Mojolicious@8.43 JSON::Validator@4.25
-                Plack@1.0050
-                DBD::SQLite
-                SQL::Translator@1.63
-                HTML::TreeBuilder::LibXML@0.26
-                Mouse@2.5.10
-            )],
-            _replace => {
-                'Imager::File::WEBP' => '',    # libwebp for centos6/epel is too old (0.4.3 as of this writing)
-            },
-        },
-        make => {
-            ruby => '2.7.8',
-        },
-        phpunit   => 4,
-        cpanm_opt => '--no-lwp',
-    },
     centos7 => {
         from => 'centos:7',
         base => 'centos',
