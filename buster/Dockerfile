@@ -7,7 +7,7 @@ RUN \
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
- libdbd-mysql-perl mariadb-server mariadb-client\
+ libdbd-mysql-perl libmariadb-dev-compat mariadb-server mariadb-client libmariadb-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
  libxml2-dev libgmp-dev libssl-dev\
@@ -31,7 +31,7 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --test --show-build-log-on-failure ExtUtils::ParseXS@3.51 &&\
  cpm install -g --show-build-log-on-failure XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 &&\
+ cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\

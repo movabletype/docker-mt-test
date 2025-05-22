@@ -36,7 +36,7 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --test --show-build-log-on-failure ExtUtils::ParseXS@3.51 &&\
  cpm install -g --show-build-log-on-failure GD XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.050 &&\
+ cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \

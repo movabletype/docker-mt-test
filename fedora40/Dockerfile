@@ -6,13 +6,18 @@ COPY ./patch/ /root/patch/
 
 RUN dnf -y  install\
  glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
- community-mysql-devel community-mysql-server community-mysql\
+ mariadb-devel mariadb-server mariadb\
  vim nano\
  libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel\
  mod_ssl vsftpd ftp memcached\
+ &&\
+ dnf -y install https://www.rpmfind.net/linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm &&\
+    dnf -y module reset php ;\
+    dnf -y module enable php:remi-8.2 ;\
+    dnf -y install\
+ php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
  &&\
  dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
@@ -21,7 +26,6 @@ RUN dnf -y  install\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- setcap -r /usr/libexec/mysqld &&\
  curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
@@ -34,7 +38,7 @@ RUN dnf -y  install\
  mv cpm /usr/local/bin/ &&\
  cpanm -v ExtUtils::ParseXS@3.51 &&\
  cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\

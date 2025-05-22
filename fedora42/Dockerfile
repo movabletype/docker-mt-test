@@ -35,8 +35,8 @@ RUN dnf --setopt=ip_resolve=4 -y  install\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -v ExtUtils::ParseXS@3.51 &&\
- cpanm -n CryptX App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
+ cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\

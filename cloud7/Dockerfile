@@ -22,7 +22,7 @@ RUN dnf -y --allowerasing install\
  &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm &&\
     dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.2 ;\
+    dnf -y module enable php:remi-8.3 ;\
     dnf -y install\
  php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
  &&\
@@ -50,7 +50,7 @@ RUN dnf -y --allowerasing install\
  mv cpm /usr/local/bin/ &&\
  cpanm -v ExtUtils::ParseXS@3.51 &&\
  cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 DBD::mysql@4.050 &&\
+ cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
