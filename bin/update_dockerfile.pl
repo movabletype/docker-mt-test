@@ -199,8 +199,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # https://github.com/DCIT/perl-CryptX/issues/118
-            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         remove_from_cpanfile   => [qw( YAML::Syck )],
         patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
@@ -244,8 +243,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # https://github.com/DCIT/perl-CryptX/issues/118
-            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         remove_from_cpanfile => [qw( YAML::Syck )],
         make_dummy_cert      => '/usr/bin',
