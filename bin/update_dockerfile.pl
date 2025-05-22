@@ -306,11 +306,17 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-                'phpunit'      => '',
+                'mysql'             => 'mariadb',
+                'mysql-server'      => 'mariadb-server',
+                'mysql-devel'       => 'mariadb-devel',
+                'procps'            => 'perl-Unix-Process',
+                'php'               => '',
+                'php-cli'           => '',
+                'php-mysqlnd'       => '',
+                'php-mbstring'      => '',
+                'php-gd'            => '',
+                'php-pecl-memcache' => '',
+                'phpunit'           => '',
             },
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
@@ -321,8 +327,18 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
+        remi => {
+            rpm    => 'https://www.rpmfind.net/linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm',
+            module => {
+                reset  => 'php',
+                enable => 'php:remi-8.2',
+            },
+            php_version => 'php82',
+        },
+        repo => {
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+        },
         installer => 'dnf',
-        setcap    => 1,
         phpunit   => 11,
     },
     fedora39 => {
