@@ -34,7 +34,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken => [qw(
-                Archive::Zip@1.65 DBD::mysql@4.050
+                Archive::Zip@1.65 DBD::mysql@4.052
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
@@ -74,7 +74,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken => [qw(
-                Archive::Zip@1.65 DBD::mysql@4.050
+                Archive::Zip@1.65 DBD::mysql@4.052
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
@@ -911,7 +911,7 @@ my %Conf = (
             _replace => {
                 'App::Prove::Plugin::MySQLPool' => '',
                 'Test::mysqld'                  => '',
-                'DBD::mysql@4.050'              => '',
+                'DBD::mysql@4.052'              => '',
             },
             db => [qw( DBD::Pg Test::PostgreSQL )],
         },
