@@ -34,7 +34,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken => [qw(
-                Archive::Zip@1.65 DBD::mysql@4.050
+                Archive::Zip@1.65 DBD::mysql@4.052
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
@@ -74,7 +74,7 @@ my %Conf = (
             no_test => [qw( XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver )],
             ## cf https://rt.cpan.org/Public/Bug/Display.html?id=130525
             broken => [qw(
-                Archive::Zip@1.65 DBD::mysql@4.050
+                Archive::Zip@1.65 DBD::mysql@4.052
             )],
             # breaking EV, hence AnyEvent
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
@@ -122,10 +122,10 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'libmysqlclient-dev' => '',
+                'libmysqlclient-dev' => 'libmariadb-dev',
                 'phpunit'            => '',
             },
-            db  => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl libmariadb-dev-compat )],
             php => [qw( php-mbstring php-xml )],
         },
         phpunit => 11,
@@ -137,10 +137,10 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'libmysqlclient-dev' => '',
+                'libmysqlclient-dev' => 'libmariadb-dev',
                 'phpunit'            => '',
             },
-            db  => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl libmariadb-dev-compat )],
             php => [qw( php-mbstring php-xml )],
         },
         phpunit => 9,
@@ -152,12 +152,12 @@ my %Conf = (
             _replace => {
                 'mysql-server'       => 'mariadb-server',
                 'mysql-client'       => 'mariadb-client',
-                'libmysqlclient-dev' => '',
+                'libmysqlclient-dev' => 'libmariadb-dev',
                 'phpunit'            => '',
                 'ruby'               => '',
                 'ruby-dev'           => '',
             },
-            db  => [qw( libdbd-mysql-perl )],
+            db  => [qw( libdbd-mysql-perl libmariadb-dev-compat )],
             php => [qw( php-mbstring php-xml )],
         },
         apache => {
@@ -199,8 +199,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # https://github.com/DCIT/perl-CryptX/issues/118
-            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         remove_from_cpanfile   => [qw( YAML::Syck )],
         patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
@@ -244,8 +243,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # https://github.com/DCIT/perl-CryptX/issues/118
-            no_test => [qw( CryptX App::Prove::Plugin::MySQLPool )],
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
         },
         remove_from_cpanfile => [qw( YAML::Syck )],
         make_dummy_cert      => '/usr/bin',
@@ -308,11 +306,17 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-                'phpunit'      => '',
+                'mysql'             => 'mariadb',
+                'mysql-server'      => 'mariadb-server',
+                'mysql-devel'       => 'mariadb-devel',
+                'procps'            => 'perl-Unix-Process',
+                'php'               => '',
+                'php-cli'           => '',
+                'php-mysqlnd'       => '',
+                'php-mbstring'      => '',
+                'php-gd'            => '',
+                'php-pecl-memcache' => '',
+                'phpunit'           => '',
             },
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
@@ -323,8 +327,18 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
+        remi => {
+            rpm    => 'https://www.rpmfind.net/linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm',
+            module => {
+                reset  => 'php',
+                enable => 'php:remi-8.2',
+            },
+            php_version => 'php82',
+        },
+        repo => {
+            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+        },
         installer => 'dnf',
-        setcap    => 1,
         phpunit   => 11,
     },
     fedora39 => {
@@ -668,9 +682,9 @@ my %Conf = (
             rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
                 reset  => 'php',
-                enable => 'php:remi-8.2',
+                enable => 'php:remi-8.3',
             },
-            php_version => 'php82',
+            php_version => 'php83',
         },
         cloud_prereqs       => 'conf/cloud_prereqs7',
         patch               => ['Test-mysqld-1.0030'],
@@ -911,7 +925,7 @@ my %Conf = (
             _replace => {
                 'App::Prove::Plugin::MySQLPool' => '',
                 'Test::mysqld'                  => '',
-                'DBD::mysql@4.050'              => '',
+                'DBD::mysql@4.052'              => '',
             },
             db => [qw( DBD::Pg Test::PostgreSQL )],
         },
