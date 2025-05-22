@@ -682,9 +682,9 @@ my %Conf = (
             rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
             module => {
                 reset  => 'php',
-                enable => 'php:remi-8.2',
+                enable => 'php:remi-8.3',
             },
-            php_version => 'php82',
+            php_version => 'php83',
         },
         cloud_prereqs       => 'conf/cloud_prereqs7',
         patch               => ['Test-mysqld-1.0030'],
