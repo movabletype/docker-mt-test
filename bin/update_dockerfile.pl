@@ -740,7 +740,7 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit         => 9,
     },
-    amazonlinux2022 => {
+    amazonlinux2023 => {
         from => 'amazonlinux:2023',
         base => 'centos',
         yum  => {
@@ -1424,7 +1424,7 @@ set -e
 % if ($type eq 'centos6') {
 service mysqld start
 service memcached start
-% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2022)$/) {
+% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
