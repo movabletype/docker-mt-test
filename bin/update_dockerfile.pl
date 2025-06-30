@@ -745,16 +745,16 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'             => 'mariadb105',
-                'mysql-server'      => 'mariadb105-server',
-                'mysql-devel'       => 'mariadb105-devel',
+                'mysql'             => 'mariadb1011',
+                'mysql-server'      => 'mariadb1011-server',
+                'mysql-devel'       => 'mariadb1011-devel',
                 ftp                 => '',
                 'php-pecl-memcache' => '',
                 'phpunit'           => '',
             },
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
             server => [qw( httpd )],                                                  ## for mod_ssl
-            db     => [qw( mariadb105-pam )],
+            db     => [qw( mariadb1011-pam )],
             php    => [qw( php-cli php-xml php-json )],
         },
         gem => {
