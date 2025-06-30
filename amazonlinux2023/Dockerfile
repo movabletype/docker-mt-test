@@ -5,7 +5,7 @@ WORKDIR /root
 
 RUN dnf -y --allowerasing install\
  which hostname glibc-langpack-ja glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
- mariadb105-pam mariadb105-devel mariadb105-server mariadb105\
+ mariadb1011-pam mariadb1011-devel mariadb1011-server mariadb1011\
  vim nano\
  ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
