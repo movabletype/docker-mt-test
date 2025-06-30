@@ -51,6 +51,9 @@ for my $name (@targets) {
     for my $t (@{ $aliases_rev{$name} || [] }) {
         $tags .= " --tag movabletype/test:$t";
     }
+    my $dockerfile = path("$name/Dockerfile")->slurp;
+    my ($from)     = $dockerfile =~ /^FROM (\S+)/;
+    system("docker pull $from");
     system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
     my $log = path("log/build_$name.log")->slurp;
     if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built)!) {
