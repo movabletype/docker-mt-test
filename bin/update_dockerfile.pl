@@ -740,21 +740,21 @@ my %Conf = (
         make_dummy_cert => '/etc/pki/tls/certs/',
         phpunit         => 9,
     },
-    amazonlinux2022 => {
+    amazonlinux2023 => {
         from => 'amazonlinux:2023',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'             => 'mariadb105',
-                'mysql-server'      => 'mariadb105-server',
-                'mysql-devel'       => 'mariadb105-devel',
+                'mysql'             => 'mariadb1011',
+                'mysql-server'      => 'mariadb1011-server',
+                'mysql-devel'       => 'mariadb1011-devel',
                 ftp                 => '',
                 'php-pecl-memcache' => '',
                 'phpunit'           => '',
             },
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
             server => [qw( httpd )],                                                  ## for mod_ssl
-            db     => [qw( mariadb105-pam )],
+            db     => [qw( mariadb1011-pam )],
             php    => [qw( php-cli php-xml php-json )],
         },
         gem => {
@@ -1424,7 +1424,7 @@ set -e
 % if ($type eq 'centos6') {
 service mysqld start
 service memcached start
-% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2022)$/) {
+% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
