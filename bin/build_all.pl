@@ -31,6 +31,7 @@ my %aliases = qw(
     php-8.1 fedora37
     php-8.2 fedora39
     php-8.3 fedora40
+    php-8.4 fedora42
 );
 my %aliases_rev;
 
