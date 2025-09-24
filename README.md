@@ -39,7 +39,7 @@ Dockerfile to test MT.
 |amazonlinux2023 (\*4)|amazonlinux:2023|5.32.1|8.4.6|MariaDB 10.11.11|3.2.2|-|
 |postgresql|fedora:41|5.40.2|8.3.22|Postgres 16.9|3.2.4|-|
 |oracle (\*3)|oraclelinux:7-slim|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
-|oracle8 (\*3)|oraclelinux:8-slim|5.26.3|8.2.28|MariaDB 10.3.39|1.1.1k|-|
+|oracle8 (\*3)|oraclelinux:8-slim|5.26.3|8.2.29|MariaDB 10.3.39|1.1.1k|-|
 
 \*2 These images were used to test older versions of MT.
 \*3 with DBD::Oracle 1.80 + OracleInstantClient 21.7

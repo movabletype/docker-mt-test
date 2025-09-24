@@ -20,5 +20,8 @@ if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 
+export MT_TEST_BACKEND=Oracle
+export NLS_LANG=Japanese_Japan.AL32UTF8
+export NLS_SORT=JAPANESE_M_CI
 
 exec "$@"
