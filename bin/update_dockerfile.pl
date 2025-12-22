@@ -907,13 +907,13 @@ my %Conf = (
         locale_def      => 1,
     },
     oracle => {
-        from => 'oraclelinux:7-slim',
+        from => 'oraclelinux:9-slim',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'                => 'mariadb',
-                'mysql-server'         => 'mariadb-server',
-                'mysql-devel'          => 'mariadb-devel',
+                'mysql'                => '',
+                'mysql-server'         => '',
+                'mysql-devel'          => '',
                 'php'                  => '',
                 'php-gd'               => '',
                 'php-mysqlnd'          => '',
@@ -923,50 +923,73 @@ my %Conf = (
                 'giflib-devel'         => '',
                 'gd-devel'             => '',
                 'libwebp-devel'        => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
                 'GraphicsMagick'       => '',
                 'GraphicsMagick-perl'  => '',
                 'icc-profiles-openicc' => '',
+                'perl-GD'              => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
-                'clang'                => '',
                 'libyaml-devel'        => '',
                 'libavif-devel'        => '',
                 'libheif-devel'        => '',
             },
-            base   => [qw( which )],
+            base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
         },
         epel => {
-            rpm    => 'oracle-epel-release-el7',
-            enable => 'ol7_developer_EPEL',
-        },
-        ol7_developer_php74 => {
-            rpm    => 'oracle-php-release-el7',
-            enable => 'ol7_developer_php74',
+            rpm    => 'oracle-epel-release-el9',
+            enable => 'ol9_developer_EPEL',
         },
         instantclient => {
-            rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
+            rpm    => 'oracle-instantclient-release-26ai-el9',
+            enable => 'ol9_oracle_instantclient26',
+        },
+        codeready => {
+            enable => 'ol9_codeready_builder',
+        },
+        remi => {
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            module => {
+                reset  => 'php',
+                enable => 'php:remi-8.3',
+            },
+            php_version => 'php83',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel libstdc++-static )],
-            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
-            epel                => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
+            instantclient => [qw(
+                oracle-instantclient-basic
+                oracle-instantclient-devel
+                oracle-instantclient-sqlplus
+            )],
+            # oracle epel9 does not have giflib-devel
+            epel => [qw(
+                ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl
+                gd-devel libwebp-devel
+                perl-GD
+            )],
+            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
+            codeready => [qw( giflib-devel mariadb mariadb-server mariadb-devel )],
         },
         cpan => {
             no_test  => [qw( DBI Test::NoWarnings )],
             missing  => [qw( DBD::Oracle )],
-            broken   => [qw( SQL::Translator@1.63 )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
                 'Imager::File::AVIF' => '',
             },
         },
+        patch           => ['Test-mysqld-1.0030'],
         make => {
-            ruby => '2.7.8',
+            ruby => '3.1.6',
         },
-        make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit         => 9,
+        make_dummy_cert => '/usr/bin',
+        phpunit         => 11,
+        installer       => 'microdnf',
         release         => 19.6,
+        locale_def      => 1,
+        no_update       => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
