@@ -1028,8 +1028,8 @@ my %Conf = (
             enable => 'ol8_developer_EPEL',
         },
         instantclient => {
-            rpm    => 'oracle-instantclient-release-23ai-el8',
-            enable => 'ol8_oracle_instantclient23',
+            rpm    => 'oracle-instantclient-release-26ai-el8',
+            enable => 'ol8_oracle_instantclient26',
         },
         codeready => {
             enable => 'ol8_codeready_builder',
