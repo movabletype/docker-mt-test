@@ -118,7 +118,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',    # test fails
             },
         },
-        patch   => [qw(Crypt-DES-2.07)],
+        patch   => [qw(Crypt-DES-2.07 YAML-Syck-1.36)],
         phpunit => 11,
     },
     bookworm => {
@@ -222,8 +222,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',  # test fails
             },
         },
-        remove_from_cpanfile   => [qw( YAML::Syck )],
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -269,7 +268,6 @@ my %Conf = (
                 'Imager::File::AVIF' => '',  # test fails
             },
         },
-        remove_from_cpanfile => [qw( YAML::Syck )],
         make_dummy_cert      => '/usr/bin',
         make                 => {
             # package is broken for unknown reason
@@ -285,7 +283,7 @@ my %Conf = (
             enable       => 'mysql-innovation-community',
             no_weak_deps => 1,
         },
-        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         installer => 'dnf',
         phpunit   => 11,
         use_ipv4  => 1,
