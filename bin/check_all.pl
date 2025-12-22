@@ -19,6 +19,7 @@ my @targets = @ARGV ? @ARGV : glob "*";
 LWP::UserAgent->new->mirror("https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile", "t/cpanfile");
 
 my %summary;
+my @errors;
 for my $name (@targets) {
     my $dockerfile = path("$name/Dockerfile");
     next unless -f $dockerfile;
@@ -36,10 +37,14 @@ for my $name (@targets) {
                 next unless $result->is_test;
                 if ($result->is_ok) {
                     $has_ok++;
-                    $has_todo++ if $result->raw =~ /# TODO/;
+                    if ($result->raw =~ /# TODO/) {
+                        $has_todo++;
+                        push @errors, $result->raw;
+                    }
                 } else {
                     next if $result->is_unplanned;
                     $has_fail++;
+                    push @errors, $result->raw;
                 }
             }
         } else {
@@ -73,5 +78,6 @@ for my $name (sort keys %summary) {
     $message = colored(['red'], $message) if $fail || !$ok;
     diag $message;
 }
+diag $_ for @errors;
 
 system('docker system prune -f');
