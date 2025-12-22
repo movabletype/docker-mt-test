@@ -37,7 +37,7 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent
+            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
@@ -78,7 +78,7 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent
+            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
