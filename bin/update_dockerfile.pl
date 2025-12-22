@@ -178,6 +178,7 @@ my %Conf = (
             ruby => $ruby_version,
         },
         phpunit => 9,
+        use_archive => 1,
     },
     noble => {
         from => 'ubuntu:noble',
