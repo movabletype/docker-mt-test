@@ -49,7 +49,7 @@ my %Conf = (
             temp    => [qw( Fluent::Logger )],
         },
         gem => {
-            fluentd => [qw(fluentd)],
+            fluentd => [qw(fluentd:1.18.0)],
         },
     },
     centos => {
@@ -90,7 +90,7 @@ my %Conf = (
             temp    => [qw( Fluent::Logger )],
         },
         gem => {
-            fluentd => [qw(fluentd)],
+            fluentd => [qw(fluentd:1.18.0)],
         },
     },
     sid => {
