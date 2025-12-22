@@ -113,6 +113,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( GD )],
+            _replace => {
+                'Imager::File::AVIF' => '',    # test fails
+            },
         },
         patch   => [qw(Crypt-DES-2.07)],
         phpunit => 11,
@@ -158,9 +161,15 @@ my %Conf = (
                 'phpunit'            => '',
                 'ruby'               => '',
                 'ruby-dev'           => '',
+                'libavif-dev'        => '',
             },
             db  => [qw( libdbd-mysql-perl libmariadb-dev-compat )],
             php => [qw( php-mbstring php-xml )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         apache => {
             enmod => [qw( php7.3 )],
@@ -182,6 +191,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw(GD)],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         patch   => ['Test-mysqld-1.0030'],
         phpunit => 11,
@@ -202,6 +214,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
         remove_from_cpanfile   => [qw( YAML::Syck )],
         patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
@@ -246,6 +261,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
         remove_from_cpanfile => [qw( YAML::Syck )],
         make_dummy_cert      => '/usr/bin',
@@ -284,6 +302,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
         make_dummy_cert => '/usr/bin',
         make            => {
@@ -323,6 +344,11 @@ my %Conf = (
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
+        },
         patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make            => {
@@ -356,6 +382,11 @@ my %Conf = (
             },
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
         patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
@@ -396,6 +427,7 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit'      => '',
+                'libheif-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
@@ -417,8 +449,15 @@ my %Conf = (
                 'phpunit'      => '',
                 'ruby'         => '',
                 'ruby-devel'   => '',
+                'libavif-devel' => '',
+                'libheif-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         make => {
             ruby => $ruby_version,
@@ -448,6 +487,8 @@ my %Conf = (
                 'phpunit'             => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
         },
         repo => {
@@ -467,6 +508,7 @@ my %Conf = (
             missing  => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for centos7/updates is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
         make => {
@@ -497,8 +539,15 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base => [qw/ glibc-langpack-ja /],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         epel => {
             rpm => 'epel-release',
@@ -549,8 +598,15 @@ my %Conf = (
                 'giflib-devel'         => '',
                 'icc-profiles-openicc' => '',
                 'mysql-devel'          => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source libdb-devel /],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         epel => {
             rpm => 'epel-release',
@@ -597,6 +653,8 @@ my %Conf = (
                 'GraphicsMagick-perl' => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
             libs => [qw( gd-devel libstdc++-static )],
         },
@@ -605,6 +663,7 @@ my %Conf = (
             broken   => [qw( Starman@0.4015 )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
             no_test => [qw( GD )],
         },
@@ -654,6 +713,8 @@ my %Conf = (
                 'mysql-devel'          => '',
                 'mysql-server'         => '',
                 'mysql'                => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base   => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs   => [qw/ ncurses-devel libdb-devel /],
@@ -665,6 +726,9 @@ my %Conf = (
                 Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
             )],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         phpunit => 11,
         make    => {
@@ -715,6 +779,8 @@ my %Conf = (
                 'phpunit'             => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
             base   => [qw( which hostname glibc-langpack-ja )],
             server => [qw( httpd )],                              ## for mod_ssl
@@ -722,6 +788,7 @@ my %Conf = (
         cpan => {
             _replace => {
                 'Imager::File::WEBP' => '',                       # libwebp for amazonlinux is too old (0.3.0)
+                'Imager::File::AVIF' => '',
             },
             no_test => [qw( XML::DOM )],
             broken  => [qw( SQL::Translator@1.63 )],
@@ -753,11 +820,18 @@ my %Conf = (
                 ftp                 => '',
                 'php-pecl-memcache' => '',
                 'phpunit'           => '',
+                'libavif-devel'     => '',
+                'libheif-devel'     => '',
             },
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
             server => [qw( httpd )],                                                  ## for mod_ssl
             db     => [qw( mariadb1011-pam )],
             php    => [qw( php-cli php-xml php-json )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         gem => {
             fluentd => [qw(json)],
@@ -791,6 +865,8 @@ my %Conf = (
                 'ruby'                 => '',
                 'ruby-devel'           => '',
                 'clang'                => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base   => [qw( which )],
             server => [qw( httpd )],
@@ -817,6 +893,7 @@ my %Conf = (
             broken   => [qw( SQL::Translator@1.63 )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
         make => {
@@ -851,6 +928,8 @@ my %Conf = (
                 'perl-GD'              => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
@@ -894,6 +973,7 @@ my %Conf = (
             missing  => [qw( DBD::Oracle )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
         make => {
@@ -928,6 +1008,7 @@ my %Conf = (
                 'App::Prove::Plugin::MySQLPool' => '',
                 'Test::mysqld'                  => '',
                 'DBD::mysql@4.052'              => '',
+                'Imager::File::AVIF'            => '',   # test fails
             },
             db => [qw( DBD::Pg Test::PostgreSQL )],
         },
