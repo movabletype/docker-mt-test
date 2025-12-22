@@ -248,6 +248,54 @@ my %Conf = (
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
+    fedora43 => {
+        from => 'fedora:43',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit'      => '',
+            },
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
+        },
+        cpan => {
+            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
+        },
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        make_dummy_cert        => '/usr/bin',
+        create_make_dummy_cert => 1,
+        make                   => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.43',
+        },
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
+            no_weak_deps        => 1,
+            fix_release_version => {
+                version => 42,
+                repo    => 'mysql-community.repo',
+            },
+        },
+        installer                      => 'dnf',
+        phpunit                        => 11,
+        nogpgcheck                     => 1,
+        mysql_require_secure_transport => 1,
+    },
     fedora42 => {
         from => 'fedora:42',
         base => 'centos',
