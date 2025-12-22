@@ -10,6 +10,7 @@ RUN  microdnf -y install dnf &&\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
+ libffi-devel\
  httpd mod_ssl vsftpd ftp memcached\
  &&\
     dnf -y --enablerepo=ol8_codeready_builder install\
@@ -19,10 +20,10 @@ RUN  microdnf -y install dnf &&\
     dnf -y --enablerepo=ol8_developer_EPEL install\
  ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl gd-devel libwebp-devel perl-GD\
  && dnf clean --enablerepo=ol8_developer_EPEL all &&\
- dnf -y install oracle-instantclient-release-23ai-el8 &&\
-    dnf -y --enablerepo=ol8_oracle_instantclient23 install\
+ dnf -y install oracle-instantclient-release-26ai-el8 &&\
+    dnf -y --enablerepo=ol8_oracle_instantclient26 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
- && dnf clean --enablerepo=ol8_oracle_instantclient23 all &&\
+ && dnf clean --enablerepo=ol8_oracle_instantclient26 all &&\
  dnf -y install https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm &&\
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.2 ;\
@@ -38,7 +39,7 @@ RUN  microdnf -y install dnf &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
-  fluentd\
+  fluentd:1.18.0\
  &&\
  curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
@@ -67,7 +68,7 @@ RUN set -ex &&\
   perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \
     /etc/httpd/conf/httpd.conf &&\
-  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+"?(/\S+/php.ini)"?!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\
   sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 RUN cd /usr/bin && ./make-dummy-cert /etc/pki/tls/certs/localhost.crt &&\

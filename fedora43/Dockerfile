@@ -1,21 +1,25 @@
-FROM fedora:41
+FROM fedora:43
 
 WORKDIR /root
 
 COPY ./patch/ /root/patch/
 
-RUN dnf -y  install\
+RUN dnf -y --nogpgcheck  install\
  distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
- postgresql postgresql-server libpq-devel\
  vim nano\
  libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
- php-pgsql php php-gd php-mbstring php-pecl-memcache\
+ php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y update --skip-unavailable &&\
+ dnf -y --nogpgcheck install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
+    sed -i -e 's/\$releasever/42/' /etc/yum.repos.d/mysql-community.repo &&    dnf -y --nogpgcheck --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+ mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
+ && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
+ dnf -y --nogpgcheck update --skip-unavailable &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+ cp /root/patch/make-dummy-cert /usr/bin && chmod +x /usr/bin/make-dummy-cert &&\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
@@ -32,19 +36,21 @@ RUN dnf -y  install\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -v ExtUtils::ParseXS@3.51 &&\
- cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
- cpanm -v Archive::Zip@1.65 &&\
+ cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v EV Archive::Zip@1.65 DBD::mysql@4.052 &&\
+      cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Data-MessagePack-Stream-1.05 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
- DBD::Pg Test::PostgreSQL\
+ ExtUtils::ParseXS\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\
  Fluent::Logger\
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\
- perl -i -nE 'print unless /(?:DBD::mysql|App::Prove::Plugin::MySQLPool)/' cpanfile &&\
  cpanm --installdeps -v . &&\
  rm -rf cpanfile /root/.perl-cpm /root/.cpanm /root/.qws
 

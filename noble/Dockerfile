@@ -8,19 +8,19 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install curl wget gnupg ca-certificates lsb-release &&\
-      curl -LO https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb &&\
-      DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes dpkg -i mysql-apt-config_0.8.33-1_all.deb &&\
-      rm mysql-apt-config_0.8.33-1_all.deb &&\
+      curl -LO https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb &&\
+      DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes dpkg -i mysql-apt-config_0.8.36-1_all.deb &&\
+      rm mysql-apt-config_0.8.36-1_all.deb &&\
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
  ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free\
+ perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache phpunit\
- ruby ruby-dev\
+ ruby ruby-dev libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
@@ -28,7 +28,7 @@ RUN \
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
-  fluentd\
+  fluentd:1.18.0\
  &&\
  curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
@@ -59,7 +59,7 @@ RUN set -ex &&\
  make-ssl-cert generate-default-snakeoil &&\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \
    's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' &&\
- perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+"?(/\S+/php.ini)"?!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
 
 ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
