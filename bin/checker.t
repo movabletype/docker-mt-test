@@ -88,9 +88,14 @@ if ($gd_version >= 2.0101) {
     ok eval { GD::supportsFileType('test.jpg') },  "$image_name: GD supports JPEG";
     ok eval { GD::supportsFileType('test.bmp') },  "$image_name: GD supports BMP";
     ok eval { GD::supportsFileType('test.webp') }, "$image_name: GD supports WEBP";
+    SKIP: {
+        local $TODO = 'AVIF may not be supported';
+        ok eval { GD::supportsFileType('test.avif') }, "$image_name: GD supports AVIF";
+    }
 }
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
+my $has_imager_avif = eval { require Imager::File::AVIF };
 my %imager_supports = map { $_ => 1 } Imager->read_types;
 ok $imager_supports{gif},  "$image_name: Imager supports GIF";
 ok $imager_supports{png},  "$image_name: Imager supports PNG";
@@ -99,6 +104,10 @@ ok $imager_supports{bmp},  "$image_name: Imager supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' unless $has_imager_webp;
     ok $imager_supports{webp}, "$image_name: Imager supports WebP";
+}
+SKIP: {
+    local $TODO = 'AVIF may not be supported' unless $has_imager_avif;
+    ok $imager_supports{avif}, "$image_name: Imager supports AVIF";
 }
 
 my %imagemagick_supports = map { $_ => 1 } Image::Magick->QueryFormat;
@@ -109,6 +118,10 @@ ok $imagemagick_supports{bmp},  "$image_name: ImageMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty)$/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
+}
+SKIP: {
+    local $TODO = 'AVIF may not be supported';
+    ok $imagemagick_supports{avif}, "$image_name: ImageMagick supports AVIF";
 }
 my $imagemagick_depth = Image::Magick->new->Get('depth');
 is $imagemagick_depth => '16', "$image_name: ImageMagick Quantum Depth: Q$imagemagick_depth";
@@ -121,6 +134,10 @@ ok $graphicsmagick_supports{bmp},  "$image_name: GraphicsMagick supports BMP";
 SKIP: {
     local $TODO = 'WebP may not be supported' if $image_name =~ /centos6|jessie|trusty/;
     ok $graphicsmagick_supports{webp}, "$image_name: GraphicsMagick supports WebP";
+}
+SKIP: {
+    local $TODO = 'AVIF may not be supported';
+    ok $graphicsmagick_supports{avif}, "$image_name: GraphicsMagick supports AVIF";
 }
 SKIP: {
     local $TODO = 'may be 8' if $image_name =~ /centos6|jessie|trusty/;
