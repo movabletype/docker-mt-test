@@ -19,7 +19,6 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 memcached -d -u root
 
 if [ -f t/cpanfile ]; then
-    perl -i -nE 'print unless /(?:YAML::Syck)/' t/cpanfile &&\
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
 

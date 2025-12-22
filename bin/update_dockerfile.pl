@@ -8,7 +8,7 @@ use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
 
-my $ruby_version = '3.1.6';
+my $ruby_version = '3.4.8';
 
 my %Conf = (
     debian => {
@@ -21,12 +21,13 @@ my %Conf = (
                 perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
                 icc-profiles-free
+                libavif-dev libheif-dev
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
             libs   => [qw( libxml2-dev libgmp-dev libssl-dev )],
             php    => [qw( php php-cli php-mysqlnd php-gd php-memcache phpunit )],
-            ruby   => [qw( ruby ruby-dev )],
+            ruby   => [qw( ruby ruby-dev libyaml-dev libffi-dev )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -36,9 +37,9 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent
+            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
@@ -48,7 +49,7 @@ my %Conf = (
             temp    => [qw( Fluent::Logger )],
         },
         gem => {
-            fluentd => [qw(fluentd)],
+            fluentd => [qw(fluentd:1.18.0)],
         },
     },
     centos => {
@@ -61,12 +62,13 @@ my %Conf = (
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
                 icc-profiles-openicc
+                libavif-devel libheif-devel
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
             libs   => [qw( libxml2-devel expat-devel openssl-devel openssl gmp-devel )],
             php    => [qw( php php-mysqlnd php-gd php-mbstring php-pecl-memcache phpunit )],
-            ruby   => [qw( ruby ruby-devel )],
+            ruby   => [qw( ruby ruby-devel libyaml-devel libffi-devel )],
             editor => [qw( vim nano )],
         },
         cpan => {
@@ -76,9 +78,9 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent
+            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
             temporary => [qw( ExtUtils::ParseXS@3.51 )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
@@ -88,7 +90,7 @@ my %Conf = (
             temp    => [qw( Fluent::Logger )],
         },
         gem => {
-            fluentd => [qw(fluentd)],
+            fluentd => [qw(fluentd:1.18.0)],
         },
     },
     sid => {
@@ -110,9 +112,13 @@ my %Conf = (
             php  => [qw( php8.4-mbstring php8.4-xml )],
         },
         cpan => {
-            no_test => [qw( GD )],
+            # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
+            no_test => [qw( GD XML::LibXML Web::Query )],
+            _replace => {
+                'Imager::File::AVIF' => '',    # test fails
+            },
         },
-        patch   => [qw(Crypt-DES-2.07)],
+        patch   => [qw(Crypt-DES-2.07 YAML-Syck-1.36)],
         phpunit => 11,
     },
     bookworm => {
@@ -156,9 +162,15 @@ my %Conf = (
                 'phpunit'            => '',
                 'ruby'               => '',
                 'ruby-dev'           => '',
+                'libavif-dev'        => '',
             },
             db  => [qw( libdbd-mysql-perl libmariadb-dev-compat )],
             php => [qw( php-mbstring php-xml )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         apache => {
             enmod => [qw( php7.3 )],
@@ -167,6 +179,7 @@ my %Conf = (
             ruby => $ruby_version,
         },
         phpunit => 9,
+        use_archive => 1,
     },
     noble => {
         from => 'ubuntu:noble',
@@ -176,10 +189,13 @@ my %Conf = (
         },
         repo => {
             # taken from https://dev.mysql.com/downloads/repo/apt/
-            mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb',
+            mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb',
         },
         cpan => {
             no_test => [qw(GD)],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         patch   => ['Test-mysqld-1.0030'],
         phpunit => 11,
@@ -199,10 +215,62 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
+            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
-        remove_from_cpanfile   => [qw( YAML::Syck )],
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        make_dummy_cert        => '/usr/bin',
+        create_make_dummy_cert => 1,
+        make                   => {
+            # package is broken for unknown reason
+            GraphicsMagick => '1.3.43',
+        },
+        repo => {
+            mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],
+        },
+        mysql84 => {
+            # taken from https://dev.mysql.com/downloads/repo/yum/
+            rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+            enable => 'mysql-8.4-lts-community',
+            # enable => 'mysql-innovation-community',
+            no_weak_deps        => 1,
+            fix_release_version => {
+                version => 42,
+                repo    => 'mysql-community.repo',
+            },
+        },
+        installer                      => 'dnf',
+        phpunit                        => 11,
+        nogpgcheck                     => 1,
+        mysql_require_secure_transport => 1,
+    },
+    fedora43 => {
+        from => 'fedora:43',
+        base => 'centos',
+        yum  => {
+            _replace => {
+                'mysql'        => '',
+                'mysql-server' => '',
+                'mysql-devel'  => '',
+                'procps'       => 'perl-Unix-Process',
+                'phpunit'      => '',
+            },
+            base   => [qw( distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz )],
+            images => [qw( libomp-devel )],
+        },
+        cpan => {
+            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
+            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
+        },
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -244,8 +312,10 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
-        remove_from_cpanfile => [qw( YAML::Syck )],
         make_dummy_cert      => '/usr/bin',
         make                 => {
             # package is broken for unknown reason
@@ -261,7 +331,7 @@ my %Conf = (
             enable       => 'mysql-innovation-community',
             no_weak_deps => 1,
         },
-        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
+        patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         installer => 'dnf',
         phpunit   => 11,
         use_ipv4  => 1,
@@ -282,6 +352,9 @@ my %Conf = (
         },
         cpan => {
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
         },
         make_dummy_cert => '/usr/bin',
         make            => {
@@ -321,6 +394,14 @@ my %Conf = (
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
+        cpan => {
+            # seems broken with the current gcc/clang, and the patch for 1.05 does not work
+            # but let's wait and see...
+            temporary => [qw(Data::MessagePack::Stream@1.04)],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
+        },
         patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         make_dummy_cert => '/usr/bin',
         make            => {
@@ -355,6 +436,14 @@ my %Conf = (
             base   => [qw( glibc-langpack-en glibc-langpack-ja xz )],
             images => [qw( libomp-devel )],
         },
+        cpan => {
+            # seems broken with the current gcc/clang, and the patch for 1.05 does not work
+            # but let's wait and see...
+            temporary => [qw(Data::MessagePack::Stream@1.04)],
+            _replace => {
+                'Imager::File::AVIF' => '',  # test fails
+            },
+        },
         patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         make            => {
@@ -378,6 +467,11 @@ my %Conf = (
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
+        cpan => {
+            # seems broken with the current gcc/clang, and the patch for 1.05 does not work
+            # but let's wait and see...
+            temporary => [qw(Data::MessagePack::Stream@1.04)],
+        },
         patch           => ['Test-mysqld-1.0030'],
         make_dummy_cert => '/usr/bin',
         installer       => 'dnf',
@@ -394,6 +488,7 @@ my %Conf = (
                 'mysql-devel'  => 'community-mysql-devel',
                 'procps'       => 'perl-Unix-Process',
                 'phpunit'      => '',
+                'libheif-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
@@ -415,8 +510,15 @@ my %Conf = (
                 'phpunit'      => '',
                 'ruby'         => '',
                 'ruby-devel'   => '',
+                'libavif-devel' => '',
+                'libheif-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         make => {
             ruby => $ruby_version,
@@ -446,6 +548,8 @@ my %Conf = (
                 'phpunit'             => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
         },
         repo => {
@@ -465,6 +569,7 @@ my %Conf = (
             missing  => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for centos7/updates is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
         make => {
@@ -495,8 +600,16 @@ my %Conf = (
                 'icc-profiles-openicc' => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
+                'libyaml-devel'        => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base => [qw/ glibc-langpack-ja /],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         epel => {
             rpm => 'epel-release',
@@ -517,7 +630,7 @@ my %Conf = (
             powertools => [qw/ giflib-devel /],
         },
         make => {
-            ruby => $ruby_version,
+            ruby => '3.1.6',
         },
         installer       => 'dnf',
         setcap          => 1,
@@ -547,8 +660,16 @@ my %Conf = (
                 'giflib-devel'         => '',
                 'icc-profiles-openicc' => '',
                 'mysql-devel'          => '',
+                'libyaml-devel'        => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source libdb-devel /],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         epel => {
             rpm => 'epel-release',
@@ -595,6 +716,8 @@ my %Conf = (
                 'GraphicsMagick-perl' => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
             libs => [qw( gd-devel libstdc++-static )],
         },
@@ -603,6 +726,7 @@ my %Conf = (
             broken   => [qw( Starman@0.4015 )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
             no_test => [qw( GD )],
         },
@@ -652,6 +776,9 @@ my %Conf = (
                 'mysql-devel'          => '',
                 'mysql-server'         => '',
                 'mysql'                => '',
+                'libyaml-devel'        => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base   => [qw/ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz /],
             libs   => [qw/ ncurses-devel libdb-devel /],
@@ -663,6 +790,9 @@ my %Conf = (
                 Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple
             )],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         phpunit => 11,
         make    => {
@@ -713,6 +843,8 @@ my %Conf = (
                 'phpunit'             => '',
                 'ruby'                => '',
                 'ruby-devel'          => '',
+                'libavif-devel'       => '',
+                'libheif-devel'       => '',
             },
             base   => [qw( which hostname glibc-langpack-ja )],
             server => [qw( httpd )],                              ## for mod_ssl
@@ -720,6 +852,7 @@ my %Conf = (
         cpan => {
             _replace => {
                 'Imager::File::WEBP' => '',                       # libwebp for amazonlinux is too old (0.3.0)
+                'Imager::File::AVIF' => '',
             },
             no_test => [qw( XML::DOM )],
             broken  => [qw( SQL::Translator@1.63 )],
@@ -751,11 +884,18 @@ my %Conf = (
                 ftp                 => '',
                 'php-pecl-memcache' => '',
                 'phpunit'           => '',
+                'libavif-devel'     => '',
+                'libheif-devel'     => '',
             },
             base   => [qw( which hostname glibc-langpack-ja glibc-locale-source )],
             server => [qw( httpd )],                                                  ## for mod_ssl
             db     => [qw( mariadb1011-pam )],
             php    => [qw( php-cli php-xml php-json )],
+        },
+        cpan => {
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
         },
         gem => {
             fluentd => [qw(json)],
@@ -767,13 +907,13 @@ my %Conf = (
         locale_def      => 1,
     },
     oracle => {
-        from => 'oraclelinux:7-slim',
+        from => 'oraclelinux:9-slim',
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'                => 'mariadb',
-                'mysql-server'         => 'mariadb-server',
-                'mysql-devel'          => 'mariadb-devel',
+                'mysql'                => '',
+                'mysql-server'         => '',
+                'mysql-devel'          => '',
                 'php'                  => '',
                 'php-gd'               => '',
                 'php-mysqlnd'          => '',
@@ -783,46 +923,73 @@ my %Conf = (
                 'giflib-devel'         => '',
                 'gd-devel'             => '',
                 'libwebp-devel'        => '',
+                'ImageMagick'          => '',
+                'ImageMagick-perl'     => '',
                 'GraphicsMagick'       => '',
                 'GraphicsMagick-perl'  => '',
                 'icc-profiles-openicc' => '',
+                'perl-GD'              => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
-                'clang'                => '',
+                'libyaml-devel'        => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
-            base   => [qw( which )],
+            base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
         },
         epel => {
-            rpm    => 'oracle-epel-release-el7',
-            enable => 'ol7_developer_EPEL',
-        },
-        ol7_developer_php74 => {
-            rpm    => 'oracle-php-release-el7',
-            enable => 'ol7_developer_php74',
+            rpm    => 'oracle-epel-release-el9',
+            enable => 'ol9_developer_EPEL',
         },
         instantclient => {
-            rpm => 'https://download.oracle.com/otn_software/linux/instantclient/217000/oracle-instantclient-basic-21.7.0.0.0-1.x86_64.rpm',
+            rpm    => 'oracle-instantclient-release-26ai-el9',
+            enable => 'ol9_oracle_instantclient26',
+        },
+        codeready => {
+            enable => 'ol9_codeready_builder',
+        },
+        remi => {
+            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
+            module => {
+                reset  => 'php',
+                enable => 'php:remi-8.3',
+            },
+            php_version => 'php83',
         },
         repo => {
-            ol7_optional_latest => [qw( gd-devel giflib-devel libwebp-devel libstdc++-static )],
-            ol7_developer_php74 => [qw( php php-mysqlnd php-gd php-mbstring phpunit php-oci8-21c )],
-            epel                => [qw( GraphicsMagick-perl-1.3.32-1.el7 clang )],
+            instantclient => [qw(
+                oracle-instantclient-basic
+                oracle-instantclient-devel
+                oracle-instantclient-sqlplus
+            )],
+            # oracle epel9 does not have giflib-devel
+            epel => [qw(
+                ImageMagick ImageMagick-perl GraphicsMagick GraphicsMagick-perl
+                gd-devel libwebp-devel
+                perl-GD
+            )],
+            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
+            codeready => [qw( giflib-devel mariadb mariadb-server mariadb-devel )],
         },
         cpan => {
             no_test  => [qw( DBI Test::NoWarnings )],
             missing  => [qw( DBD::Oracle )],
-            broken   => [qw( SQL::Translator@1.63 )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
+        patch           => ['Test-mysqld-1.0030'],
         make => {
-            ruby => '2.7.8',
+            ruby => '3.1.6',
         },
-        make_dummy_cert => '/etc/pki/tls/certs/',
-        phpunit         => 9,
+        make_dummy_cert => '/usr/bin',
+        phpunit         => 11,
+        installer       => 'microdnf',
         release         => 19.6,
+        locale_def      => 1,
+        no_update       => 1,
     },
     oracle8 => {
         from => 'oraclelinux:8-slim',
@@ -849,6 +1016,9 @@ my %Conf = (
                 'perl-GD'              => '',
                 'ruby'                 => '',
                 'ruby-devel'           => '',
+                'libyaml-devel'        => '',
+                'libavif-devel'        => '',
+                'libheif-devel'        => '',
             },
             base   => [qw( which glibc-locale-source )],
             server => [qw( httpd )],
@@ -858,8 +1028,8 @@ my %Conf = (
             enable => 'ol8_developer_EPEL',
         },
         instantclient => {
-            rpm    => 'oracle-instantclient-release-23ai-el8',
-            enable => 'ol8_oracle_instantclient23',
+            rpm    => 'oracle-instantclient-release-26ai-el8',
+            enable => 'ol8_oracle_instantclient26',
         },
         codeready => {
             enable => 'ol8_codeready_builder',
@@ -892,10 +1062,11 @@ my %Conf = (
             missing  => [qw( DBD::Oracle )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for oracle is too old (0.3.0 as of this writing)
+                'Imager::File::AVIF' => '',
             },
         },
         make => {
-            ruby => $ruby_version,
+            ruby => '3.1.6',
         },
         make_dummy_cert => '/usr/bin',
         phpunit         => 11,
@@ -926,6 +1097,7 @@ my %Conf = (
                 'App::Prove::Plugin::MySQLPool' => '',
                 'Test::mysqld'                  => '',
                 'DBD::mysql@4.052'              => '',
+                'Imager::File::AVIF'            => '',   # test fails
             },
             db => [qw( DBD::Pg Test::PostgreSQL )],
         },
@@ -1172,7 +1344,7 @@ RUN set -ex &&\\
  make-ssl-cert generate-default-snakeoil &&\\
  find /etc/apache2/ | grep '\.conf' | xargs perl -i -pe \\
    's!AllowOverride None!AllowOverride All!g; s!/usr/lib/cgi-bin!/var/www/cgi-bin!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' &&\\
- perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
+ perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+"?(/\S+/php.ini)"?!; my $ini = do { open my $fh, "<", $inifile or die $!; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile or die $!; print $fh $ini'
 
 ENV LANG=en_US.UTF-8 \\
     LC_ALL=en_US.UTF-8 \\
@@ -1206,7 +1378,7 @@ RUN\
   sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist=https:\/\/mirrorlist.fedoraproject.org/g" /etc/yum.repos.d/fedora-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/download.example\/pub\/fedora/baseurl=https:\/\/archives.fedoraproject.org\/pub\/archive\/fedora/g" /etc/yum.repos.d/fedora-* &&\\
 % }
-% if ($type =~ /^oracle[89]$/) {
+% if ($type =~ /^oracle/) {
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
   % $conf->{installer} = 'dnf';
 % }
@@ -1215,12 +1387,6 @@ RUN\
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
-% if ($type eq 'oracle') {
- yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
- yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\
- yum -y install oracle-instantclient-devel oracle-instantclient-sqlplus &&\\
- yum -y reinstall glibc-common &&\\
-% }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
 %   if ($type eq 'amazonlinux') {
  amazon-linux-extras install <%= $repo %> &&\\
@@ -1363,7 +1529,7 @@ RUN set -ex &&\\
   perl -i -pe \\
    's!AllowOverride None!AllowOverride All!g; s!#AddEncoding x-gzip \.gz \.tgz!AddEncoding x-gzip .gz .tgz .svgz!g;' \\
     /etc/httpd/conf/httpd.conf &&\\
-  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+(/\S+/php.ini)!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\\
+  perl -e 'my ($inifile) = `php --ini` =~ m!Loaded Configuration File:\s+"?(/\S+/php.ini)"?!; my $ini = do { open my $fh, "<", $inifile; local $/; <$fh> }; $ini =~ s!^;\s*date\.timezone =!date\.timezone = "Asia/Tokyo"!m; open my $fh, ">", $inifile; print $fh $ini' &&\\
   sed -i -E 's/inet_protocols = all/inet_protocols = ipv4/' /etc/postfix/main.cf
 
 % # cf https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html
