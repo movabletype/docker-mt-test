@@ -8,7 +8,7 @@ use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
 
-my $ruby_version = '3.1.6';
+my $ruby_version = '3.4.8';
 
 my %Conf = (
     debian => {
