@@ -1387,12 +1387,6 @@ RUN\
  <%= join " ", @{$conf->{yum}{$key}} %>\\
 % }
  &&\\
-% if ($type eq 'oracle') {
- yum -y install <%= $conf->{instantclient}{rpm} %> &&\\
- yum -y install oracle-instantclient-basic oracle-instantclient-release-el7 &&\\
- yum -y install oracle-instantclient-devel oracle-instantclient-sqlplus &&\\
- yum -y reinstall glibc-common &&\\
-% }
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
 %   if ($type eq 'amazonlinux') {
  amazon-linux-extras install <%= $repo %> &&\\
