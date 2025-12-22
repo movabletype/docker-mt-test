@@ -215,7 +215,9 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
+            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
             _replace => {
                 'Imager::File::AVIF' => '',  # test fails
             },
