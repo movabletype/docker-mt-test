@@ -189,7 +189,7 @@ my %Conf = (
         },
         repo => {
             # taken from https://dev.mysql.com/downloads/repo/apt/
-            mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb',
+            mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb',
         },
         cpan => {
             no_test => [qw(GD)],
