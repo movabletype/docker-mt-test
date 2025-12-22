@@ -21,6 +21,7 @@ my %Conf = (
                 perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick
                 libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev
                 icc-profiles-free
+                libavif-dev libheif-dev
             )],
             server => [qw( apache2 vsftpd ftp memcached )],
             db     => [qw( mysql-server mysql-client libmysqlclient-dev )],
@@ -61,6 +62,7 @@ my %Conf = (
                 ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick
                 giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel
                 icc-profiles-openicc
+                libavif-devel libheif-devel
             )],
             server => [qw( mod_ssl vsftpd ftp memcached )],
             db     => [qw( mysql-devel mysql-server mysql )],
