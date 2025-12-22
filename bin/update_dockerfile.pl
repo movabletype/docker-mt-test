@@ -1378,7 +1378,7 @@ RUN\
   sed -i -e "s/^mirrorlist=https:\/\/mirrorlist.fedoraproject.org/#mirrorlist=https:\/\/mirrorlist.fedoraproject.org/g" /etc/yum.repos.d/fedora-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/download.example\/pub\/fedora/baseurl=https:\/\/archives.fedoraproject.org\/pub\/archive\/fedora/g" /etc/yum.repos.d/fedora-* &&\\
 % }
-% if ($type =~ /^oracle[89]$/) {
+% if ($type =~ /^oracle/) {
   <%= $conf->{installer} // 'yum' %> -y install dnf &&\\
   % $conf->{installer} = 'dnf';
 % }
