@@ -112,7 +112,8 @@ my %Conf = (
             php  => [qw( php8.4-mbstring php8.4-xml )],
         },
         cpan => {
-            no_test => [qw( GD )],
+            # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
+            no_test => [qw( GD XML::LibXML Web::Query )],
             _replace => {
                 'Imager::File::AVIF' => '',    # test fails
             },
