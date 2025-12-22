@@ -630,7 +630,7 @@ my %Conf = (
             powertools => [qw/ giflib-devel /],
         },
         make => {
-            ruby => $ruby_version,
+            ruby => '3.1.6',
         },
         installer       => 'dnf',
         setcap          => 1,
@@ -1043,7 +1043,7 @@ my %Conf = (
             },
         },
         make => {
-            ruby => $ruby_version,
+            ruby => '3.1.6',
         },
         make_dummy_cert => '/usr/bin',
         phpunit         => 11,
