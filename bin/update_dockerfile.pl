@@ -1195,18 +1195,23 @@ sub merge_conf {
     my %conf = %{ $Conf{$name} // {} };
     my $base = $conf{base} or return \%conf;
     for my $key (keys %{ $Conf{$base} }) {
-        my %replace = %{ delete $conf{$key}{_replace} || {} };
-        for my $subkey (keys %{ $Conf{$base}{$key} }) {
-            my @values = @{ $conf{$key}{$subkey} || [] };
-            for my $value (@{ $Conf{$base}{$key}{$subkey} }) {
-                if (exists $replace{$value}) {
-                    my $new_value = $replace{$value};
-                    push @values, $new_value if $new_value;
-                } else {
-                    push @values, $value;
+        if (ref $Conf{$base}{$key} eq 'HASH') {
+            my %replace = %{ delete $conf{$key}{_replace} || {} };
+            for my $subkey (keys %{ $Conf{$base}{$key} }) {
+                my @values = @{ $conf{$key}{$subkey} || [] };
+                for my $value (@{ $Conf{$base}{$key}{$subkey} }) {
+                    if (exists $replace{$value}) {
+                        my $new_value = $replace{$value};
+                        push @values, $new_value if $new_value;
+                    } else {
+                        push @values, $value;
+                    }
                 }
+                $conf{$key}{$subkey} = \@values if @values;
             }
-            $conf{$key}{$subkey} = \@values if @values;
+        }
+        if (ref $Conf{$base}{$key} eq 'ARRAY') {
+            push @{ $conf{$key} //= [] }, @{ $Conf{$base}{$key} };
         }
     }
     $conf{cpanm} = 'cpanm';
