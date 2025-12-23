@@ -37,8 +37,6 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
-            temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
@@ -48,6 +46,8 @@ my %Conf = (
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
         },
+        # cf. https://github.com/Perl/perl5/issues/22353
+        patch => [qw(EV-4.36)],
         gem => {
             fluentd => [qw(fluentd:1.18.0)],
         },
@@ -78,8 +78,6 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            # breaking EV, hence AnyEvent; might it be better to apply https://github.com/Perl/perl5/issues/22353?
-            temporary => [qw( ExtUtils::ParseXS@3.51 )],
             extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
             addons    => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
@@ -89,6 +87,8 @@ my %Conf = (
             make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
             temp    => [qw( Fluent::Logger )],
         },
+        # cf. https://github.com/Perl/perl5/issues/22353
+        patch => [qw(EV-4.36)],
         gem => {
             fluentd => [qw(fluentd:1.18.0)],
         },
@@ -215,9 +215,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
-            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
             _replace => {
                 'Imager::File::AVIF' => '',  # test fails
             },
@@ -263,9 +261,7 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            broken => [qw( EV )],    # needs ExtUtils::ParseXS 3.51
             no_test => [qw( App::Prove::Plugin::MySQLPool )],
-            bump_parse_xs => [qw( ExtUtils::ParseXS )], # Imager needs the latest version of ParseXS
             _replace => {
                 'Imager::File::AVIF' => '',  # test fails
             },
