@@ -24,6 +24,7 @@ my %aliases = qw(
     perl-5.36 fedora37
     perl-5.38 fedora39
     perl-5.40 fedora41
+    perl-5.42 fedora43
 
     php-7.3 buster
     php-7.4 fedora32
