@@ -28,11 +28,11 @@ RUN \
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpm install -g --test --show-build-log-on-failure ExtUtils::ParseXS@3.51 &&\
  cpm install -g --show-build-log-on-failure GD XML::LibXML Web::Query XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
