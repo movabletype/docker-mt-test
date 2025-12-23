@@ -405,7 +405,7 @@ my %Conf = (
             GraphicsMagick => '1.3.43',
         },
         remi => {
-            rpm    => 'https://www.rpmfind.net/linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm',
+            rpm    => 'https://ftp.riken.jp/Linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm',
             module => {
                 reset  => 'php',
                 enable => 'php:remi-8.2',
