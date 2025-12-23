@@ -37,8 +37,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons    => [qw(
+            extra  => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -48,7 +48,7 @@ my %Conf = (
         },
         # cf. https://github.com/Perl/perl5/issues/22353
         patch => [qw(EV-4.36)],
-        gem => {
+        gem   => {
             fluentd => [qw(fluentd:1.18.0)],
         },
     },
@@ -78,8 +78,8 @@ my %Conf = (
             broken => [qw(
                 Archive::Zip@1.65 DBD::mysql@4.052
             )],
-            extra     => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
-            addons    => [qw(
+            extra  => [qw( JSON::XS Starman Imager::File::WEBP Imager::File::AVIF Plack::Middleware::ReverseProxy Devel::CheckLib )],
+            addons => [qw(
                 AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir
                 Net::LDAP Linux::Pid Data::Section::Simple
             )],
@@ -89,7 +89,7 @@ my %Conf = (
         },
         # cf. https://github.com/Perl/perl5/issues/22353
         patch => [qw(EV-4.36)],
-        gem => {
+        gem   => {
             fluentd => [qw(fluentd:1.18.0)],
         },
     },
@@ -113,7 +113,7 @@ my %Conf = (
         },
         cpan => {
             # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
-            no_test => [qw( GD XML::LibXML Web::Query )],
+            no_test  => [qw( GD XML::LibXML Web::Query )],
             _replace => {
                 'Imager::File::AVIF' => '',    # test fails
             },
@@ -178,7 +178,7 @@ my %Conf = (
         make => {
             ruby => $ruby_version,
         },
-        phpunit => 9,
+        phpunit     => 9,
         use_archive => 1,
     },
     noble => {
@@ -192,7 +192,7 @@ my %Conf = (
             mysql84 => 'https://dev.mysql.com/get/mysql-apt-config_0.8.36-1_all.deb',
         },
         cpan => {
-            no_test => [qw(GD)],
+            no_test  => [qw(GD)],
             _replace => {
                 'Imager::File::AVIF' => '',
             },
@@ -215,9 +215,9 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            no_test  => [qw( App::Prove::Plugin::MySQLPool )],
             _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
         patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
@@ -261,9 +261,9 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            no_test  => [qw( App::Prove::Plugin::MySQLPool )],
             _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
         patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
@@ -307,13 +307,13 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            no_test  => [qw( App::Prove::Plugin::MySQLPool )],
             _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
-        make_dummy_cert      => '/usr/bin',
-        make                 => {
+        make_dummy_cert => '/usr/bin',
+        make            => {
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
@@ -347,9 +347,9 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            no_test => [qw( App::Prove::Plugin::MySQLPool )],
+            no_test  => [qw( App::Prove::Plugin::MySQLPool )],
             _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
         make_dummy_cert => '/usr/bin',
@@ -394,8 +394,8 @@ my %Conf = (
             # seems broken with the current gcc/clang, and the patch for 1.05 does not work
             # but let's wait and see...
             temporary => [qw(Data::MessagePack::Stream@1.04)],
-            _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+            _replace  => {
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
         patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
@@ -436,8 +436,8 @@ my %Conf = (
             # seems broken with the current gcc/clang, and the patch for 1.05 does not work
             # but let's wait and see...
             temporary => [qw(Data::MessagePack::Stream@1.04)],
-            _replace => {
-                'Imager::File::AVIF' => '',  # test fails
+            _replace  => {
+                'Imager::File::AVIF' => '',    # test fails
             },
         },
         patch           => ['Test-mysqld-1.0030'],
@@ -479,11 +479,11 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-                'phpunit'      => '',
+                'mysql'         => 'community-mysql',
+                'mysql-server'  => 'community-mysql-server',
+                'mysql-devel'   => 'community-mysql-devel',
+                'procps'        => 'perl-Unix-Process',
+                'phpunit'       => '',
                 'libheif-devel' => '',
             },
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
@@ -499,13 +499,13 @@ my %Conf = (
         base => 'centos',
         yum  => {
             _replace => {
-                'mysql'        => 'community-mysql',
-                'mysql-server' => 'community-mysql-server',
-                'mysql-devel'  => 'community-mysql-devel',
-                'procps'       => 'perl-Unix-Process',
-                'phpunit'      => '',
-                'ruby'         => '',
-                'ruby-devel'   => '',
+                'mysql'         => 'community-mysql',
+                'mysql-server'  => 'community-mysql-server',
+                'mysql-devel'   => 'community-mysql-devel',
+                'procps'        => 'perl-Unix-Process',
+                'phpunit'       => '',
+                'ruby'          => '',
+                'ruby-devel'    => '',
                 'libavif-devel' => '',
                 'libheif-devel' => '',
             },
@@ -976,8 +976,8 @@ my %Conf = (
                 'Imager::File::AVIF' => '',
             },
         },
-        patch           => ['Test-mysqld-1.0030'],
-        make => {
+        patch => ['Test-mysqld-1.0030'],
+        make  => {
             ruby => '3.1.6',
         },
         make_dummy_cert => '/usr/bin',
@@ -1093,7 +1093,7 @@ my %Conf = (
                 'App::Prove::Plugin::MySQLPool' => '',
                 'Test::mysqld'                  => '',
                 'DBD::mysql@4.052'              => '',
-                'Imager::File::AVIF'            => '',   # test fails
+                'Imager::File::AVIF'            => '',    # test fails
             },
             db => [qw( DBD::Pg Test::PostgreSQL )],
         },
