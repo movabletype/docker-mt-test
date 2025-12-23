@@ -24,13 +24,14 @@ my %aliases = qw(
     perl-5.36 fedora37
     perl-5.38 fedora39
     perl-5.40 fedora41
+    perl-5.42 fedora43
 
     php-7.3 buster
     php-7.4 fedora32
     php-8.0 fedora35
     php-8.1 fedora37
     php-8.2 fedora39
-    php-8.3 fedora40
+    php-8.3 fedora41
     php-8.4 fedora42
 );
 my %aliases_rev;

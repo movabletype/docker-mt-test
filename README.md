@@ -34,7 +34,7 @@ Dockerfile to test MT.
 |rawhide|fedora:rawhide|5.42.0|8.5.1|8.4.7|3.5.4|-|
 |rockylinux|rockylinux/rockylinux:9|5.32.1|8.1.34|8.0.44|3.5.1|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.29|MariaDB 10.11.14|3.0.17|2028-06|
-|sid|debian:sid|5.40.1|8.4.11|MariaDB 11.8.5|3.5.4|-|
+|sid|debian:sid|5.40.1|8.4.16|MariaDB 11.8.5|3.5.4|-|
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.7|3.0.13|-|
 |amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2023 (\*4)|amazonlinux:2023|5.32.1|8.4.14|MariaDB 10.11.13|3.2.2|-|
