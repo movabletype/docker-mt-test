@@ -15,10 +15,6 @@ GetOptions(
 
 my %aliases = qw(
     perl-5.16 centos7
-    perl-5.28 buster
-    perl-5.32 bullseye
-    perl-5.34 fedora35
-    perl-5.36 fedora37
     perl-5.38 fedora39
     perl-5.40 fedora41
     perl-5.42 fedora43
