@@ -27,20 +27,20 @@ for my $repo (@repos) {
         for my $key (keys %{$workflow->{jobs}}) {
             if (my $image = $workflow->{jobs}{$key}{env}{TEST_IMAGE_NAME}) {
                 ok $tags{$image}, "$image is used in $repo/$branch (by env)";
-                $used{$image} = 1;
+                $used{$image}{$branch} = 1;
             }
             if (my $config = $workflow->{jobs}{$key}{strategy}{matrix}{config}) {
                 for my $c (@$config) {
                     my $image = $c->{image} or next;
                     ok $tags{$image}, "$image is used in $repo/$branch (by matrix config)";
-                    $used{$image} = 1;
+                    $used{$image}{$branch} = 1;
                 }
             }
             if (my $config = $workflow->{jobs}{$key}{strategy}{matrix}{include}) {
                 for my $c (@$config) {
                     my $image = $c->{config}{image} or next;
                     ok $tags{$image}, "$image is used in $repo/$branch (by matrix include)";
-                    $used{$image} = 1;
+                    $used{$image}{$branch} = 1;
                 }
             }
         }
@@ -50,5 +50,8 @@ for my $tag (keys %tags) {
     next if $used{$tag};
     fail "$tag is not used anywhere";
 }
+
+YAML::DumpFile('./tmp/used_images.yml', \%used);
+note explain \%used;
 
 done_testing;
