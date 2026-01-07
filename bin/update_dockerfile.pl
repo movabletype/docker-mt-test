@@ -494,36 +494,6 @@ my %Conf = (
         setcap          => 1,
         phpunit         => 9,
     },
-    fedora32 => {
-        from => 'fedora:32',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql'         => 'community-mysql',
-                'mysql-server'  => 'community-mysql-server',
-                'mysql-devel'   => 'community-mysql-devel',
-                'procps'        => 'perl-Unix-Process',
-                'phpunit'       => '',
-                'ruby'          => '',
-                'ruby-devel'    => '',
-                'libavif-devel' => '',
-                'libheif-devel' => '',
-            },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::AVIF' => '',
-            },
-        },
-        make => {
-            ruby => $ruby_version,
-        },
-        make_dummy_cert => '/usr/bin',
-        installer       => 'dnf',
-        setcap          => 1,
-        phpunit         => 9,
-    },
     centos7 => {
         from => 'centos:7',
         base => 'centos',
@@ -689,66 +659,6 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         phpunit         => 10,
         allow_erasing   => 1,
-    },
-    cloud6 => {
-        from => 'centos:7',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql'               => '',
-                'mysql-server'        => '',
-                'mysql-devel'         => '',
-                'php'                 => '',
-                'php-cli'             => '',
-                'php-mysqlnd'         => '',
-                'php-mbstring'        => '',
-                'php-gd'              => '',
-                'php-pecl-memcache'   => '',
-                'phpunit'             => '',
-                'perl-GD'             => '',
-                'ImageMagick'         => '',
-                'ImageMagick-perl'    => '',
-                'GraphicsMagick'      => '',
-                'GraphicsMagick-perl' => '',
-                'ruby'                => '',
-                'ruby-devel'          => '',
-                'libavif-devel'       => '',
-                'libheif-devel'       => '',
-            },
-            libs => [qw( gd-devel libstdc++-static )],
-        },
-        cpan => {
-            missing  => [qw( TAP::Harness::Env )],
-            broken   => [qw( Starman@0.4015 )],
-            _replace => {
-                'Imager::File::WEBP' => '',    # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
-                'Imager::File::AVIF' => '',
-            },
-            no_test => [qw( GD )],
-        },
-        phpunit => 9,
-        make    => {
-            perl           => '5.28.2',
-            ImageMagick    => '7.0.8-68',
-            GraphicsMagick => '1.3.36',
-            ruby           => '2.7.8',
-        },
-        repo => {
-            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi                => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
-        },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable      => 'remi,remi-php74',
-            php_version => 'php74',
-        },
-        'mysql57-community' => {
-            rpm     => 'https://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
-            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
-        },
-        cloud_prereqs => 'conf/cloud_prereqs6',
-        locale_def    => 1,
-        no_update     => 1,
     },
     cloud7 => {
         from => 'rockylinux/rockylinux:9.5',
