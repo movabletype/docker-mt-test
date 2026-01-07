@@ -36,7 +36,7 @@ ok !grep(/\.(?:cpanm|perl-cpm)/, @files), "$image_name: no cpanm|cpm directories
 my $entrypoint_is_executed;
 if (-e '/docker-entrypoint.sh' && $image_name !~ /chromedriver/) {
     my $entrypoint_sh = do { open my $fh, '<', '/docker-entrypoint.sh'; local $/; <$fh> };
-    if ($entrypoint_sh =~ /mysql/ && $image_name !~ /(?:fedora23|postgresql)/) {
+    if ($entrypoint_sh =~ /mysql/ && $image_name !~ /(?:postgresql)/) {
         my $entrypoint = `/docker-entrypoint.sh`;
         note $entrypoint;
         $entrypoint_is_executed = 1;
