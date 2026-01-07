@@ -1332,7 +1332,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } else { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
@@ -1498,10 +1498,7 @@ exec "$@"
 #!/bin/bash
 set -e
 
-% if ($type eq 'centos6') {
-service mysqld start
-service memcached start
-% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
+% if ($type =~ /^(?:centos7|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
@@ -1539,9 +1536,7 @@ until mysqladmin ping -h localhost --silent; do
 done
 % }
 
-% if ($type eq 'centos6') {
-mysql -e "create database if not exists mt_test character set utf8;"
-% } elsif ($type ne 'postgresql') {
+% if ($type ne 'postgresql') {
 mysql -e "create database mt_test character set utf8;"
 % }
 % if ($type eq 'postgresql') {
@@ -1557,9 +1552,7 @@ su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
 su -c 'createuser mt' postgres
 su -c 'createdb -O mt mt_test' postgres
 % } else {
-% if ($type ne 'centos6') {
 mysql -e "create user mt@localhost;"
-% }
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 % }
 
