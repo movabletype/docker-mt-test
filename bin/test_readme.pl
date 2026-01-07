@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use Test::More;
 use Mojo::File qw/path/;
-use Data::Dump qw/dump/;
 use YAML;
 
 my %mapping;

@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use Test::More;
-use Data::Dump qw/dump/;
 use YAML;
 use File::Path;
 
