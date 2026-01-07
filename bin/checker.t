@@ -116,7 +116,7 @@ ok $imagemagick_supports{png},  "$image_name: ImageMagick supports PNG";
 ok $imagemagick_supports{jpeg}, "$image_name: ImageMagick supports JPEG";
 ok $imagemagick_supports{bmp},  "$image_name: ImageMagick supports BMP";
 SKIP: {
-    local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|bionic|centos6|centos7|jessie|oracle|stretch|trusty)$/;
+    local $TODO = 'WebP may not be supported' if $image_name =~ /^(?:amazonlinux|centos7|oracle)$/;
     ok $imagemagick_supports{webp}, "$image_name: ImageMagick supports WebP";
 }
 SKIP: {
@@ -131,19 +131,13 @@ ok $graphicsmagick_supports{gif},  "$image_name: GraphicsMagick supports GIF";
 ok $graphicsmagick_supports{png},  "$image_name: GraphicsMagick supports PNG";
 ok $graphicsmagick_supports{jpeg}, "$image_name: GraphicsMagick supports JPEG";
 ok $graphicsmagick_supports{bmp},  "$image_name: GraphicsMagick supports BMP";
-SKIP: {
-    local $TODO = 'WebP may not be supported' if $image_name =~ /centos6|jessie|trusty/;
-    ok $graphicsmagick_supports{webp}, "$image_name: GraphicsMagick supports WebP";
-}
+ok $graphicsmagick_supports{webp}, "$image_name: GraphicsMagick supports WebP";
 SKIP: {
     local $TODO = 'AVIF may not be supported';
     ok $graphicsmagick_supports{avif}, "$image_name: GraphicsMagick supports AVIF";
 }
-SKIP: {
-    local $TODO = 'may be 8' if $image_name =~ /centos6|jessie|trusty/;
-    my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
-    is $graphicsmagick_depth => '16', "$image_name: GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
-}
+my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
+is $graphicsmagick_depth => '16', "$image_name: GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
 my ($has_identify) = `which identify`;
 ok $has_identify, "has identify";
 my ($has_convert) = `which convert`;
@@ -167,18 +161,12 @@ if ($image_name eq 'postgresql') {
     ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 }
 ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-SKIP: {
-    local $TODO = 'php for CentOS6 does not support DOM/XML' if $image_name =~ /centos6/;
-    ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
-}
+ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
 ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
-SKIP: {
-    local $TODO = 'php for CentOS6 does not support WebP' if $image_name =~ /centos6/;
-    ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
-}
+ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
 SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
@@ -284,11 +272,8 @@ ok $mailpit, "$image_name: has mailpit $mailpit";
 
 my (@icc_profiles) = (`find /usr/share | grep '.icc\$'` // '') =~ /(\w+\.icc)$/gm;
 my $srgb = grep /\bsRGB\.icc$/i, @icc_profiles;
-SKIP: {
-    local $TODO = 'CentOS 6 has no icc profile packages' if $image_name =~ /centos6/;
-    ok @icc_profiles, "$image_name: has " . join(",", @icc_profiles);
-    ok $srgb,         "$image_name: has sRGB.icc";
-}
+ok @icc_profiles, "$image_name: has " . join(",", @icc_profiles);
+ok $srgb,         "$image_name: has sRGB.icc";
 
 if ($image_name =~ /oracle/) {
     my ($sqlplus_version) = (`sqlplus -v`) =~ /^Version (\d+\.\d+)/m;
