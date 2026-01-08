@@ -1,4 +1,4 @@
-FROM debian:sid
+FROM ubuntu:questing
 
 WORKDIR /root
 
@@ -8,16 +8,32 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
- libdbd-mysql-perl mariadb-server mariadb-client libmysqlclient-dev\
+ libstdc++-15-dev xz-utils ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
+ mysql-server mysql-client libmysqlclient-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
- libstdc++-14-dev libcrypt-dev libxml2-dev libgmp-dev libssl-dev\
- php8.4-mbstring php8.4-xml php8.4 php8.4-cli php8.4-mysql php8.4-gd php8.4-memcache\
+ netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
+ libxml2-dev libgmp-dev libssl-dev\
+ php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache phpunit\
  ruby ruby-dev libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+  git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\
+  git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\
+  echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\
+  echo 'eval "$(plenv init -)"' >> ~/.bash_profile &&\
+  export PATH="$HOME/.plenv/bin:$PATH" &&\
+  eval "$(plenv init -)" &&\
+  plenv install 5.42.0 &&\
+  plenv global 5.42.0 &&\
+ mkdir src && cd src &&\
+ curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.46/GraphicsMagick-1.3.46.tar.xz &&\
+ tar xf GraphicsMagick-1.3.46.tar.xz && cd GraphicsMagick-1.3.46 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.1.2-12.tar.xz &&\
+ tar xf ImageMagick-7.1.2-12.tar.xz && cd ImageMagick-7.1.2-12 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
@@ -30,6 +46,7 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure GD XML::LibXML Web::Query XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
+      cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\

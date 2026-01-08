@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 service mariadb start
 service memcached start
 

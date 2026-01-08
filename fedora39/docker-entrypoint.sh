@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 echo 'default_authentication_plugin = mysql_native_password' >> /etc/my.cnf.d/community-mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
