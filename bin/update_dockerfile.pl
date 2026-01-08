@@ -1176,6 +1176,16 @@ RUN \\
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
+% if ($conf->{plenv}) {
+  git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\\
+  git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\\
+  echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\\
+  echo 'eval "$(plenv init -)"' >> ~/.bash_profile &&\\
+  export PATH="$HOME/.plenv/bin:$PATH" &&\\
+  eval "$(plenv init -)" &&\\
+  plenv install <%= $conf->{plenv} %> &&\\
+  plenv global <%= $conf->{plenv} %> &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1338,6 +1348,16 @@ RUN\
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
+% if ($conf->{plenv}) {
+  git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\\
+  git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\\
+  echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\\
+  echo 'eval "$(plenv init -)"' >> ~/.bash_profile &&\\
+  export PATH="$HOME/.plenv/bin:$PATH" &&\\
+  eval "$(plenv init -)" &&\\
+  plenv install <%= $conf->{plenv} %> &&\\
+  plenv global <%= $conf->{plenv} %> &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1455,6 +1475,10 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #!/bin/bash
 set -e
 
+% if ($conf->{plenv}) {
+source ~/.bash_profile
+% }
+
 % if ($type =~ /^(?:trusty|bionic)$/) {
 find /var/lib/mysql -type f | xargs touch
 % } elsif ($type =~ /^(?:buster|jessie)$/) {
@@ -1494,6 +1518,10 @@ exec "$@"
 % my ($type, $conf) = @_;
 #!/bin/bash
 set -e
+
+% if ($conf->{plenv}) {
+source ~/.bash_profile
+% }
 
 % if ($type =~ /^(?:centos7|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
