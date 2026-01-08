@@ -8,6 +8,8 @@ use Getopt::Long qw/:config pass_through/;
 use Mojo::File   qw/path/;
 
 GetOptions(
+    'builder'                           => \my $builder,
+    'push'                              => \my $push,
     'no_cache|no-cache'                 => \my $no_cache,
     'workers=i'                         => \my $workers,
     'errored|errored_only|errored-only' => \my $errored_only,
@@ -29,6 +31,8 @@ my %aliases = qw(
 );
 my %aliases_rev;
 
+my %use_builder = map {$_ => 1} qw( noble plucky questing );
+
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];
     push @{ $aliases_rev{$name} }, $alias;
@@ -49,7 +53,11 @@ for my $name (@targets) {
     my $dockerfile = path("$name/Dockerfile")->slurp;
     my ($from)     = $dockerfile =~ /^FROM (\S+)/;
     system("docker pull $from");
-    system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+    if ($builder && $use_builder{$name}) {
+        system("docker buildx build --builder $builder --platform linux/amd64,linux/arm64 $name $tags --output=type=image" . ($no_cache ? " --no-cache" : "") . ($push ? " --push" : "") . " 2>&1 | tee log/build_$name.log");
+    } else {
+        system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+    }
     my $log = path("log/build_$name.log")->slurp;
     if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built)!) {
         if ($log =~ /No package (.+) available/) {
