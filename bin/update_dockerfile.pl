@@ -1200,7 +1200,7 @@ RUN \\
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
  curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
@@ -1372,7 +1372,7 @@ RUN\
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
  curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
