@@ -10,6 +10,9 @@ for my $line (split /\n/, path('README.md')->slurp) {
     if ($line =~ /^## .*for CI/) {
         $phase = 'ci';
     }
+    if ($line =~ /^## .*multi platforms/) {
+        $phase = 'multi';
+    }
     if ($line =~ /^## .*manual testing/) {
         $phase = 'manual';
     }
