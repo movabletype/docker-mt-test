@@ -1528,12 +1528,10 @@ set -e
 source ~/.bash_profile
 % }
 
-% if ($type =~ /^(?:trusty|bionic)$/) {
-find /var/lib/mysql -type f | xargs touch
-% } elsif ($type =~ /^(?:buster|jessie)$/) {
+% if ($type =~ /^(?:buster)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
-% if ($conf->{repo}{mysql84}) {
+% if ($conf->{repo}{mysql84} or $type =~ /^(?:questing|plucky)$/) {
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
 
 sleep 1
@@ -1541,10 +1539,10 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /sid|bookworm|bullseye/) {
-service mariadb start
-% } else {
+% } elsif ($type =~ /buster/) {
 service mysql start
+% } else {
+service mariadb start
 % }
 service memcached start
 
