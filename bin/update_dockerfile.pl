@@ -204,7 +204,7 @@ my %Conf = (
         from => 'ubuntu:plucky',
         base => 'debian',
         apt  => {
-            base => [qw( libx32stdc++-15-dev )],
+            base => [qw( libstdc++-15-dev )],
             php => [qw( php-mbstring php-xml )],
         },
         cpan => {
@@ -221,7 +221,7 @@ my %Conf = (
         from => 'ubuntu:questing',
         base => 'debian',
         apt  => {
-            base => [qw( libx32stdc++-15-dev xz-utils )],
+            base => [qw( libstdc++-15-dev xz-utils )],
             php => [qw( php-mbstring php-xml )],
             _replace => {
                 'graphicsmagick' => '',
