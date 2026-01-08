@@ -8,7 +8,7 @@ use Getopt::Long qw/:config pass_through/;
 use Mojo::File   qw/path/;
 
 GetOptions(
-    'builder'                           => \my $builder,
+    'builder=s'                         => \my $builder,
     'push'                              => \my $push,
     'no_cache|no-cache'                 => \my $no_cache,
     'workers=i'                         => \my $workers,
