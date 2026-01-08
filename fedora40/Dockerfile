@@ -13,7 +13,7 @@ RUN dnf -y  install\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y install https://ftp.riken.jp/Linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm &&\
+ dnf -y install https://ftp.riken.jp/Linux/remi/fedora/40/remi/`uname -m`/remi-release-40-1.fc40.remi.noarch.rpm &&\
     dnf -y module reset php ;\
     dnf -y module enable php:remi-8.2 ;\
     dnf -y install\

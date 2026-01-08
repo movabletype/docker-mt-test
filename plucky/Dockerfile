@@ -1,4 +1,4 @@
-FROM debian:sid
+FROM ubuntu:plucky
 
 WORKDIR /root
 
@@ -8,12 +8,12 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
- libdbd-mysql-perl mariadb-server mariadb-client libmysqlclient-dev\
+ libstdc++-15-dev ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
+ mysql-server mysql-client libmysqlclient-dev\
  vim nano\
  perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
- libstdc++-14-dev libcrypt-dev libxml2-dev libgmp-dev libssl-dev\
- php8.4-mbstring php8.4-xml php8.4 php8.4-cli php8.4-mysql php8.4-gd php8.4-memcache\
+ libxml2-dev libgmp-dev libssl-dev\
+ php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache phpunit\
  ruby ruby-dev libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
@@ -30,6 +30,7 @@ RUN \
  mv cpm /usr/local/bin/ &&\
  cpm install -g --show-build-log-on-failure GD XML::LibXML Web::Query XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
+      cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\

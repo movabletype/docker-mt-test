@@ -107,7 +107,7 @@ my %Conf = (
                 'php-memcache' => 'php8.4-memcache',
                 'phpunit'      => '',
             },
-            libs => [qw( libstdc++-14-dev )],
+            libs => [qw( libstdc++-14-dev libcrypt-dev )],
             db   => [qw( libdbd-mysql-perl )],
             php  => [qw( php8.4-mbstring php8.4-xml )],
         },
@@ -200,6 +200,51 @@ my %Conf = (
         patch   => ['Test-mysqld-1.0030'],
         phpunit => 11,
     },
+    plucky => {
+        from => 'ubuntu:plucky',
+        base => 'debian',
+        apt  => {
+            base => [qw( libstdc++-15-dev )],
+            php => [qw( php-mbstring php-xml )],
+        },
+        cpan => {
+            # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
+            no_test  => [qw( GD XML::LibXML Web::Query )],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
+        },
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+        phpunit => 11,
+    },
+    questing => {
+        from => 'ubuntu:questing',
+        base => 'debian',
+        apt  => {
+            base => [qw( libstdc++-15-dev xz-utils )],
+            php => [qw( php-mbstring php-xml )],
+            _replace => {
+                'graphicsmagick' => '',
+                'imagemagick' => '',
+                'perlmagick' => '',
+                'libgraphics-magick-perl',
+            },
+        },
+        cpan => {
+            # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
+            no_test  => [qw( GD XML::LibXML Web::Query )],
+            _replace => {
+                'Imager::File::AVIF' => '',
+            },
+        },
+        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+        plenv => '5.42.0',
+        make => {
+            ImageMagick => '7.1.2-12',
+            GraphicsMagick => '1.3.46',
+        },
+        phpunit => 11,
+    },
     rawhide => {
         from => 'fedora:rawhide',
         base => 'centos',
@@ -220,7 +265,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',    # test fails
             },
         },
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -266,7 +311,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',    # test fails
             },
         },
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -391,9 +436,10 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # seems broken with the current gcc/clang, and the patch for 1.05 does not work
-            # but let's wait and see...
-            temporary => [qw(Data::MessagePack::Stream@1.04)],
+            # GTest (installed by libheif-devel) breaks the latest version
+            # Adding -DMSGPACK_BUILD_TESTS=OFF to builder/MyBuilder.pm helps
+            # but it's easier to install an older version here
+            temporary => [qw( Data::MessagePack::Stream@1.04 )],
             _replace  => {
                 'Imager::File::AVIF' => '',    # test fails
             },
@@ -405,7 +451,7 @@ my %Conf = (
             GraphicsMagick => '1.3.43',
         },
         remi => {
-            rpm    => 'https://ftp.riken.jp/Linux/remi/fedora/40/remi/x86_64/remi-release-40-1.fc40.remi.noarch.rpm',
+            rpm    => 'https://ftp.riken.jp/Linux/remi/fedora/40/remi/`uname -m`/remi-release-40-1.fc40.remi.noarch.rpm',
             module => {
                 reset  => 'php',
                 enable => 'php:remi-8.2',
@@ -489,36 +535,6 @@ my %Conf = (
             base => [qw( glibc-langpack-en glibc-langpack-ja )],
         },
         patch           => ['Test-mysqld-1.0030'],
-        make_dummy_cert => '/usr/bin',
-        installer       => 'dnf',
-        setcap          => 1,
-        phpunit         => 9,
-    },
-    fedora32 => {
-        from => 'fedora:32',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql'         => 'community-mysql',
-                'mysql-server'  => 'community-mysql-server',
-                'mysql-devel'   => 'community-mysql-devel',
-                'procps'        => 'perl-Unix-Process',
-                'phpunit'       => '',
-                'ruby'          => '',
-                'ruby-devel'    => '',
-                'libavif-devel' => '',
-                'libheif-devel' => '',
-            },
-            base => [qw( glibc-langpack-en glibc-langpack-ja )],
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::AVIF' => '',
-            },
-        },
-        make => {
-            ruby => $ruby_version,
-        },
         make_dummy_cert => '/usr/bin',
         installer       => 'dnf',
         setcap          => 1,
@@ -690,66 +706,6 @@ my %Conf = (
         phpunit         => 10,
         allow_erasing   => 1,
     },
-    cloud6 => {
-        from => 'centos:7',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'mysql'               => '',
-                'mysql-server'        => '',
-                'mysql-devel'         => '',
-                'php'                 => '',
-                'php-cli'             => '',
-                'php-mysqlnd'         => '',
-                'php-mbstring'        => '',
-                'php-gd'              => '',
-                'php-pecl-memcache'   => '',
-                'phpunit'             => '',
-                'perl-GD'             => '',
-                'ImageMagick'         => '',
-                'ImageMagick-perl'    => '',
-                'GraphicsMagick'      => '',
-                'GraphicsMagick-perl' => '',
-                'ruby'                => '',
-                'ruby-devel'          => '',
-                'libavif-devel'       => '',
-                'libheif-devel'       => '',
-            },
-            libs => [qw( gd-devel libstdc++-static )],
-        },
-        cpan => {
-            missing  => [qw( TAP::Harness::Env )],
-            broken   => [qw( Starman@0.4015 )],
-            _replace => {
-                'Imager::File::WEBP' => '',    # libwebp for cloud6/updates is too old (0.3.0 as of this writing)
-                'Imager::File::AVIF' => '',
-            },
-            no_test => [qw( GD )],
-        },
-        phpunit => 9,
-        make    => {
-            perl           => '5.28.2',
-            ImageMagick    => '7.0.8-68',
-            GraphicsMagick => '1.3.36',
-            ruby           => '2.7.8',
-        },
-        repo => {
-            'mysql57-community' => [qw( mysql-community-server mysql-community-client mysql-community-devel )],
-            remi                => [qw( php74-php php74-php-mbstring php74-php-mysqlnd php74-php-gd php74-php-pecl-memcache php74-php-xml )],
-        },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable      => 'remi,remi-php74',
-            php_version => 'php74',
-        },
-        'mysql57-community' => {
-            rpm     => 'https://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm',
-            gpg_key => 'https://repo.mysql.com/RPM-GPG-KEY-mysql-2022',
-        },
-        cloud_prereqs => 'conf/cloud_prereqs6',
-        locale_def    => 1,
-        no_update     => 1,
-    },
     cloud7 => {
         from => 'rockylinux/rockylinux:9.5',
         base => 'centos',
@@ -793,7 +749,7 @@ my %Conf = (
         phpunit => 11,
         make    => {
             perl           => '5.38.2',
-            ImageMagick    => '7.0.8-68',
+            ImageMagick    => '7.1.2-12',
             GraphicsMagick => '1.3.43',
         },
         repo => {
@@ -1269,6 +1225,16 @@ RUN \\
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
+% if ($conf->{plenv}) {
+  git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\\
+  git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\\
+  echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\\
+  echo 'eval "$(plenv init -)"' >> ~/.bash_profile &&\\
+  export PATH="$HOME/.plenv/bin:$PATH" &&\\
+  eval "$(plenv init -)" &&\\
+  plenv install <%= $conf->{plenv} %> &&\\
+  plenv global <%= $conf->{plenv} %> &&\\
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1283,7 +1249,7 @@ RUN \\
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
  curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
@@ -1422,7 +1388,7 @@ RUN\
 %   }
 % }
 % if (!$conf->{no_update}) {
- <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } elsif ($type ne 'fedora23') { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
+ <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>update <% if ($type =~ /(rawhide|fedora4[1-9]|postgresql)/) { %>--skip-unavailable<% } else { %>--skip-broken<% } %><% if ($conf->{no_best}) { %> --nobest<% } %> &&\\
 % }
  <%= $conf->{installer} // 'yum' %> clean all && rm -rf /var/cache/<%= $conf->{installer} // 'yum' %> &&\\
 % if ($conf->{use_legacy_policies}) {
@@ -1430,6 +1396,16 @@ RUN\
 % }
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
+% }
+% if ($conf->{plenv}) {
+  git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\\
+  git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\\
+  echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\\
+  echo 'eval "$(plenv init -)"' >> ~/.bash_profile &&\\
+  export PATH="$HOME/.plenv/bin:$PATH" &&\\
+  eval "$(plenv init -)" &&\\
+  plenv install <%= $conf->{plenv} %> &&\\
+  plenv global <%= $conf->{plenv} %> &&\\
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -1445,7 +1421,7 @@ RUN\
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
  curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
@@ -1548,12 +1524,14 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 #!/bin/bash
 set -e
 
-% if ($type =~ /^(?:trusty|bionic)$/) {
-find /var/lib/mysql -type f | xargs touch
-% } elsif ($type =~ /^(?:buster|jessie)$/) {
+% if ($conf->{plenv}) {
+source ~/.bash_profile
+% }
+
+% if ($type =~ /^(?:buster)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
-% if ($conf->{repo}{mysql84}) {
+% if ($conf->{repo}{mysql84} or $type =~ /^(?:questing|plucky)$/) {
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
 
 sleep 1
@@ -1561,10 +1539,10 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /sid|bookworm|bullseye/) {
-service mariadb start
-% } else {
+% } elsif ($type =~ /buster/) {
 service mysql start
+% } else {
+service mariadb start
 % }
 service memcached start
 
@@ -1588,10 +1566,11 @@ exec "$@"
 #!/bin/bash
 set -e
 
-% if ($type eq 'centos6') {
-service mysqld start
-service memcached start
-% } elsif ($type =~ /^(?:centos7|fedora23|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
+% if ($conf->{plenv}) {
+source ~/.bash_profile
+% }
+
+% if ($type =~ /^(?:centos7|fedora40|oracle|oracle8|amazonlinux|amazonlinux2023)$/) {
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
@@ -1629,9 +1608,7 @@ until mysqladmin ping -h localhost --silent; do
 done
 % }
 
-% if ($type eq 'centos6') {
-mysql -e "create database if not exists mt_test character set utf8;"
-% } elsif ($type ne 'postgresql') {
+% if ($type ne 'postgresql') {
 mysql -e "create database mt_test character set utf8;"
 % }
 % if ($type eq 'postgresql') {
@@ -1647,9 +1624,7 @@ su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
 su -c 'createuser mt' postgres
 su -c 'createdb -O mt mt_test' postgres
 % } else {
-% if ($type ne 'centos6') {
 mysql -e "create user mt@localhost;"
-% }
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 % }
 
