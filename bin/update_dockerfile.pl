@@ -220,7 +220,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',    # test fails
             },
         },
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -266,7 +266,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',    # test fails
             },
         },
-        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'Data-MessagePack-Stream-1.05', 'YAML-Syck-1.36'],
+        patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         make_dummy_cert        => '/usr/bin',
         create_make_dummy_cert => 1,
         make                   => {
@@ -391,9 +391,6 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
-            # seems broken with the current gcc/clang, and the patch for 1.05 does not work
-            # but let's wait and see...
-            temporary => [qw(Data::MessagePack::Stream@1.04)],
             _replace  => {
                 'Imager::File::AVIF' => '',    # test fails
             },
