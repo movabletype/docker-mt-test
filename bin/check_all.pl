@@ -78,6 +78,6 @@ for my $name (sort keys %summary) {
     $message = colored(['red'], $message) if $fail || !$ok;
     diag $message;
 }
-diag $_ for @errors;
+diag colored([/# TODO/ ? 'yellow' : 'red'], $_) for @errors;
 
 system('docker system prune -f');
