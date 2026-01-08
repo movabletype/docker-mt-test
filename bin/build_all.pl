@@ -31,7 +31,7 @@ my %aliases = qw(
 );
 my %aliases_rev;
 
-my %use_builder = map {$_ => 1} qw( noble plucky questing );
+my %multi_platform = map {$_ => 1} qw( noble plucky questing );
 
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];
@@ -52,14 +52,34 @@ for my $name (@targets) {
     }
     my $dockerfile = path("$name/Dockerfile")->slurp;
     my ($from)     = $dockerfile =~ /^FROM (\S+)/;
-    system("docker pull $from");
-    if ($builder && $use_builder{$name}) {
+    system("docker pull $from") if $no_cache;
+    if ($builder && $multi_platform{$name}) {
         system("docker buildx build --builder $builder --platform linux/amd64,linux/arm64 $name $tags --output=type=image" . ($no_cache ? " --no-cache" : "") . ($push ? " --push" : "") . " 2>&1 | tee log/build_$name.log");
     } else {
-        system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+        if ($push) {
+            if ($multi_platform{$name}) {
+                say "$name requires multi-platform build to push";
+            } else {
+                my $id = `docker images movabletype/test:$name --no-trunc --format '{{.ID}}'`;
+                chomp $id;
+                die "Image not found: $name" unless $id;
+
+                say "$name : $id";
+
+                my @tags = map { s/ .*//r }
+                    grep { /$id/ }
+                    split /\n/, `docker images -f 'reference=movabletype/test:*' --no-trunc --format '{{.Tag}} {{.ID}}'`;
+
+                for my $tag (@tags) {
+                    system("docker push movabletype/test:$tag");
+                }
+            }
+        } else {
+            system("docker build $name $tags" . ($no_cache ? " --no-cache" : "") . " 2>&1 | tee log/build_$name.log");
+        }
     }
     my $log = path("log/build_$name.log")->slurp;
-    if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built)!) {
+    if ($log =~ m!(naming to docker.io/movabletype/test:$name (\S+ )?done|Successfully built|exporting manifest list .* done)!) {
         if ($log =~ /No package (.+) available/) {
             rename "log/build_$name.log" => "log/build_warn_$name.log";
         } else {
