@@ -15,9 +15,9 @@ GetOptions(
 
 my %aliases = qw(
     perl-5.16 centos7
-    perl-5.38 fedora39
-    perl-5.40 fedora41
-    perl-5.42 fedora43
+    perl-5.38 noble
+    perl-5.40 plucky
+    perl-5.42 questing
 
     php-7.3 buster
     php-7.4 fedora32
