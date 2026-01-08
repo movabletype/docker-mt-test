@@ -107,7 +107,7 @@ my %Conf = (
                 'php-memcache' => 'php8.4-memcache',
                 'phpunit'      => '',
             },
-            libs => [qw( libstdc++-14-dev )],
+            libs => [qw( libstdc++-14-dev libcrypt-dev )],
             db   => [qw( libdbd-mysql-perl )],
             php  => [qw( php8.4-mbstring php8.4-xml )],
         },
