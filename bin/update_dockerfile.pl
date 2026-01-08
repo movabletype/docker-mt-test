@@ -436,6 +436,10 @@ my %Conf = (
             images => [qw( libomp-devel )],
         },
         cpan => {
+            # GTest (installed by libheif-devel) breaks the latest version
+            # Adding -DMSGPACK_BUILD_TESTS=OFF to builder/MyBuilder.pm helps
+            # but it's easier to install an older version here
+            temporary => [qw( Data::MessagePack::Stream@1.04 )],
             _replace  => {
                 'Imager::File::AVIF' => '',    # test fails
             },
