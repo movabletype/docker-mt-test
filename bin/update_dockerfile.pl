@@ -749,13 +749,14 @@ my %Conf = (
         phpunit => 11,
         make    => {
             perl           => '5.38.2',
-            ImageMagick    => '7.1.2-12',
+            ImageMagick    => '7.0.8-68',
             GraphicsMagick => '1.3.43',
         },
         repo => {
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( giflib-devel )],
             epel => [qw( libidn-devel )],
+            devel => [qw( libtool-ltdl-devel )],
         },
         epel => {
             rpm => 'epel-release',
