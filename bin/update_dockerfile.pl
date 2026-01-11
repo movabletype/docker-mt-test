@@ -756,6 +756,7 @@ my %Conf = (
             remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( giflib-devel )],
             epel => [qw( libidn-devel )],
+            devel => [qw( libtool-ltdl-devel )],
         },
         epel => {
             rpm => 'epel-release',
