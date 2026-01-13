@@ -185,11 +185,11 @@ for my $file (@image_files) {
 }
 
 my ($has_identify) = `which identify`;
-ok $has_identify, "has identify";
+ok $has_identify, "$image_name: has identify";
 my ($has_convert) = `which convert`;
-ok $has_convert, "has convert";
+ok $has_convert, "$image_name: has convert";
 my ($has_gm) = `which gm`;
-ok $has_gm, "has gm";
+ok $has_gm, "$image_name: has gm";
 
 my ($php_version) = `php --version` =~ /PHP (\d\.\d+\.\d+)/;
 ok $php_version, "$image_name: PHP exists ($php_version)";
