@@ -5,7 +5,8 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y --allowerasing install\
- glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
+ glibc-langpack-ja glibc-langpack-en glibc-locale-source xz git make cmake gcc clang curl perl perl-core tar zip unzip\
+  bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
  mariadb mariadb-server mariadb-connector-c-devel mariadb-pam\
  vim nano\
  libomp-devel netpbm-progs libpng-devel libjpeg-devel gd-devel libwebp-devel\
@@ -23,31 +24,69 @@ RUN dnf -y --allowerasing install\
     dnf -y --enablerepo=epel install\
  libidn-devel\
  &&\
- dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm &&\
-    dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.3 ;\
-    dnf -y install\
- php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
- &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
   update-crypto-policies --set legacy &&\
+  dnf install -y --enablerepo=devel\
+    autoconf bison re2c oniguruma-devel sqlite-devel &&\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\
+  rm -rf /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.3.29.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  php-build --verbose my_php /usr &&\
+  yes | pecl install memcache &&\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\
  mkdir src && cd src &&\
  curl -LO https://cpan.metacpan.org/src/5.0/perl-5.38.2.tar.gz && tar xf perl-5.38.2.tar.gz &&\
  cd perl-5.38.2 && ./Configure -des -Dprefix=/usr -Accflags=-fPIC -Duseshrplib && make && make install && cd .. &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.0.8-68.tar.xz &&\
- tar xf ImageMagick-7.0.8-68.tar.xz && cd ImageMagick-7.0.8-68 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.1.2-12.tar.xz &&\
+ tar xf ImageMagick-7.1.2-12.tar.xz && cd ImageMagick-7.1.2-12 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
@@ -57,7 +96,9 @@ RUN dnf -y --allowerasing install\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
- Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
+ Net::LibIDN AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid\
+  AnyEvent::FTP Capture::Tiny Class::Method::Modifiers Data::Section::Simple AnyEvent::FTP::Server\
+  Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\
  pQuery\
  JSON::XS Starman Imager::File::WEBP Plack::Middleware::ReverseProxy Devel::CheckLib\
  JavaScript::Minifier CSS::Minifier\

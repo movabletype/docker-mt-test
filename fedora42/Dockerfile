@@ -5,9 +5,11 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf --setopt=ip_resolve=4 -y  install\
- distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
+ distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip\
+  bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  vim nano\
- libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel\
+  libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel libyaml-devel libffi-devel\
@@ -22,15 +24,21 @@ RUN dnf --setopt=ip_resolve=4 -y  install\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

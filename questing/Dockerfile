@@ -8,16 +8,16 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- libstdc++-15-dev xz-utils ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
+ libstdc++-15-dev xz-utils ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps\
+  ssl-cert postfix libsasl2-dev libsasl2-modules\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
  netpbm libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
  libxml2-dev libgmp-dev libssl-dev\
- php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache phpunit\
+ phpunit\
  ruby ruby-dev libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
- && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
- ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+ && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
   git clone --depth 1 https://github.com/tokuhirom/plenv.git ~/.plenv &&\
   git clone --depth 1 https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/ &&\
   echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> ~/.bash_profile &&\
@@ -26,21 +26,65 @@ RUN \
   eval "$(plenv init -)" &&\
   plenv install 5.42.0 &&\
   plenv global 5.42.0 &&\
+  apt-get install -y autoconf bison re2c libonig-dev libsqlite3-dev &&\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\
+  rm -rf /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.4.16.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  php-build --verbose my_php /usr &&\
+  yes | pecl install memcache &&\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\
+ apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.46/GraphicsMagick-1.3.46.tar.xz &&\
  tar xf GraphicsMagick-1.3.46.tar.xz && cd GraphicsMagick-1.3.46 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.1.2-12.tar.xz &&\
  tar xf ImageMagick-7.1.2-12.tar.xz && cd ImageMagick-7.1.2-12 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' \
+   cpanm && mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

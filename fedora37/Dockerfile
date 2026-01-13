@@ -5,10 +5,12 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y  install\
- glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
+ glibc-langpack-en glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which\
+  perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  community-mysql-devel community-mysql-server community-mysql\
  vim nano\
- ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel\
+  libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel libyaml-devel libffi-devel\
@@ -23,7 +25,10 @@ RUN dnf -y  install\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

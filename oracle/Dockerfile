@@ -6,7 +6,8 @@ COPY ./patch/ /root/patch/
 
 RUN  microdnf -y install dnf &&\
  dnf -y  install\
- which glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
+ which glibc-locale-source git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
+  cyrus-sasl-devel cyrus-sasl-plain\
  vim nano\
  netpbm-progs libpng-devel libjpeg-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
@@ -24,24 +25,57 @@ RUN  microdnf -y install dnf &&\
     dnf -y --enablerepo=ol9_oracle_instantclient26 install\
  oracle-instantclient-basic oracle-instantclient-devel oracle-instantclient-sqlplus\
  && dnf clean --enablerepo=ol9_oracle_instantclient26 all &&\
- dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm &&\
-    dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.3 ;\
-    dnf -y install\
- php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8\
- &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+  dnf install -y --enablerepo=ol9_codeready_builder\
+    autoconf bison re2c oniguruma-devel sqlite-devel &&\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\
+  rm -rf /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-oci8=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-oci=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.3.29.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  php-build --verbose my_php /usr &&\
+  yes | pecl install memcache &&\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\
  mkdir src && cd src &&\
- curl -LO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz && tar xf ruby-3.1.6.tar.gz &&\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz &&\
+ tar xf ruby-3.1.6.tar.gz &&\
  cd ruby-3.1.6 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
- curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

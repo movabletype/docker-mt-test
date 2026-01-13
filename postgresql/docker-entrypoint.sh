@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-
-
 export PGDATA=/var/lib/postgresql/data
 install --verbose --directory --owner postgres --group postgres --mode 1777 /var/lib/postgresql
 install --verbose --directory --owner postgres --group postgres --mode 3777 /var/run/postgresql

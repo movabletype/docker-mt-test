@@ -5,26 +5,58 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN dnf -y  install\
- glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
+ glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which\
+  perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel\
+  libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y install https://ftp.riken.jp/Linux/remi/fedora/40/remi/`uname -m`/remi-release-40-1.fc40.remi.noarch.rpm &&\
-    dnf -y module reset php ;\
-    dnf -y module enable php:remi-8.2 ;\
-    dnf -y install\
- php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml\
- &&\
  dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+  dnf install -y \
+    autoconf bison re2c oniguruma-devel sqlite-devel &&\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\
+  rm -rf /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.2.30.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  php-build --verbose my_php /usr &&\
+  yes | pecl install memcache &&\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.43/GraphicsMagick-1.3.43.tar.xz &&\
  tar xf GraphicsMagick-1.3.43.tar.xz && cd GraphicsMagick-1.3.43 &&\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
@@ -32,7 +64,10 @@ RUN dnf -y  install\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

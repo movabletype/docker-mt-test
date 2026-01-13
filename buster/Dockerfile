@@ -11,18 +11,21 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
+ ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
+  libsasl2-dev libsasl2-modules\
  libdbd-mysql-perl libmariadb-dev-compat mariadb-server mariadb-client libmariadb-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libheif-dev\
+ perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev\
+  libwebp-dev icc-profiles-free libheif-dev\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache\
  libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
- && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
- ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+ && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+ apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  mkdir src && cd src &&\
- curl -LO https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz && tar xf ruby-3.4.8.tar.gz &&\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz &&\
+ tar xf ruby-3.4.8.tar.gz &&\
  cd ruby-3.4.8 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
@@ -31,7 +34,10 @@ RUN \
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' \
+   cpanm && mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

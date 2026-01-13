@@ -5,10 +5,12 @@ WORKDIR /root
 COPY ./patch/ /root/patch/
 
 RUN yum -y  install\
- which hostname glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix cyrus-sasl-devel cyrus-sasl-plain\
+ which hostname glibc-langpack-ja git make cmake gcc clang curl perl perl-core tar zip unzip bzip2 which procps postfix\
+  cyrus-sasl-devel cyrus-sasl-plain\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+ ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel\
+  icc-profiles-openicc\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  libyaml-devel libffi-devel\
  httpd mod_ssl vsftpd ftp memcached\
@@ -24,7 +26,8 @@ RUN yum -y  install\
  yum -y update --skip-broken &&\
  yum clean all && rm -rf /var/cache/yum &&\
  mkdir src && cd src &&\
- curl -LO https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz && tar xf ruby-3.4.8.tar.gz &&\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz &&\
+ tar xf ruby-3.4.8.tar.gz &&\
  cd ruby-3.4.8 && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
@@ -33,7 +36,10 @@ RUN yum -y  install\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\
+ mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\

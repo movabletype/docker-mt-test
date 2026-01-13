@@ -14,23 +14,28 @@ RUN \
  apt-get update &&\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\
  apt-get --no-install-recommends -y install\
- ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix libsasl2-dev libsasl2-modules\
+ ca-certificates netbase git make cmake gcc clang curl ssh locales perl zip unzip bzip2 procps ssl-cert postfix\
+  libsasl2-dev libsasl2-modules\
  mysql-server mysql-client libmysqlclient-dev\
  vim nano\
- perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev libwebp-dev icc-profiles-free libavif-dev libheif-dev\
+ perlmagick libgraphics-magick-perl netpbm imagemagick graphicsmagick libgd-dev libpng-dev libgif-dev libjpeg-dev\
+  libwebp-dev icc-profiles-free libavif-dev libheif-dev\
  libxml2-dev libgmp-dev libssl-dev\
  php-mbstring php-xml php php-cli php-mysqlnd php-gd php-memcache phpunit\
  ruby ruby-dev libyaml-dev libffi-dev\
  apache2 vsftpd ftp memcached\
- && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
- ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
- curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
+ && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
+ apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
+ curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
  gem install \
   fluentd:1.18.0\
  &&\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\
+ perl -pi -E \
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' \
+   cpanm && mv cpanm /usr/local/bin &&\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
