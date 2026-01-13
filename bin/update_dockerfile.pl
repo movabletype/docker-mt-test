@@ -8,7 +8,9 @@ use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
 use File::Path qw/rmtree/;
+use Text::Wrap;
 
+$Text::Wrap::columns = 120;
 my $ruby_version = '3.4.8';
 
 my %Conf = (
@@ -982,6 +984,19 @@ my %Conf = (
 
 my $templates = get_data_section();
 
+sub _strip_lines {
+    my $text = shift;
+    $text =~ s/^\n+//g;
+    $text =~ s/\n\n+$/\n/g;
+    $text =~ s/\n\n\n+/\n\n/g;
+    $text;
+}
+
+sub Mojo::Template::Sandbox::_wrap {
+    my $text = shift;
+    join "\\\n", split /\n/, Text::Wrap::wrap('', '  ', $text);
+}
+
 my @targets = @ARGV ? @ARGV : grep $Conf{$_}{base}, sort keys %Conf;
 for my $name (@targets) {
     if (!exists $Conf{$name}) {
@@ -997,8 +1012,8 @@ for my $name (@targets) {
     if ($conf->{cpan}{temporary}) {
         say "  temporary: $_" for @{ $conf->{cpan}{temporary} };
     }
-    my $dockerfile = Mojo::Template->new->render($template,    $name, $conf);
-    my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
+    my $dockerfile = _strip_lines(Mojo::Template->new->render($template,    $name, $conf));
+    my $entrypoint = _strip_lines(Mojo::Template->new->render($ep_template, $name, $conf));
     path("$name/Dockerfile")->spew($dockerfile);
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
     path("$name/patch")->remove_tree if -d path("$name/patch");
@@ -1158,7 +1173,7 @@ RUN \\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
  apt-get --no-install-recommends -y install\\
 % for my $key (sort keys %{ $conf->{apt} }) {
- <%= join " ", @{$conf->{apt}{$key}} %>\\
+ <%= _wrap(join " ", @{$conf->{apt}{$key}}) %>\\
 % }
  && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
  ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
@@ -1232,15 +1247,24 @@ RUN \\
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \\
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \\
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \\
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \\
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
@@ -1252,18 +1276,21 @@ RUN \\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
-  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+  <%= _wrap(join " ", @{ $conf->{gem}{$key} }) %>\\
 % }
  &&\\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\\
+ perl -pi -E \\
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' \\
+   cpanm && mv cpanm /usr/local/bin &&\\
  curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{cpan}{temporary}) {
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
@@ -1276,7 +1303,7 @@ RUN \\
  <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
- <%= join " ", @{ $conf->{cpan}{$key} } %>\\
+ <%= _wrap(join " ", @{ $conf->{cpan}{$key} }) %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{remove_from_cpanfile}) {
@@ -1293,7 +1320,7 @@ RUN set -ex &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
  localedef -i ja_JP -f UTF-8 ja_JP.UTF-8 &&\\
  a2dismod mpm_event &&\\
- a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} || [] } %> &&\\
+ a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= _wrap(join " ", @{ $conf->{apache}{enmod} || [] }) %> &&\\
  a2enconf serve-cgi-bin &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
@@ -1339,7 +1366,7 @@ RUN\
 % }
  <%= $conf->{installer} // 'yum' %> <%= $conf->{use_ipv4} ? '--setopt=ip_resolve=4 ' : '' %>-y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
- <%= join " ", @{$conf->{yum}{$key}} %>\\
+ <%= _wrap(join " ", @{$conf->{yum}{$key}}) %>\\
 % }
  &&\\
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
@@ -1368,7 +1395,7 @@ RUN\
 %     }
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{disable} ? ' --disablerepo='.$conf->{$repo}{disable} : '' %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
- <%= join " ", @{$conf->{repo}{$repo}} %>\\
+ <%= _wrap(join " ", @{$conf->{repo}{$repo}}) %>\\
 %   if ($conf->{$repo}{enable}) {
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
 %   } else {
@@ -1462,15 +1489,24 @@ RUN\
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \\
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \\
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \\
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \\
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
@@ -1486,25 +1522,28 @@ RUN\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
-  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+  <%= _wrap(join " ", @{ $conf->{gem}{$key} }) %>\\
 % }
  &&\\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\\
+ perl -pi -E \\
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\\
+ mv cpanm /usr/local/bin &&\\
  curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpm}) {
 % if ($conf->{cpan}{temporary}) {
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % } else {
 % if ($conf->{cpan}{temporary}) {
- <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ <%= $conf->{cpanm} %> -v <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- <%= $conf->{cpanm} %> -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ <%= $conf->{cpanm} %> -n <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ <%= $conf->{cpanm} %> -v <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1518,7 +1557,7 @@ RUN\
  <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
- <%= join " ", @{ $conf->{cpan}{$key} } %>\\
+ <%= _wrap(join " ", @{ $conf->{cpan}{$key} }) %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{remove_from_cpanfile}) {
