@@ -1178,8 +1178,7 @@ RUN \\
 % for my $key (sort keys %{ $conf->{apt} }) {
  <%= _wrap(join " ", @{$conf->{apt}{$key}}) %>\\
 % }
- && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
- ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
+ && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
