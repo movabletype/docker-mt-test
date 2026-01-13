@@ -617,6 +617,8 @@ my %Conf = (
             _replace => {
                 'Imager::File::AVIF' => '',
             },
+            # for arm64
+            no_test => [qw( indirect )],
         },
         epel => {
             rpm => 'epel-release',
