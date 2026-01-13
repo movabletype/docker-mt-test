@@ -26,6 +26,7 @@ for my $line (split /\n/, path('README.md')->slurp) {
     $line             =~ s/(?:MariaDB|Postgres) //;
     my ($image, $base, @rest) = split '\|', $line;
     next if $image =~ /(?:openldap|chromedriver)/;
+
     if ($image =~ /(?:addons|chromiumdriver|playwright)/) {
         my @extra = split /,\s*/, $rest[0];
         $mapping{$image} = { map { split / /, $_ } @extra };
