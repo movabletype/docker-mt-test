@@ -583,67 +583,6 @@ my %Conf = (
         phpunit    => 7,
         locale_def => 1,
     },
-    centos8 => {
-        from => 'centos:8',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'php'                  => '',
-                'php-cli'              => '',
-                'php-mysqlnd'          => '',
-                'php-mbstring'         => '',
-                'php-gd'               => '',
-                'php-pecl-memcache'    => '',
-                'phpunit'              => '',
-                'ssh'                  => '',
-                'GraphicsMagick'       => '',
-                'GraphicsMagick-perl'  => '',
-                'ImageMagick'          => '',
-                'ImageMagick-perl'     => '',
-                'perl-GD'              => '',
-                'giflib-devel'         => '',
-                'icc-profiles-openicc' => '',
-                'ruby'                 => '',
-                'ruby-devel'           => '',
-                'libyaml-devel'        => '',
-                'libavif-devel'        => '',
-                'libheif-devel'        => '',
-            },
-            base => [qw/ glibc-langpack-ja /],
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::AVIF' => '',
-            },
-        },
-        epel => {
-            rpm => 'epel-release',
-        },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.0',
-            },
-            php_version => 'php80',
-        },
-        repo => {
-            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            # php-pecl-memcache seems broken
-            #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            remi       => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
-            powertools => [qw/ giflib-devel /],
-        },
-        make => {
-            ruby => '3.1.6',
-        },
-        installer       => 'dnf',
-        setcap          => 1,
-        make_dummy_cert => '/usr/bin',
-        phpunit         => 9,
-        no_best         => 1,
-        installer       => 'dnf',
-    },
     rockylinux => {
         from => 'rockylinux/rockylinux:9.5',
         base => 'centos',
