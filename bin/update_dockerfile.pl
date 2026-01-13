@@ -208,7 +208,7 @@ my %Conf = (
         base => 'debian',
         apt  => {
             base => [qw( libstdc++-15-dev )],
-            php => [qw( php-mbstring php-xml )],
+            php  => [qw( php-mbstring php-xml )],
         },
         cpan => {
             # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
@@ -217,20 +217,20 @@ my %Conf = (
                 'Imager::File::AVIF' => '',
             },
         },
-        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+        patch   => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         phpunit => 12,
     },
     questing => {
         from => 'ubuntu:questing',
         base => 'debian',
         apt  => {
-            base => [qw( libstdc++-15-dev xz-utils )],
-            php => [qw( php-mbstring php-xml )],
+            base     => [qw( libstdc++-15-dev xz-utils )],
+            php      => [qw( php-mbstring php-xml )],
             _replace => {
-                'graphicsmagick' => '',
-                'imagemagick' => '',
-                'perlmagick' => '',
-                'libgraphics-magick-perl',
+                'graphicsmagick'          => '',
+                'imagemagick'             => '',
+                'perlmagick'              => '',
+                'libgraphics-magick-perl' => '',
             },
         },
         cpan => {
@@ -242,8 +242,8 @@ my %Conf = (
         },
         patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         plenv => '5.42.0',
-        make => {
-            ImageMagick => '7.1.2-12',
+        make  => {
+            ImageMagick    => '7.1.2-12',
             GraphicsMagick => '1.3.46',
         },
         php_build => {
@@ -686,8 +686,8 @@ my %Conf = (
             GraphicsMagick => '1.3.43',
         },
         repo => {
-            crb  => [qw( giflib-devel )],
-            epel => [qw( libidn-devel )],
+            crb   => [qw( giflib-devel )],
+            epel  => [qw( libidn-devel )],
             devel => [qw( libtool-ltdl-devel )],
         },
         epel => {
