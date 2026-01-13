@@ -7,6 +7,7 @@ use Data::Section::Simple qw/get_data_section/;
 use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
+use File::Path qw/rmtree/;
 
 my $ruby_version = '3.4.8';
 
