@@ -243,6 +243,9 @@ my %Conf = (
             ImageMagick => '7.1.2-12',
             GraphicsMagick => '1.3.46',
         },
+        php_build => {
+            version => '8.4',
+        },
         phpunit => 11,
     },
     rawhide => {
@@ -450,16 +453,8 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        remi => {
-            rpm    => 'https://ftp.riken.jp/Linux/remi/fedora/40/remi/`uname -m`/remi-release-40-1.fc40.remi.noarch.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.2',
-            },
-            php_version => 'php82',
-        },
-        repo => {
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+        php_build => {
+            version => '8.2',
         },
         installer => 'dnf',
         phpunit   => 11,
@@ -566,15 +561,12 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl GraphicsMagick )],
-            remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable      => 'remi,remi-php71',
-            php_version => 'php71',
+        php_build => {
+            version => '7.3',
         },
         cpan => {
             broken   => [qw( SQL::Translator@1.63 )],
@@ -686,17 +678,13 @@ my %Conf = (
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.1',
-            },
-            php_version => 'php81',
+        php_build => {
+            version => '8.1',
+            enable  => 'devel',
+            force   => 1,
         },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
         patch           => ['Test-mysqld-1.0030'],
@@ -753,7 +741,6 @@ my %Conf = (
             GraphicsMagick => '1.3.43',
         },
         repo => {
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( giflib-devel )],
             epel => [qw( libidn-devel )],
             devel => [qw( libtool-ltdl-devel )],
@@ -761,13 +748,9 @@ my %Conf = (
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.3',
-            },
-            php_version => 'php83',
+        php_build => {
+            version => '8.3',
+            enable  => 'devel',
         },
         cloud_prereqs       => 'conf/cloud_prereqs7',
         patch               => ['Test-mysqld-1.0030'],
@@ -902,13 +885,9 @@ my %Conf = (
         codeready => {
             enable => 'ol9_codeready_builder',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.3',
-            },
-            php_version => 'php83',
+        php_build => {
+            version => '8.3',
+            enable  => 'ol9_codeready_builder',
         },
         repo => {
             instantclient => [qw(
@@ -922,7 +901,6 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
             codeready => [qw( giflib-devel mariadb mariadb-server mariadb-devel )],
         },
         cpan => {
@@ -987,13 +965,10 @@ my %Conf = (
         codeready => {
             enable => 'ol8_codeready_builder',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.2',
-            },
-            php_version => 'php82',
+        php_build => {
+            # re2c is too old to build php 8.3+
+            version => '8.2',
+            enable  => 'ol8_codeready_builder',
         },
         repo => {
             instantclient => [qw(
@@ -1007,7 +982,6 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
             codeready => [qw( giflib-devel )],
         },
         cpan => {
@@ -1171,6 +1145,15 @@ sub merge_conf {
             push @{ $conf{$key} //= [] }, @{ $Conf{$base}{$key} };
         }
     }
+    if ($conf{php_build}) {
+        for my $key (qw(apt yum)) {
+            next unless $conf{$key};
+            for my $subkey (keys %{ $conf{$key} }) {
+                @{ $conf{$key}{$subkey} } = grep !/^php(?:-|$)/, @{ $conf{$key}{$subkey} };
+            }
+        }
+        $conf{php_build}{install_package} = _find_php_package($conf{php_build}{version});
+    }
     $conf{cpanm} = 'cpanm';
     if ($conf{cpanm_opt}) {
         $conf{cpanm} .= ' ' . $conf{cpanm_opt};
@@ -1184,6 +1167,22 @@ sub load_prereqs {
     # Use cpan.metacpan.org explicitly as it is actually a backpan
     # (CDN-based) www.cpan.org does not serve some of the older prereqs anymore (which should be updated anyway)
     return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_ } @dists;
+}
+
+sub _find_php_package {
+    my $version = shift;
+    if (!-d './tmp/php-build' or (stat('./tmp/php-build'))[9] < time - 864000) {
+        rmtree('./tmp/php-build');
+        system('git clone --depth 1 https://github.com/php-build/php-build ./tmp/php-build');
+    }
+    if ($version !~ /^\d+.\d+\.\d+$/) {
+        my ($v) = sort { $b <=> $a } map { /$version\.(\d+)/ && $1 } glob "./tmp/php-build/share/php-build/definitions/$version.*";
+        die "Patch version for $version is not found" unless defined $v;
+        $version = "$version.$v";
+    }
+    my $definition = path("./tmp/php-build/share/php-build/definitions/$version")->slurp;
+    my ($package) = $definition =~ /install_package "([^"]+)"/;
+    return $package;
 }
 
 __DATA__
@@ -1236,6 +1235,54 @@ RUN \\
   plenv install <%= $conf->{plenv} %> &&\\
   plenv global <%= $conf->{plenv} %> &&\\
 % }
+% if ($conf->{php_build}) {
+  apt-get install -y autoconf bison re2c libonig-dev libsqlite3-dev &&\\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\\
+% if ($conf->{php_build}{force}) {
+  sed -i -E 's/buildconf_wrapper$/buildconf_wrapper --force/' /usr/local/bin/php-build &&\\
+% }
+  rm -rf /usr/local/share/php-build/default_configure_options &&\\
+%#  echo "--disable-all" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /postgresql/) {
+  echo "--with-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\\
+% if ($conf->{php_build}{version} < 8.1) {
+  echo 'patch_file "php-8.0-support-openssl-3.patch"' > /usr/local/share/php-build/definitions/my_php &&\\
+% }
+  echo 'install_package "<%= $conf->{php_build}{install_package} %>"' > /usr/local/share/php-build/definitions/my_php &&\\
+  php-build --verbose my_php /usr &&\\
+%   unless ($conf->{php_build}{no_memcache}) {
+  yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
+%   }
+% }
+ apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1408,6 +1455,64 @@ RUN\
   plenv install <%= $conf->{plenv} %> &&\\
   plenv global <%= $conf->{plenv} %> &&\\
 % }
+% if ($conf->{php_build}) {
+  <%= $conf->{installer} // 'yum' %> install -y <%= $conf->{php_build}{enable} ? '--enablerepo=' . $conf->{php_build}{enable} : '' %>\\
+    autoconf bison re2c oniguruma-devel sqlite-devel &&\\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\\
+% if ($conf->{php_build}{force}) {
+  sed -i -E 's/buildconf_wrapper$/buildconf_wrapper --force/' /usr/local/bin/php-build &&\\
+% }
+  rm -rf /usr/local/share/php-build/default_configure_options &&\\
+%#  echo "--disable-all" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /postgresql/) {
+  echo "--with-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /oracle/) {
+  echo "--with-oci8=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-oci=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($conf->{php_build}{version} < 7.4) {
+  echo "--with-jpeg-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-png-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-webp-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  % } else {
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\\
+% if ($conf->{php_build}{version} < 8.1) {
+  echo 'patch_file "php-8.0-support-openssl-3.patch"' > /usr/local/share/php-build/definitions/my_php &&\\
+% }
+  echo 'install_package "<%= $conf->{php_build}{install_package} %>"' > /usr/local/share/php-build/definitions/my_php &&\\
+  php-build --verbose my_php /usr &&\\
+%   unless ($conf->{php_build}{no_memcache}) {
+  yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
+%   }
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1429,9 +1534,6 @@ RUN\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
-% }
-% if ($conf->{remi} && !$conf->{remi}{module}) {
- ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
 % }
 % if ($conf->{setcap}) {
 %# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
