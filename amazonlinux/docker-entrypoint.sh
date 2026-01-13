@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
 
 bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
@@ -20,6 +19,5 @@ memcached -d -u root
 if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
-
 
 exec "$@"

@@ -9,7 +9,7 @@ diag "\nChecking $image_name";
 
 my %prereqs = (
     'Archive::Tar'            => '',
-    'Archive::Zip'            => '<= 1.65?(cloud6|cloud7|addons)',
+    'Archive::Zip'            => '<= 1.65?(cloud7|addons)',
     'DBI'                     => '1.633',
     'GD'                      => 0,
     'Graphics::Magick'        => 0,
@@ -79,6 +79,8 @@ for my $module (sort keys %prereqs) {
 my ($perl_version) = `perl -v` =~ /v(5\.\d+\.\d+)/;
 ok $perl_version, "$image_name: Perl exists ($perl_version)";
 
+my @image_files = glob("./t/images/*");
+
 my $gd_version     = eval { GD::LIBGD_VERSION() }  || 0;
 my $gd_version_str = eval { GD::VERSION_STRING() } || 'unknown';
 note "$image_name: GD version $gd_version ($gd_version_str)";
@@ -88,10 +90,22 @@ if ($gd_version >= 2.0101) {
     ok eval { GD::supportsFileType('test.jpg') },  "$image_name: GD supports JPEG";
     ok eval { GD::supportsFileType('test.bmp') },  "$image_name: GD supports BMP";
     ok eval { GD::supportsFileType('test.webp') }, "$image_name: GD supports WEBP";
-    SKIP: {
+SKIP: {
         local $TODO = 'AVIF may not be supported';
         ok eval { GD::supportsFileType('test.avif') }, "$image_name: GD supports AVIF";
     }
+}
+require GD::Image;
+for my $file (@image_files) {
+    my $gd = GD::Image->new($file);
+    if (!$gd) {
+        # bmp support is broken on all the known images
+        local $TODO = 'GD does not support BMP?' if $file =~ /\.bmp$/ or ($file =~ /\.webp$/ && $image_name =~ /^(?:addons8|amazonlinux|centos|cloud7|fedora3[579]|fedora40|oracle|rockylinux)/);
+        fail "$image_name: GD failed to read $file";
+        next;
+    }
+    my ($w, $h) = $gd->getBounds();
+    ok $w && $h, "$image_name: GD can get size of $file";
 }
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
@@ -108,6 +122,16 @@ SKIP: {
 SKIP: {
     local $TODO = 'AVIF may not be supported' unless $has_imager_avif;
     ok $imager_supports{avif}, "$image_name: Imager supports AVIF";
+}
+for my $file (@image_files) {
+    next if $file =~ /\.webp$/ and !$has_imager_webp;
+    my $imager = Imager->new;
+    if (!$imager->read(file => $file)) {
+        fail "$image_name: Imager failed to read $file";
+        next;
+    }
+    my ($w, $h) = ($imager->getwidth, $imager->getheight);
+    ok $w && $h, "$image_name: Imager can get size of $file";
 }
 
 my %imagemagick_supports = map { $_ => 1 } Image::Magick->QueryFormat;
@@ -126,6 +150,17 @@ SKIP: {
 my $imagemagick_depth = Image::Magick->new->Get('depth');
 is $imagemagick_depth => '16', "$image_name: ImageMagick Quantum Depth: Q$imagemagick_depth";
 
+for my $file (@image_files) {
+    next if $file =~ /\.webp$/ and $image_name =~ /^(?:amazonlinux|centos7|oracle)$/;
+    my $magick = Image::Magick->new;
+    if (my $error = $magick->Read($file)) {
+        fail "$image_name: ImageMagick failed to read $file: $error";
+        next;
+    }
+    my ($w, $h) = $magick->Get('width', 'height');
+    ok $w && $h, "$image_name: ImageMagick can get sizes of $file";
+}
+
 my %graphicsmagick_supports = map { $_ => 1 } Graphics::Magick->QueryFormat;
 ok $graphicsmagick_supports{gif},  "$image_name: GraphicsMagick supports GIF";
 ok $graphicsmagick_supports{png},  "$image_name: GraphicsMagick supports PNG";
@@ -138,12 +173,23 @@ SKIP: {
 }
 my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
 is $graphicsmagick_depth => '16', "$image_name: GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
+
+for my $file (@image_files) {
+    my $magick = Graphics::Magick->new;
+    if (my $error = $magick->Read($file)) {
+        fail "$image_name: GraphicsMagick failed to read $file: $error";
+        next;
+    }
+    my ($w, $h) = $magick->Get('width', 'height');
+    ok $w && $h, "$image_name: GraphicsMagick can get sizes of $file";
+}
+
 my ($has_identify) = `which identify`;
-ok $has_identify, "has identify";
+ok $has_identify, "$image_name: has identify";
 my ($has_convert) = `which convert`;
-ok $has_convert, "has convert";
+ok $has_convert, "$image_name: has convert";
 my ($has_gm) = `which gm`;
-ok $has_gm, "has gm";
+ok $has_gm, "$image_name: has gm";
 
 my ($php_version) = `php --version` =~ /PHP (\d\.\d+\.\d+)/;
 ok $php_version, "$image_name: PHP exists ($php_version)";
@@ -160,15 +206,15 @@ if ($image_name eq 'postgresql') {
 } else {
     ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 }
-ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
+ok $phpinfo =~ /GD Support => enabled/,         "$image_name: PHP has GD";
+ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
 ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
-ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
+ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
 SKIP: {
-    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
+    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
 if ($image_name =~ /oracle/) {
@@ -205,7 +251,9 @@ for my $line (@wanted_lines) {
 SKIP: {
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
-    if ($php_version_number >= 8.2) {
+    if ($php_version_number >= 8.3) {
+        is substr($phpunit, 0, 2) => 12, "$image_name: phpunit 12 (12.x.x) for php >= 8.3 ($php_version)";
+    } elsif ($php_version_number >= 8.2) {
         is substr($phpunit, 0, 2) => 11, "$image_name: phpunit 11 (11.x.x) for php >= 8.2 ($php_version)";
     } elsif ($php_version_number >= 8.1) {
         is substr($phpunit, 0, 2) => 10, "$image_name: phpunit 10 (10.x.x) for php >= 8.1 ($php_version)";

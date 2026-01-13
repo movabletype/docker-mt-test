@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 echo 'require_secure_transport = true' >> /etc/my.cnf.d/mysql-server.cnf
 echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/mysql-server.cnf
 mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
@@ -23,6 +22,5 @@ memcached -d -u root
 if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
-
 
 exec "$@"

@@ -5,8 +5,8 @@ use YAML;
 use File::Path;
 
 my $local = YAML::LoadFile('./.github/workflows/mirror.yml');
-my %tags  = map {$_ => 1} @{$local->{jobs}{'pull-and-push'}{strategy}{matrix}{tag} // []};
-$tags{centos6} = 1;  # special case
+my %tags  = map { $_ => 1 } @{ $local->{jobs}{'pull-and-push'}{strategy}{matrix}{tag} // [] };
+$tags{centos6} = 1;    # special case
 
 my @branches = qw(develop support-8.8.x support-8.4.x support-8.0.x);
 my @repos    = qw(movabletype movabletype-addons movabletype-plugins);
@@ -23,7 +23,7 @@ for my $repo (@repos) {
             next;
         }
         my $workflow = YAML::LoadFile($yml);
-        for my $key (keys %{$workflow->{jobs}}) {
+        for my $key (keys %{ $workflow->{jobs} }) {
             if (my $image = $workflow->{jobs}{$key}{env}{TEST_IMAGE_NAME}) {
                 ok $tags{$image}, "$image is used in $repo/$branch (by env)";
                 $used{$image}{$branch} = 1;

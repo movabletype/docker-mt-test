@@ -9,14 +9,14 @@ Dockerfile to test MT.
 
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
-|centos7|centos:7|5.16.3|*7.1.33*|*MariaDB 5.5.68*|1.0.2k|2024-06|
-|bullseye|debian:bullseye-slim|*5.32.1*|*7.4.33*|*MariaDB 10.5.28*|1.1.1w|2024-08|
+|centos7|centos:7|5.16.3|*7.3.33*|*MariaDB 5.5.68*|1.0.2k|2024-06|
+|bullseye|debian:bullseye-slim|*5.32.1*|*7.4.33*|*MariaDB 10.5.29*|1.1.1w|2024-08|
 |fedora35|fedora:35|*5.34.1*|*8.0.26*|8.0.31|1.1.1q|2022-12|
 |fedora37|fedora:37|*5.36.1*|*8.1.25*|*8.0.35*|3.0.9|2023-12|
-|fedora40|fedora:40|*5.38.4*|*8.2.29*|*MariaDB 10.11.11*|3.2.4|-|
+|fedora40|fedora:40|*5.38.4*|*8.2.30*|*MariaDB 10.11.11*|3.2.4|-|
 |fedora42|fedora:42|*5.40.3*|*8.4.16*|*9.5.0*|3.2.6|-|
 |fedora43|fedora:43|*5.42.0*|8.4.16|*8.4.7*|3.5.4|-|
-|cloud7 (\*1)|rockylinux/rockylinux:9|*5.38.2*|*8.3.29*|MariaDB 10.5.27|3.5.1|-|
+|cloud7 (\*1)|rockylinux/rockylinux:9|*5.38.2*|*8.3.29*|MariaDB 10.5.29|3.5.1|-|
 
 \*1 This image is not used in the MT cloud, but the well-known modules should have the same versions (except for those used only in tests).
 
@@ -26,7 +26,7 @@ Dockerfile to test MT.
 |-|-|-|-|-|-|-|
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.7|3.0.13|-|
 |plucky|ubuntu:plucky|5.40.1|8.4.5|8.4.7|3.4.1|-|
-|questing|ubuntu:questing|5.42.0|8.4.11|8.4.7|3.5.3|-|
+|questing|ubuntu:questing|5.42.0|8.4.16|8.4.7|3.5.3|-|
 
 ## Environment list (only for manual testing)
 
@@ -34,10 +34,9 @@ Dockerfile to test MT.
 |-|-|-|-|-|-|-|
 |buster (\*2)|debian:buster-slim|*5.28.1*|*7.3.31*|*MariaDB 10.3.39*|1.1.1n|2022-01|
 |centos6 (\*2)|centos:6|*5.10.1*|*5.3.3*|*5.1.73*|1.0.1e|2020-11|
-|centos8|centos:8|5.26.3|8.0.30|8.0.26|1.1.1k|2021-12|
 |fedora39 (\*2)|fedora:39|5.38.2|8.2.25|8.0.39|3.1.4|2024-11|
 |fedora41 (\*2)|fedora:41|5.40.3|8.3.27|8.4.7|3.2.6|-|
-|rawhide|fedora:rawhide|5.42.0|8.5.1|8.4.7|3.5.4|-|
+|rawhide|fedora:rawhide|5.42.0|8.5.2|8.4.7|3.5.4|-|
 |rockylinux|rockylinux/rockylinux:9|5.32.1|8.1.34|8.0.44|3.5.1|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.29|MariaDB 10.11.14|3.0.17|2028-06|
 |sid|debian:sid|5.40.1|8.4.16|MariaDB 11.8.5|3.5.4|-|

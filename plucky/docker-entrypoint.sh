@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
 
 sleep 1

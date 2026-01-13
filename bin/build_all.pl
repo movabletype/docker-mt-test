@@ -31,7 +31,7 @@ my %aliases = qw(
 );
 my %aliases_rev;
 
-my %multi_platform = map {$_ => 1} qw( noble plucky questing );
+my %multi_platform = map { $_ => 1 } qw( noble plucky questing );
 
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];
@@ -51,7 +51,7 @@ for my $name (@targets) {
         $tags .= " --tag movabletype/test:$t";
     }
     my $dockerfile = path("$name/Dockerfile")->slurp;
-    my ($from)     = $dockerfile =~ /^FROM (\S+)/;
+    my ($from) = $dockerfile =~ /^FROM (\S+)/;
     system("docker pull $from") if $no_cache;
     if ($builder && $multi_platform{$name}) {
         system("docker buildx build --builder $builder --platform linux/amd64,linux/arm64 $name $tags --output=type=image" . ($no_cache ? " --no-cache" : "") . ($push ? " --push" : "") . " 2>&1 | tee log/build_$name.log");

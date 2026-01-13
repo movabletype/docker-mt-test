@@ -7,7 +7,10 @@ use Data::Section::Simple qw/get_data_section/;
 use Mojo::Template;
 use Mojo::File qw/path/;
 use File::Basename;
+use File::Path qw/rmtree/;
+use Text::Wrap;
 
+$Text::Wrap::columns = 120;
 my $ruby_version = '3.4.8';
 
 my %Conf = (
@@ -119,7 +122,7 @@ my %Conf = (
             },
         },
         patch   => [qw(Crypt-DES-2.07 YAML-Syck-1.36)],
-        phpunit => 11,
+        phpunit => 12,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -198,14 +201,14 @@ my %Conf = (
             },
         },
         patch   => ['Test-mysqld-1.0030'],
-        phpunit => 11,
+        phpunit => 12,
     },
     plucky => {
         from => 'ubuntu:plucky',
         base => 'debian',
         apt  => {
             base => [qw( libstdc++-15-dev )],
-            php => [qw( php-mbstring php-xml )],
+            php  => [qw( php-mbstring php-xml )],
         },
         cpan => {
             # cf. https://rt.cpan.org/Public/Bug/Display.html?id=156899
@@ -214,20 +217,20 @@ my %Conf = (
                 'Imager::File::AVIF' => '',
             },
         },
-        patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
-        phpunit => 11,
+        patch   => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+        phpunit => 12,
     },
     questing => {
         from => 'ubuntu:questing',
         base => 'debian',
         apt  => {
-            base => [qw( libstdc++-15-dev xz-utils )],
-            php => [qw( php-mbstring php-xml )],
+            base     => [qw( libstdc++-15-dev xz-utils )],
+            php      => [qw( php-mbstring php-xml )],
             _replace => {
-                'graphicsmagick' => '',
-                'imagemagick' => '',
-                'perlmagick' => '',
-                'libgraphics-magick-perl',
+                'graphicsmagick'          => '',
+                'imagemagick'             => '',
+                'perlmagick'              => '',
+                'libgraphics-magick-perl' => '',
             },
         },
         cpan => {
@@ -239,11 +242,14 @@ my %Conf = (
         },
         patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         plenv => '5.42.0',
-        make => {
-            ImageMagick => '7.1.2-12',
+        make  => {
+            ImageMagick    => '7.1.2-12',
             GraphicsMagick => '1.3.46',
         },
-        phpunit => 11,
+        php_build => {
+            version => '8.4',
+        },
+        phpunit => 12,
     },
     rawhide => {
         from => 'fedora:rawhide',
@@ -287,7 +293,7 @@ my %Conf = (
             },
         },
         installer                      => 'dnf',
-        phpunit                        => 11,
+        phpunit                        => 12,
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
@@ -333,7 +339,7 @@ my %Conf = (
             },
         },
         installer                      => 'dnf',
-        phpunit                        => 11,
+        phpunit                        => 12,
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
@@ -374,7 +380,7 @@ my %Conf = (
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
         use_ipv4  => 1,
     },
     fedora41 => {
@@ -413,7 +419,7 @@ my %Conf = (
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
     },
     fedora40 => {
         from => 'fedora:40',
@@ -450,16 +456,8 @@ my %Conf = (
             # package is broken for unknown reason
             GraphicsMagick => '1.3.43',
         },
-        remi => {
-            rpm    => 'https://ftp.riken.jp/Linux/remi/fedora/40/remi/`uname -m`/remi-release-40-1.fc40.remi.noarch.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.2',
-            },
-            php_version => 'php82',
-        },
-        repo => {
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
+        php_build => {
+            version => '8.2',
         },
         installer => 'dnf',
         phpunit   => 11,
@@ -566,18 +564,16 @@ my %Conf = (
         },
         repo => {
             epel => [qw( GraphicsMagick-perl GraphicsMagick )],
-            remi => [qw( php71-php php71-php-mbstring php71-php-mysqlnd php71-php-gd php71-php-pecl-memcache php71-php-xml )],
         },
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm         => 'https://rpms.remirepo.net/enterprise/remi-release-7.rpm',
-            enable      => 'remi,remi-php71',
-            php_version => 'php71',
+        php_build => {
+            version => '7.3',
         },
         cpan => {
-            broken   => [qw( SQL::Translator@1.63 )],
+            no_test  => [qw( Net::SSH::Perl )],
+            broken   => [qw( SQL::Translator@1.63 Data::MessagePack::Stream@1.04 )],
             missing  => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for centos7/updates is too old (0.3.0 as of this writing)
@@ -587,69 +583,8 @@ my %Conf = (
         make => {
             ruby => '2.7.8',
         },
-        phpunit    => 7,
+        phpunit    => 9,
         locale_def => 1,
-    },
-    centos8 => {
-        from => 'centos:8',
-        base => 'centos',
-        yum  => {
-            _replace => {
-                'php'                  => '',
-                'php-cli'              => '',
-                'php-mysqlnd'          => '',
-                'php-mbstring'         => '',
-                'php-gd'               => '',
-                'php-pecl-memcache'    => '',
-                'phpunit'              => '',
-                'ssh'                  => '',
-                'GraphicsMagick'       => '',
-                'GraphicsMagick-perl'  => '',
-                'ImageMagick'          => '',
-                'ImageMagick-perl'     => '',
-                'perl-GD'              => '',
-                'giflib-devel'         => '',
-                'icc-profiles-openicc' => '',
-                'ruby'                 => '',
-                'ruby-devel'           => '',
-                'libyaml-devel'        => '',
-                'libavif-devel'        => '',
-                'libheif-devel'        => '',
-            },
-            base => [qw/ glibc-langpack-ja /],
-        },
-        cpan => {
-            _replace => {
-                'Imager::File::AVIF' => '',
-            },
-        },
-        epel => {
-            rpm => 'epel-release',
-        },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.0',
-            },
-            php_version => 'php80',
-        },
-        repo => {
-            epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            # php-pecl-memcache seems broken
-            #remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            remi       => [qw( php php-mbstring php-mysqlnd php-gd php-xml php-json )],
-            powertools => [qw/ giflib-devel /],
-        },
-        make => {
-            ruby => '3.1.6',
-        },
-        installer       => 'dnf',
-        setcap          => 1,
-        make_dummy_cert => '/usr/bin',
-        phpunit         => 9,
-        no_best         => 1,
-        installer       => 'dnf',
     },
     rockylinux => {
         from => 'rockylinux/rockylinux:9.5',
@@ -682,21 +617,19 @@ my %Conf = (
             _replace => {
                 'Imager::File::AVIF' => '',
             },
+            # for arm64
+            no_test => [qw( indirect )],
         },
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.1',
-            },
-            php_version => 'php81',
+        php_build => {
+            version => '8.1',
+            enable  => 'devel',
+            force   => 1,
         },
         repo => {
             epel => [qw( GraphicsMagick-perl ImageMagick-perl perl-GD ImageMagick GraphicsMagick )],
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
             crb  => [qw( mysql-devel giflib-devel )],
         },
         patch           => ['Test-mysqld-1.0030'],
@@ -746,28 +679,23 @@ my %Conf = (
                 'Imager::File::AVIF' => '',
             },
         },
-        phpunit => 11,
+        phpunit => 12,
         make    => {
             perl           => '5.38.2',
-            ImageMagick    => '7.0.8-68',
+            ImageMagick    => '7.1.2-12',
             GraphicsMagick => '1.3.43',
         },
         repo => {
-            remi => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml )],
-            crb  => [qw( giflib-devel )],
-            epel => [qw( libidn-devel )],
+            crb   => [qw( giflib-devel )],
+            epel  => [qw( libidn-devel )],
             devel => [qw( libtool-ltdl-devel )],
         },
         epel => {
             rpm => 'epel-release',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.3',
-            },
-            php_version => 'php83',
+        php_build => {
+            version => '8.3',
+            enable  => 'devel',
         },
         cloud_prereqs       => 'conf/cloud_prereqs7',
         patch               => ['Test-mysqld-1.0030'],
@@ -856,7 +784,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer       => 'dnf',
         allow_erasing   => 1,
-        phpunit         => 11,
+        phpunit         => 12,
         locale_def      => 1,
     },
     oracle => {
@@ -902,13 +830,9 @@ my %Conf = (
         codeready => {
             enable => 'ol9_codeready_builder',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-9.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.3',
-            },
-            php_version => 'php83',
+        php_build => {
+            version => '8.3',
+            enable  => 'ol9_codeready_builder',
         },
         repo => {
             instantclient => [qw(
@@ -922,7 +846,6 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
             codeready => [qw( giflib-devel mariadb mariadb-server mariadb-devel )],
         },
         cpan => {
@@ -938,7 +861,7 @@ my %Conf = (
             ruby => '3.1.6',
         },
         make_dummy_cert => '/usr/bin',
-        phpunit         => 11,
+        phpunit         => 12,
         installer       => 'microdnf',
         release         => 19.6,
         locale_def      => 1,
@@ -987,13 +910,10 @@ my %Conf = (
         codeready => {
             enable => 'ol8_codeready_builder',
         },
-        remi => {
-            rpm    => 'https://rpms.remirepo.net/enterprise/remi-release-8.4.rpm',
-            module => {
-                reset  => 'php',
-                enable => 'php:remi-8.2',
-            },
-            php_version => 'php82',
+        php_build => {
+            # re2c is too old to build php 8.3+
+            version => '8.2',
+            enable  => 'ol8_codeready_builder',
         },
         repo => {
             instantclient => [qw(
@@ -1007,7 +927,6 @@ my %Conf = (
                 gd-devel libwebp-devel
                 perl-GD
             )],
-            remi      => [qw( php php-mbstring php-mysqlnd php-gd php-pecl-memcache php-xml php-oci8 )],
             codeready => [qw( giflib-devel )],
         },
         cpan => {
@@ -1062,11 +981,24 @@ my %Conf = (
         },
         patch     => ['Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
     },
 );
 
 my $templates = get_data_section();
+
+sub _strip_lines {
+    my $text = shift;
+    $text =~ s/^\n+//g;
+    $text =~ s/\n\n+$/\n/g;
+    $text =~ s/\n\n\n+/\n\n/g;
+    $text;
+}
+
+sub Mojo::Template::Sandbox::_wrap {
+    my $text = shift;
+    join "\\\n", split /\n/, Text::Wrap::wrap('', '  ', $text);
+}
 
 my @targets = @ARGV ? @ARGV : grep $Conf{$_}{base}, sort keys %Conf;
 for my $name (@targets) {
@@ -1083,8 +1015,8 @@ for my $name (@targets) {
     if ($conf->{cpan}{temporary}) {
         say "  temporary: $_" for @{ $conf->{cpan}{temporary} };
     }
-    my $dockerfile = Mojo::Template->new->render($template,    $name, $conf);
-    my $entrypoint = Mojo::Template->new->render($ep_template, $name, $conf);
+    my $dockerfile = _strip_lines(Mojo::Template->new->render($template,    $name, $conf));
+    my $entrypoint = _strip_lines(Mojo::Template->new->render($ep_template, $name, $conf));
     path("$name/Dockerfile")->spew($dockerfile);
     path("$name/docker-entrypoint.sh")->spew($entrypoint)->chmod(0755);
     path("$name/patch")->remove_tree if -d path("$name/patch");
@@ -1171,6 +1103,15 @@ sub merge_conf {
             push @{ $conf{$key} //= [] }, @{ $Conf{$base}{$key} };
         }
     }
+    if ($conf{php_build}) {
+        for my $key (qw(apt yum)) {
+            next unless $conf{$key};
+            for my $subkey (keys %{ $conf{$key} }) {
+                @{ $conf{$key}{$subkey} } = grep !/^php(?:-|$)/, @{ $conf{$key}{$subkey} };
+            }
+        }
+        $conf{php_build}{install_package} = _find_php_package($conf{php_build}{version});
+    }
     $conf{cpanm} = 'cpanm';
     if ($conf{cpanm_opt}) {
         $conf{cpanm} .= ' ' . $conf{cpanm_opt};
@@ -1184,6 +1125,22 @@ sub load_prereqs {
     # Use cpan.metacpan.org explicitly as it is actually a backpan
     # (CDN-based) www.cpan.org does not serve some of the older prereqs anymore (which should be updated anyway)
     return map { join "/", "https://cpan.metacpan.org/authors/id", substr($_, 0, 1), substr($_, 0, 2), $_ } @dists;
+}
+
+sub _find_php_package {
+    my $version = shift;
+    if (!-d './tmp/php-build' or (stat('./tmp/php-build'))[9] < time - 864000) {
+        rmtree('./tmp/php-build');
+        system('git clone --depth 1 https://github.com/php-build/php-build ./tmp/php-build');
+    }
+    if ($version !~ /^\d+.\d+\.\d+$/) {
+        my ($v) = sort { $b <=> $a } map { /$version\.(\d+)/ && $1 } glob "./tmp/php-build/share/php-build/definitions/$version.*";
+        die "Patch version for $version is not found" unless defined $v;
+        $version = "$version.$v";
+    }
+    my $definition = path("./tmp/php-build/share/php-build/definitions/$version")->slurp;
+    my ($package) = $definition =~ /install_package "([^"]+)"/;
+    return $package;
 }
 
 __DATA__
@@ -1219,10 +1176,9 @@ RUN \\
  DEBIAN_FRONTEND=noninteractive DEBCONF_NOWARNINGS=yes\\
  apt-get --no-install-recommends -y install\\
 % for my $key (sort keys %{ $conf->{apt} }) {
- <%= join " ", @{$conf->{apt}{$key}} %>\\
+ <%= _wrap(join " ", @{$conf->{apt}{$key}}) %>\\
 % }
- && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
- ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
+ && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\\
 % if ($conf->{create_make_dummy_cert}) {
  cp /root/patch/make-dummy-cert <%= $conf->{make_dummy_cert} %> && chmod +x <%= $conf->{make_dummy_cert} %>/make-dummy-cert &&\\
 % }
@@ -1236,6 +1192,54 @@ RUN \\
   plenv install <%= $conf->{plenv} %> &&\\
   plenv global <%= $conf->{plenv} %> &&\\
 % }
+% if ($conf->{php_build}) {
+  apt-get install -y autoconf bison re2c libonig-dev libsqlite3-dev &&\\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\\
+% if ($conf->{php_build}{force}) {
+  sed -i -E 's/buildconf_wrapper$/buildconf_wrapper --force/' /usr/local/bin/php-build &&\\
+% }
+  rm -rf /usr/local/share/php-build/default_configure_options &&\\
+%#  echo "--disable-all" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /postgresql/) {
+  echo "--with-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\\
+% if ($conf->{php_build}{version} < 8.1) {
+  echo 'patch_file "php-8.0-support-openssl-3.patch"' > /usr/local/share/php-build/definitions/my_php &&\\
+% }
+  echo 'install_package "<%= $conf->{php_build}{install_package} %>"' > /usr/local/share/php-build/definitions/my_php &&\\
+  php-build --verbose my_php /usr &&\\
+%   unless ($conf->{php_build}{no_memcache}) {
+  yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
+%   }
+% }
+ apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1245,15 +1249,24 @@ RUN \\
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \\
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \\
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \\
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \\
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
@@ -1265,18 +1278,21 @@ RUN \\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
-  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+  <%= _wrap(join " ", @{ $conf->{gem}{$key} }) %>\\
 % }
  &&\\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\\
+ perl -pi -E \\
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' \\
+   cpanm && mv cpanm /usr/local/bin &&\\
  curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{cpan}{temporary}) {
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
       cd /root/patch/<%= $patch %> && <%= $conf->{cpanm} %> --installdeps . && <%= $conf->{cpanm} %> . && cd /root &&\\
@@ -1289,7 +1305,7 @@ RUN \\
  <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
- <%= join " ", @{ $conf->{cpan}{$key} } %>\\
+ <%= _wrap(join " ", @{ $conf->{cpan}{$key} }) %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{remove_from_cpanfile}) {
@@ -1306,7 +1322,7 @@ RUN set -ex &&\\
  localedef -i en_US -f UTF-8 en_US.UTF-8 &&\\
  localedef -i ja_JP -f UTF-8 ja_JP.UTF-8 &&\\
  a2dismod mpm_event &&\\
- a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= join " ", @{ $conf->{apache}{enmod} || [] } %> &&\\
+ a2enmod mpm_prefork cgi rewrite proxy proxy_http ssl <%= _wrap(join " ", @{ $conf->{apache}{enmod} || [] }) %> &&\\
  a2enconf serve-cgi-bin &&\\
  a2ensite default-ssl &&\\
  make-ssl-cert generate-default-snakeoil &&\\
@@ -1338,7 +1354,7 @@ COPY ./patch/ /root/patch/
 % }
 
 RUN\
-% if ($type =~ /^(?:centos[678]|cloud6)$/) {
+% if ($type =~ /^centos/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
@@ -1352,7 +1368,7 @@ RUN\
 % }
  <%= $conf->{installer} // 'yum' %> <%= $conf->{use_ipv4} ? '--setopt=ip_resolve=4 ' : '' %>-y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %><% if ($conf->{allow_erasing}) { %>--allowerasing<% } %> install\\
 % for my $key (sort keys %{ $conf->{yum} }) {
- <%= join " ", @{$conf->{yum}{$key}} %>\\
+ <%= _wrap(join " ", @{$conf->{yum}{$key}}) %>\\
 % }
  &&\\
 % for my $repo (sort keys %{$conf->{repo} || {}}) {
@@ -1363,7 +1379,7 @@ RUN\
 %     if ($conf->{$repo}{gpg_key}) {
  rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
 %     }
-%     if ($type =~ /^(?:centos[678]|cloud6)$/) {
+%     if ($type =~ /^centos/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 %     }
@@ -1381,7 +1397,7 @@ RUN\
 %     }
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{disable} ? ' --disablerepo='.$conf->{$repo}{disable} : '' %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
- <%= join " ", @{$conf->{repo}{$repo}} %>\\
+ <%= _wrap(join " ", @{$conf->{repo}{$repo}}) %>\\
 %   if ($conf->{$repo}{enable}) {
  && <%= $conf->{installer} // 'yum' %> clean --enablerepo=<%= $conf->{$repo}{enable} // $repo %> all &&\\
 %   } else {
@@ -1408,6 +1424,64 @@ RUN\
   plenv install <%= $conf->{plenv} %> &&\\
   plenv global <%= $conf->{plenv} %> &&\\
 % }
+% if ($conf->{php_build}) {
+  <%= $conf->{installer} // 'yum' %> install -y <%= $conf->{php_build}{enable} ? '--enablerepo=' . $conf->{php_build}{enable} : '' %>\\
+    autoconf bison re2c oniguruma-devel sqlite-devel &&\\
+  git clone --depth 1 https://github.com/php-build/php-build.git &&\\
+  cd php-build && ./install.sh && cd .. && rm -rf php-build &&\\
+% if ($conf->{php_build}{force}) {
+  sed -i -E 's/buildconf_wrapper$/buildconf_wrapper --force/' /usr/local/bin/php-build &&\\
+% }
+  rm -rf /usr/local/share/php-build/default_configure_options &&\\
+%#  echo "--disable-all" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-mbstring" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-session" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-dom" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-json" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-ctype" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-tokenizer" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-xmlwriter" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-pdo" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-phar" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--enable-fpm" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--disable-ipv6" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-mysqli=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-mysql=mysqlnd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /postgresql/) {
+  echo "--with-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-pgsql" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-sqlite3" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-sqlite" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($type =~ /oracle/) {
+  echo "--with-oci8=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pdo-oci=instantclient,/usr/lib/oracle/23/client64/lib" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-libxml" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-openssl" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-gd" >> /usr/local/share/php-build/default_configure_options &&\\
+  % if ($conf->{php_build}{version} < 7.4) {
+  echo "--with-jpeg-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-png-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-webp-dir=/usr" >> /usr/local/share/php-build/default_configure_options &&\\
+  % } else {
+  echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\\
+  % }
+  echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\\
+  echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\\
+% if ($conf->{php_build}{version} < 8.1) {
+  echo 'patch_file "php-8.0-support-openssl-3.patch"' > /usr/local/share/php-build/definitions/my_php &&\\
+% }
+  echo 'install_package "<%= $conf->{php_build}{install_package} %>"' > /usr/local/share/php-build/definitions/my_php &&\\
+  php-build --verbose my_php /usr &&\\
+%   unless ($conf->{php_build}{no_memcache}) {
+  yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
+  echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
+%   }
+% }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
 %   if ($conf->{make}{perl}) {
@@ -1417,21 +1491,27 @@ RUN\
 %   if ($conf->{make}{GraphicsMagick}) {
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/<%= $conf->{make}{GraphicsMagick} %>/GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz &&\\
  tar xf GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %>.tar.xz && cd GraphicsMagick-<%= $conf->{make}{GraphicsMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
+   --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
+   --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
  curl -LO https://imagemagick.org/archive/releases/ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz &&\\
  tar xf ImageMagick-<%= $conf->{make}{ImageMagick} %>.tar.xz && cd ImageMagick-<%= $conf->{make}{ImageMagick} %> &&\\
- ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml --disable-openmp --disable-opencl && make && make install && cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \\
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \\
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \\
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \\
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ruby}) {
- curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz && tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ curl -LO https://cache.ruby-lang.org/pub/ruby/<%= $conf->{make}{ruby} =~ s/\.\d+$//r %>/ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
+ tar xf ruby-<%= $conf->{make}{ruby} %>.tar.gz &&\\
  cd ruby-<%= $conf->{make}{ruby} %> && ./configure --enable-shared --disable-install-doc && make -j4 && make install && cd .. &&\\
 %   }
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\\
-% }
-% if ($conf->{remi} && !$conf->{remi}{module}) {
- ln -s /usr/bin/<%= $conf->{remi}{php_version} %> /usr/local/bin/php &&\\
 % }
 % if ($conf->{setcap}) {
 %# MySQL 8.0 capability issue (https://bugs.mysql.com/bug.php?id=91395)
@@ -1444,25 +1524,28 @@ RUN\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\\
  gem install \\
 % for my $key (sort keys %{ $conf->{gem} }) {
-  <%= join " ", @{ $conf->{gem}{$key} } %>\\
+  <%= _wrap(join " ", @{ $conf->{gem}{$key} }) %>\\
 % }
  &&\\
- curl -sL https://cpanmin.us > cpanm && chmod +x cpanm && perl -pi -E 's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm && mv cpanm /usr/local/bin &&\\
+ curl -sL https://cpanmin.us > cpanm && chmod +x cpanm &&\\
+ perl -pi -E \\
+   's{http://(www\.cpan\.org|backpan\.perl\.org|cpan\.metacpan\.org|fastapi\.metacpan\.org|cpanmetadb\.plackperl\.org)}{https://$1}g' cpanm &&\\
+ mv cpanm /usr/local/bin &&\\
  curl -sL --compressed https://git.io/cpm > cpm &&\\
  chmod +x cpm &&\\
  mv cpm /usr/local/bin/ &&\\
 % if ($conf->{use_cpm}) {
 % if ($conf->{cpan}{temporary}) {
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- cpm install -g --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- cpm install -g --test --show-build-log-on-failure <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ cpm install -g --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ cpm install -g --test --show-build-log-on-failure <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % } else {
 % if ($conf->{cpan}{temporary}) {
- <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{temporary}} %> &&\\
+ <%= $conf->{cpanm} %> -v <%= _wrap(join " ", @{delete $conf->{cpan}{temporary}}) %> &&\\
 % }
- <%= $conf->{cpanm} %> -n <%= join " ", @{delete $conf->{cpan}{no_test}} %> &&\\
- <%= $conf->{cpanm} %> -v <%= join " ", @{delete $conf->{cpan}{broken}} %> &&\\
+ <%= $conf->{cpanm} %> -n <%= _wrap(join " ", @{delete $conf->{cpan}{no_test}}) %> &&\\
+ <%= $conf->{cpanm} %> -v <%= _wrap(join " ", @{delete $conf->{cpan}{broken}}) %> &&\\
 % }
 % if ($conf->{patch}) {
 %   for my $patch (@{$conf->{patch}}) {
@@ -1476,7 +1559,7 @@ RUN\
  <%= $conf->{cpanm} %> -v \\
 % }
 % for my $key (sort keys %{ $conf->{cpan} }) {
- <%= join " ", @{ $conf->{cpan}{$key} } %>\\
+ <%= _wrap(join " ", @{ $conf->{cpan}{$key} }) %>\\
 % }
  && curl -sLO https://raw.githubusercontent.com/movabletype/movabletype/develop/t/cpanfile &&\\
 % if ($conf->{remove_from_cpanfile}) {
@@ -1580,7 +1663,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud6|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux)$/) {  ## MySQL 8.*
 % if ($conf->{mysql_require_secure_transport}) {
 echo 'require_secure_transport = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
 echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
