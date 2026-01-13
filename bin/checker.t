@@ -90,7 +90,7 @@ if ($gd_version >= 2.0101) {
     ok eval { GD::supportsFileType('test.jpg') },  "$image_name: GD supports JPEG";
     ok eval { GD::supportsFileType('test.bmp') },  "$image_name: GD supports BMP";
     ok eval { GD::supportsFileType('test.webp') }, "$image_name: GD supports WEBP";
-    SKIP: {
+SKIP: {
         local $TODO = 'AVIF may not be supported';
         ok eval { GD::supportsFileType('test.avif') }, "$image_name: GD supports AVIF";
     }
@@ -206,13 +206,13 @@ if ($image_name eq 'postgresql') {
 } else {
     ok $phpinfo =~ /PDO drivers => .*?mysql/, "$image_name: PHP has PDO mysql driver";
 }
-ok $phpinfo =~ /GD Support => enabled/, "$image_name: PHP has GD";
-ok $phpinfo =~ /DOM.XML => enabled/, "$image_name: PHP has DOM/XML";
+ok $phpinfo =~ /GD Support => enabled/,         "$image_name: PHP has GD";
+ok $phpinfo =~ /DOM.XML => enabled/,            "$image_name: PHP has DOM/XML";
 ok $phpinfo =~ /GIF Read Support => enabled/,   "$image_name: PHP supports GIF read";
 ok $phpinfo =~ /GIF Create Support => enabled/, "$image_name: PHP supports GIF create";
 ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG";
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
-ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
+ok $phpinfo =~ /WebP Support => enabled/,       "$image_name: PHP supports WebP";
 SKIP: {
     local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
