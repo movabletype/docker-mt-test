@@ -120,7 +120,7 @@ my %Conf = (
             },
         },
         patch   => [qw(Crypt-DES-2.07 YAML-Syck-1.36)],
-        phpunit => 11,
+        phpunit => 12,
     },
     bookworm => {
         from => 'debian:bookworm-slim',
@@ -199,7 +199,7 @@ my %Conf = (
             },
         },
         patch   => ['Test-mysqld-1.0030'],
-        phpunit => 11,
+        phpunit => 12,
     },
     plucky => {
         from => 'ubuntu:plucky',
@@ -216,7 +216,7 @@ my %Conf = (
             },
         },
         patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
-        phpunit => 11,
+        phpunit => 12,
     },
     questing => {
         from => 'ubuntu:questing',
@@ -247,7 +247,7 @@ my %Conf = (
         php_build => {
             version => '8.4',
         },
-        phpunit => 11,
+        phpunit => 12,
     },
     rawhide => {
         from => 'fedora:rawhide',
@@ -291,7 +291,7 @@ my %Conf = (
             },
         },
         installer                      => 'dnf',
-        phpunit                        => 11,
+        phpunit                        => 12,
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
@@ -337,7 +337,7 @@ my %Conf = (
             },
         },
         installer                      => 'dnf',
-        phpunit                        => 11,
+        phpunit                        => 12,
         nogpgcheck                     => 1,
         mysql_require_secure_transport => 1,
     },
@@ -378,7 +378,7 @@ my %Conf = (
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
         use_ipv4  => 1,
     },
     fedora41 => {
@@ -417,7 +417,7 @@ my %Conf = (
         },
         patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
     },
     fedora40 => {
         from => 'fedora:40',
@@ -580,7 +580,7 @@ my %Conf = (
         make => {
             ruby => '2.7.8',
         },
-        phpunit    => 7,
+        phpunit    => 9,
         locale_def => 1,
     },
     rockylinux => {
@@ -674,7 +674,7 @@ my %Conf = (
                 'Imager::File::AVIF' => '',
             },
         },
-        phpunit => 11,
+        phpunit => 12,
         make    => {
             perl           => '5.38.2',
             ImageMagick    => '7.0.8-68',
@@ -779,7 +779,7 @@ my %Conf = (
         make_dummy_cert => '/usr/bin',
         installer       => 'dnf',
         allow_erasing   => 1,
-        phpunit         => 11,
+        phpunit         => 12,
         locale_def      => 1,
     },
     oracle => {
@@ -856,7 +856,7 @@ my %Conf = (
             ruby => '3.1.6',
         },
         make_dummy_cert => '/usr/bin',
-        phpunit         => 11,
+        phpunit         => 12,
         installer       => 'microdnf',
         release         => 19.6,
         locale_def      => 1,
@@ -976,7 +976,7 @@ my %Conf = (
         },
         patch     => ['Crypt-DES-2.07'],
         installer => 'dnf',
-        phpunit   => 11,
+        phpunit   => 12,
     },
 );
 
