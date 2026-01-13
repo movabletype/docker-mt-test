@@ -79,6 +79,8 @@ for my $module (sort keys %prereqs) {
 my ($perl_version) = `perl -v` =~ /v(5\.\d+\.\d+)/;
 ok $perl_version, "$image_name: Perl exists ($perl_version)";
 
+my @image_files = glob("./t/images/*");
+
 my $gd_version     = eval { GD::LIBGD_VERSION() }  || 0;
 my $gd_version_str = eval { GD::VERSION_STRING() } || 'unknown';
 note "$image_name: GD version $gd_version ($gd_version_str)";
@@ -92,6 +94,18 @@ if ($gd_version >= 2.0101) {
         local $TODO = 'AVIF may not be supported';
         ok eval { GD::supportsFileType('test.avif') }, "$image_name: GD supports AVIF";
     }
+}
+require GD::Image;
+for my $file (@image_files) {
+    my $gd = GD::Image->new($file);
+    if (!$gd) {
+        # bmp support is broken on all the known images
+        local $TODO = 'GD does not support BMP?' if $file =~ /\.bmp$/ or ($file =~ /\.webp$/ && $image_name =~ /^(?:addons8|amazonlinux|centos|cloud7|fedora3[579]|fedora40|oracle|rockylinux)/);
+        fail "$image_name: GD failed to read $file";
+        next;
+    }
+    my ($w, $h) = $gd->getBounds();
+    ok $w && $h, "$image_name: GD can get size of $file";
 }
 
 my $has_imager_webp = eval { require Imager::File::WEBP };
@@ -108,6 +122,16 @@ SKIP: {
 SKIP: {
     local $TODO = 'AVIF may not be supported' unless $has_imager_avif;
     ok $imager_supports{avif}, "$image_name: Imager supports AVIF";
+}
+for my $file (@image_files) {
+    next if $file =~ /\.webp$/ and !$has_imager_webp;
+    my $imager = Imager->new;
+    if (!$imager->read(file => $file)) {
+        fail "$image_name: Imager failed to read $file";
+        next;
+    }
+    my ($w, $h) = ($imager->getwidth, $imager->getheight);
+    ok $w && $h, "$image_name: Imager can get size of $file";
 }
 
 my %imagemagick_supports = map { $_ => 1 } Image::Magick->QueryFormat;
@@ -126,6 +150,17 @@ SKIP: {
 my $imagemagick_depth = Image::Magick->new->Get('depth');
 is $imagemagick_depth => '16', "$image_name: ImageMagick Quantum Depth: Q$imagemagick_depth";
 
+for my $file (@image_files) {
+    next if $file =~ /\.webp$/ and $image_name =~ /^(?:amazonlinux|centos7|oracle)$/;
+    my $magick = Image::Magick->new;
+    if (my $error = $magick->Read($file)) {
+        fail "$image_name: ImageMagick failed to read $file: $error";
+        next;
+    }
+    my ($w, $h) = $magick->Get('width', 'height');
+    ok $w && $h, "$image_name: ImageMagick can get sizes of $file";
+}
+
 my %graphicsmagick_supports = map { $_ => 1 } Graphics::Magick->QueryFormat;
 ok $graphicsmagick_supports{gif},  "$image_name: GraphicsMagick supports GIF";
 ok $graphicsmagick_supports{png},  "$image_name: GraphicsMagick supports PNG";
@@ -138,6 +173,17 @@ SKIP: {
 }
 my $graphicsmagick_depth = Graphics::Magick->new->Get('depth');
 is $graphicsmagick_depth => '16', "$image_name: GraphicsMagick Quantum Depth: Q$graphicsmagick_depth";
+
+for my $file (@image_files) {
+    my $magick = Graphics::Magick->new;
+    if (my $error = $magick->Read($file)) {
+        fail "$image_name: GraphicsMagick failed to read $file: $error";
+        next;
+    }
+    my ($w, $h) = $magick->Get('width', 'height');
+    ok $w && $h, "$image_name: GraphicsMagick can get sizes of $file";
+}
+
 my ($has_identify) = `which identify`;
 ok $has_identify, "has identify";
 my ($has_convert) = `which convert`;
