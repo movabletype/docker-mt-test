@@ -1354,7 +1354,7 @@ COPY ./patch/ /root/patch/
 % }
 
 RUN\
-% if ($type =~ /^(?:centos[678]|cloud6)$/) {
+% if ($type =~ /^centos/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 % }
@@ -1379,7 +1379,7 @@ RUN\
 %     if ($conf->{$repo}{gpg_key}) {
  rpm --import <%= $conf->{$repo}{gpg_key} %> &&\\
 %     }
-%     if ($type =~ /^(?:centos[678]|cloud6)$/) {
+%     if ($type =~ /^centos/) {
   sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/\/mirrorlist.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
   sed -i -e "s/^#baseurl=http:\/\/mirror.centos.org/baseurl=http:\/\/vault.centos.org/g" /etc/yum.repos.d/CentOS-* &&\\
 %     }
@@ -1663,7 +1663,7 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
-% } elsif ($type =~ /^(?:cloud6|centos8|fedora|fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux|almalinux)$/) {  ## MySQL 8.*
+% } elsif ($type =~ /^(?:fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux)$/) {  ## MySQL 8.*
 % if ($conf->{mysql_require_secure_transport}) {
 echo 'require_secure_transport = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
 echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
