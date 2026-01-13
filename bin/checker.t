@@ -251,7 +251,9 @@ for my $line (@wanted_lines) {
 SKIP: {
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
-    if ($php_version_number >= 8.2) {
+    if ($php_version_number >= 8.3) {
+        is substr($phpunit, 0, 2) => 12, "$image_name: phpunit 12 (12.x.x) for php >= 8.3 ($php_version)";
+    } elsif ($php_version_number >= 8.2) {
         is substr($phpunit, 0, 2) => 11, "$image_name: phpunit 11 (11.x.x) for php >= 8.2 ($php_version)";
     } elsif ($php_version_number >= 8.1) {
         is substr($phpunit, 0, 2) => 10, "$image_name: phpunit 10 (10.x.x) for php >= 8.1 ($php_version)";
