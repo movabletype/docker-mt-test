@@ -572,7 +572,8 @@ my %Conf = (
             version => '7.3',
         },
         cpan => {
-            broken   => [qw( SQL::Translator@1.63 )],
+            no_test  => [qw( Net::SSH::Perl )],
+            broken   => [qw( SQL::Translator@1.63 Data::MessagePack::Stream@1.04 )],
             missing  => [qw( TAP::Harness::Env )],
             _replace => {
                 'Imager::File::WEBP' => '',    # libwebp for centos7/updates is too old (0.3.0 as of this writing)
