@@ -9,7 +9,7 @@ diag "\nChecking $image_name";
 
 my %prereqs = (
     'Archive::Tar'            => '',
-    'Archive::Zip'            => '<= 1.65?(cloud6|cloud7|addons)',
+    'Archive::Zip'            => '<= 1.65?(cloud7|addons)',
     'DBI'                     => '1.633',
     'GD'                      => 0,
     'Graphics::Magick'        => 0,
@@ -168,7 +168,7 @@ ok $phpinfo =~ /JPEG Support => enabled/,       "$image_name: PHP supports JPEG"
 ok $phpinfo =~ /PNG Support => enabled/,        "$image_name: PHP supports PNG";
 ok $phpinfo =~ /WebP Support => enabled/, "$image_name: PHP supports WebP";
 SKIP: {
-    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle|centos8/;
+    local $TODO = 'Memcache may not be supported' if $image_name =~ /amazonlinux|oracle/;
     ok $phpinfo =~ /memcache support => enabled/, "$image_name: PHP supports memcache";
 }
 if ($image_name =~ /oracle/) {
