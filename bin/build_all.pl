@@ -31,7 +31,7 @@ my %aliases = qw(
 );
 my %aliases_rev;
 
-my %multi_platform = map { $_ => 1 } qw( noble plucky questing );
+my %multi_platform = map { $_ => 1 } qw( noble plucky questing oracle );
 
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];

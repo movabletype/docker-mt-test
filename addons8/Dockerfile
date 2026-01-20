@@ -12,7 +12,9 @@ RUN dnf install -y \
  curl -kLO ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.8b.tar.gz &&\
  tar xf proftpd-1.3.8b.tar.gz && cd proftpd-1.3.8b &&\
  ./configure --prefix=/usr/local --enable-dso --enable-openssl --with-pic --enable-nls --with-modules=mod_tls &&\
- make && make install && cd .. && rm -rf proftpd-*
+ make && make install && cd .. && rm -rf proftpd-* &&\
+ curl -LO https://garagehq.deuxfleurs.fr/_releases/v2.1.0/`uname -m`-unknown-linux-musl/garage &&\
+ chmod +x garage && mv garage /usr/local/bin
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
