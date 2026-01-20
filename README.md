@@ -40,7 +40,6 @@ Dockerfile to test MT.
 |rockylinux|rockylinux/rockylinux:9|5.32.1|8.1.34|8.0.44|3.5.1|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.29|MariaDB 10.11.14|3.0.17|2028-06|
 |sid|debian:sid|5.40.1|8.4.16|MariaDB 11.8.5|3.5.4|-|
-|amazonlinux|amazonlinux:2|5.16.3|7.4.33|MariaDB 5.5.68|1.0.2k|-|
 |amazonlinux2023|amazonlinux:2023|5.32.1|8.4.14|MariaDB 10.11.13|3.2.2|-|
 |postgresql|fedora:41|5.40.3|8.3.27|Postgres 16.11|3.2.6|-|
 |oracle (\*3)|oraclelinux:9-slim|5.32.1|8.3.29|MariaDB 10.5.29|3.5.1|-|
