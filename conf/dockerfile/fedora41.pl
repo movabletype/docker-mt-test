@@ -13,7 +13,7 @@ return {
         images => [qw( libomp-devel )],
     },
     cpan => {
-        no_test  => [qw( App::Prove::Plugin::MySQLPool )],
+        no_test  => [qw( App::Prove::Plugin::MySQLPool Starman )],
         _replace => {
             'Imager::File::AVIF' => '',    # test fails
         },

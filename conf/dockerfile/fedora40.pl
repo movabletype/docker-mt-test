@@ -23,6 +23,7 @@ return {
         # Adding -DMSGPACK_BUILD_TESTS=OFF to builder/MyBuilder.pm helps
         # but it's easier to install an older version here
         temporary => [qw( Data::MessagePack::Stream@1.04 )],
+        no_test   => [qw( Starman )],
         _replace  => {
             'Imager::File::AVIF' => '',    # test fails
         },
