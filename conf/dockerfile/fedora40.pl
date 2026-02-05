@@ -32,6 +32,8 @@ return {
     make            => {
         # package is broken for unknown reason
         GraphicsMagick => '1.3.43',
+        # package sometimes causes segfault for unknown reason
+        ImageMagick => '7.1.2',
     },
     php_build => {
         version => '8.2',
