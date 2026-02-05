@@ -13,7 +13,7 @@ return {
         images => [qw( libomp-devel )],
     },
     cpan => {
-        no_test  => [qw( App::Prove::Plugin::MySQLPool )],
+        no_test  => [qw( App::Prove::Plugin::MySQLPool Starman )],
         _replace => {
             'Imager::File::AVIF' => '',    # test fails
         },
@@ -22,6 +22,8 @@ return {
     make            => {
         # package is broken for unknown reason
         GraphicsMagick => '1.3.43',
+        # package sometimes causes segfault for unknown reason
+        ImageMagick => '7.1.2',
     },
     repo => {
         mysql84 => [qw(mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel)],

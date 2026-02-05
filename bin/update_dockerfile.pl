@@ -150,6 +150,35 @@ sub merge_conf {
     if ($conf{cpanm_opt}) {
         $conf{cpanm} .= ' ' . $conf{cpanm_opt};
     }
+    if ($conf{make}{GraphicsMagick}) {
+        for my $key (qw(yum apt)) {
+            next unless exists $conf{$key};
+            for my $subkey (keys %{$conf{$key}}) {
+                $conf{$key}{$subkey} = [grep !/GraphicsMagick/i, @{$conf{$key}{$subkey}}];
+            }
+        }
+    }
+    if (my $im_version = $conf{make}{ImageMagick}) {
+        for my $key (qw(yum apt)) {
+            next unless exists $conf{$key};
+            for my $subkey (keys %{$conf{$key}}) {
+                $conf{$key}{$subkey} = [grep !/ImageMagick/i, @{$conf{$key}{$subkey}}];
+            }
+        }
+        if ($im_version =~ /^7\.\d+\.\d+$/) {
+            # find the biggest identifier for the version
+            if (!-e './tmp/imagemagick' or (stat('./tmp/imagemagick'))[9] < time - 864000) {
+                unlink('./tmp/imagemagick');
+                system('git ls-remote --tags https://github.com/ImageMagick/ImageMagick > ./tmp/imagemagick');
+            }
+            {
+                my @versions = grep /^$im_version\b/, map { m!refs/tags/([0-9\.-]+)!; $1 } split /\n/, path('./tmp/imagemagick')->slurp;
+                my @identifiers = grep /^[0-9]$/, map {my ($v, $i) = split /\-/, $_; $i} @versions;
+                my ($biggest) = sort {$b <=> $a} @identifiers;
+                $conf{make}{ImageMagick} = "$im_version-$biggest";
+            }
+        }
+    }
     \%conf;
 }
 

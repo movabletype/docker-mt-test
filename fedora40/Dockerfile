@@ -9,8 +9,8 @@ RUN dnf -y  install\
   perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  mariadb-devel mariadb-server mariadb\
  vim nano\
- libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel\
-  libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ libomp-devel perl-GD netpbm-progs giflib-devel libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc\
+  libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
@@ -57,6 +57,14 @@ RUN dnf -y  install\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
+ curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.1.2-9.tar.xz &&\
+ tar xf ImageMagick-7.1.2-9.tar.xz && cd ImageMagick-7.1.2-9 &&\
+ ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
+   --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
+   --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
+   --without-lcms2 --without-lqr --without-lzma --without-openexr --without-pango --without-xml \
+   --enable-delegate-build --with-xml --disable-openmp --disable-opencl && make && make install &&\
+   cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
@@ -72,7 +80,7 @@ RUN dnf -y  install\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -v Data::MessagePack::Stream@1.04 &&\
- cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -n Starman XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
