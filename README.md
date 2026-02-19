@@ -16,7 +16,7 @@ Dockerfile to test MT.
 |fedora40|fedora:40|*5.38.4*|*8.2.30*|*MariaDB 10.11.11*|3.2.4|-|
 |fedora42|fedora:42|*5.40.3*|*8.4.16*|*9.5.0*|3.2.6|-|
 |fedora43|fedora:43|*5.42.0*|8.4.16|*8.4.7*|3.5.4|-|
-|cloud7 (\*1)|rockylinux/rockylinux:9|*5.38.2*|*8.3.29*|MariaDB 10.5.29|3.5.1|-|
+|cloud7 (\*1)|rockylinux/rockylinux:9.6|*5.38.2*|*8.3.30*|MariaDB 10.5.29|3.5.1|-|
 
 \*1 This image is not used in the MT cloud, but the well-known modules should have the same versions (except for those used only in tests).
 
@@ -37,7 +37,7 @@ Dockerfile to test MT.
 |fedora39 (\*2)|fedora:39|5.38.2|8.2.25|8.0.39|3.1.4|2024-11|
 |fedora41 (\*2)|fedora:41|5.40.3|8.3.27|8.4.7|3.2.6|-|
 |rawhide|fedora:rawhide|5.42.0|8.5.2|8.4.7|3.5.4|-|
-|rockylinux|rockylinux/rockylinux:9|5.32.1|8.1.34|8.0.44|3.5.1|-|
+|rockylinux|rockylinux/rockylinux:9.6|5.32.1|8.1.34|8.0.44|3.5.1|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.29|MariaDB 10.11.14|3.0.17|2028-06|
 |sid|debian:sid|5.40.1|8.4.16|MariaDB 11.8.5|3.5.4|-|
 |amazonlinux2023|amazonlinux:2023|5.32.1|8.4.14|MariaDB 10.11.13|3.2.2|-|
