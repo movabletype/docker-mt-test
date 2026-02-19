@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.5
+FROM rockylinux/rockylinux:9.6
 
 WORKDIR /root
 
@@ -55,7 +55,7 @@ RUN dnf -y --allowerasing install\
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.3.29.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.3.30.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
@@ -90,7 +90,7 @@ RUN dnf -y --allowerasing install\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpanm -n XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -n Starman XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
