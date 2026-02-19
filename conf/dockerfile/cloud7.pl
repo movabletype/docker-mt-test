@@ -1,5 +1,5 @@
 return {
-    from => 'rockylinux/rockylinux:9.5',
+    from => 'rockylinux/rockylinux:9.6',
     base => 'centos',
     yum  => {
         _replace => {
