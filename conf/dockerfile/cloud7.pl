@@ -1,5 +1,5 @@
 return {
-    from => 'rockylinux/rockylinux:9.5',
+    from => 'rockylinux/rockylinux:9.6',
     base => 'centos',
     yum  => {
         _replace => {
@@ -37,6 +37,7 @@ return {
         _replace => {
             'Imager::File::AVIF' => '',
         },
+        no_test => [qw( Starman )],
     },
     phpunit => 12,
     make    => {

@@ -1,5 +1,5 @@
 return {
-    from => 'rockylinux/rockylinux:9.5',
+    from => 'rockylinux/rockylinux:9.6',
     base => 'centos',
     yum  => {
         _replace => {
@@ -30,7 +30,7 @@ return {
             'Imager::File::AVIF' => '',
         },
         # for arm64
-        no_test => [qw( indirect )],
+        no_test => [qw( indirect Starman )],
     },
     epel => {
         rpm => 'epel-release',
