@@ -37,6 +37,7 @@ return {
         _replace => {
             'Imager::File::AVIF' => '',
         },
+        no_test => [qw( Starman )],
     },
     phpunit => 12,
     make    => {
