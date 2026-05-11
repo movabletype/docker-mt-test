@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-mysql_install_db --user=mysql --skip-name-resolve --force >/dev/null
+echo 'require_secure_transport = true' >> /etc/my.cnf.d/mysql-server.cnf
+echo 'caching_sha2_password_auto_generate_rsa_keys = true' >> /etc/my.cnf.d/mysql-server.cnf
+mysqld --initialize-insecure --user=mysql --skip-name-resolve >/dev/null
 
-bash -c "cd /usr; mysqld_safe --user=mysql --datadir=/var/lib/mysql &"
+bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
+
 sleep 1
 until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
@@ -19,11 +22,5 @@ memcached -d -u root
 if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
-
-export MT_TEST_BACKEND=Oracle
-export NLS_LANG=Japanese_Japan.AL32UTF8
-export NLS_NCHAR=AL32UTF8
-export NLS_COMP=LINGUISTIC
-export NLS_SORT=JAPANESE_M
 
 exec "$@"

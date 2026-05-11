@@ -46,7 +46,7 @@ RUN dnf -y  install\
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.2.30.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.2.31.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\

@@ -54,7 +54,7 @@ RUN \
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.4.16.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.4.21.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
@@ -92,7 +92,6 @@ RUN \
  cpm install -g --test --show-build-log-on-failure Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
-      cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \

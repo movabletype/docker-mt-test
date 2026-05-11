@@ -9,8 +9,8 @@ RUN dnf -y  install\
   bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  postgresql postgresql-server libpq-devel\
  vim nano\
- libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel\
-  libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ libomp-devel ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel\
+  libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php-pgsql php php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel libyaml-devel libffi-devel\

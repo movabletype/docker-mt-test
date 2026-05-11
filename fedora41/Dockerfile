@@ -16,6 +16,7 @@ RUN dnf -y  install\
  mod_ssl vsftpd ftp memcached\
  &&\
  dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc41-1.noarch.rpm &&\
+    dnf config-manager  setopt mysql-8.4-lts-community.enabled=1  &&\
     dnf -y --enablerepo=mysql-8.4-lts-community install\
  mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
  && dnf clean --enablerepo=mysql-8.4-lts-community all &&\

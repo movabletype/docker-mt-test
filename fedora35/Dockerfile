@@ -18,6 +18,8 @@ RUN dnf -y  install\
  &&\
  dnf -y update --skip-broken &&\
  dnf clean all && rm -rf /var/cache/dnf &&\
+ mkdir src && cd src &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  setcap -r /usr/libexec/mysqld &&\
  curl -sL https://phar.phpunit.de/phpunit-9.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
