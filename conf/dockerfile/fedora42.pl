@@ -28,7 +28,7 @@ return {
     },
     mysql93 => {
         # taken from https://dev.mysql.com/downloads/repo/yum/
-        rpm          => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+        rpm          => 'https://dev.mysql.com/get/mysql84-community-release-fc42-4.noarch.rpm',
         disable      => 'mysql-8.4-lts-community',
         enable       => 'mysql-innovation-community',
         no_weak_deps => 1,

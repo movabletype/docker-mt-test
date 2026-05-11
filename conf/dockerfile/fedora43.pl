@@ -30,14 +30,11 @@ return {
     },
     mysql84 => {
         # taken from https://dev.mysql.com/downloads/repo/yum/
-        rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+        rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc43-2.noarch.rpm',
+        disable => 'mysql-9.7-lts-community',
         enable => 'mysql-8.4-lts-community',
         # enable => 'mysql-innovation-community',
         no_weak_deps        => 1,
-        fix_release_version => {
-            version => 42,
-            repo    => 'mysql-community.repo',
-        },
     },
     installer                      => 'dnf',
     phpunit                        => 12,
