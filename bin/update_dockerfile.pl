@@ -734,6 +734,15 @@ until mysqladmin ping -h localhost --silent; do
     echo 'waiting for mysqld to be connectable...'
     sleep 1
 done
+% } elsif ($type =~ /^(?:fedora44)$/) {  ## MariaDB 11
+mariadb-install-db --user=mysql --skip-name-resolve --force >/dev/null
+
+bash -c "cd /usr; /usr/bin/mariadbd-safe --user=mysql --datadir=/var/lib/mysql &"
+sleep 1
+until /usr/bin/mariadb-admin ping -h localhost --silent; do
+    echo 'waiting for mysqld to be connectable...'
+    sleep 1
+done
 % } elsif ($type =~ /^(?:fedora(?:3[0-9]|4[0-9])|rawhide|rockylinux)$/) {  ## MySQL 8.*
 % if ($conf->{mysql_require_secure_transport}) {
 echo 'require_secure_transport = true' >> /etc/my.cnf.d/<% if (grep /community/, @{$conf->{yum}{db} || []} and $type !~ /^(?:fedora4[0-9]|rawhide)$/) { %>community-<% } %>mysql-server.cnf
@@ -763,9 +772,6 @@ until mysqladmin ping -h localhost --silent; do
 done
 % }
 
-% if ($type ne 'postgresql') {
-mysql -e "create database mt_test character set utf8;"
-% }
 % if ($type eq 'postgresql') {
 export PGDATA=/var/lib/postgresql/data
 install --verbose --directory --owner postgres --group postgres --mode 1777 /var/lib/postgresql
@@ -779,8 +785,15 @@ su -c 'pg_ctl -D /var/lib/postgresql/data start' postgres
 su -c 'createuser mt' postgres
 su -c 'createdb -O mt mt_test' postgres
 % } else {
+%   if ($type =~ /^(?:fedora44)$/) {
+/usr/bin/mariadb -e "create database mt_test character set utf8;"
+/usr/bin/mariadb -e "create user mt@localhost;"
+/usr/bin/mariadb -e "grant all privileges on mt_test.* to mt@localhost;"
+%   } else {
+mysql -e "create database mt_test character set utf8;"
 mysql -e "create user mt@localhost;"
 mysql -e "grant all privileges on mt_test.* to mt@localhost;"
+%   }
 % }
 
 memcached -d -u root
