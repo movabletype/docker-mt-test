@@ -33,7 +33,7 @@ return {
         enable       => 'mysql-innovation-community',
         no_weak_deps => 1,
     },
-    patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+    patch     => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     installer => 'dnf',
     phpunit   => 12,
     use_ipv4  => 1,

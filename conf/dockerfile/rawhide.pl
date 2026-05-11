@@ -18,7 +18,7 @@ return {
             'Imager::File::AVIF' => '',    # test fails
         },
     },
-    patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07', 'YAML-Syck-1.36'],
+    patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     make_dummy_cert        => '/usr/bin',
     create_make_dummy_cert => 1,
     make                   => {

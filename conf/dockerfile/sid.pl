@@ -23,6 +23,6 @@ return {
             'Imager::File::AVIF' => '',    # test fails
         },
     },
-    patch   => [qw(Crypt-DES-2.07 YAML-Syck-1.36)],
+    patch   => [qw(Crypt-DES-2.07)],
     phpunit => 12,
 };
