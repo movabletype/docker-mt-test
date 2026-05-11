@@ -798,7 +798,9 @@ export MT_TEST_BACKEND=Pg
 % if ($type =~ /oracle/) {
 export MT_TEST_BACKEND=Oracle
 export NLS_LANG=Japanese_Japan.AL32UTF8
-export NLS_SORT=JAPANESE_M_CI
+export NLS_NCHAR=AL32UTF8
+export NLS_COMP=LINGUISTIC
+export NLS_SORT=JAPANESE_M
 % }
 
 exec "$@"
