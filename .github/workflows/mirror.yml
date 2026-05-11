@@ -27,6 +27,7 @@ jobs:
           - fedora41
           - fedora42
           - fedora43
+          - fedora44
           - chromiumdriver
           - addons8
     steps:
