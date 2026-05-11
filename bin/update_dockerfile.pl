@@ -456,7 +456,15 @@ RUN\
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>install\\
 %   } else {
 %     if (my $fix = $conf->{$repo}{fix_release_version}) {
-    sed -i -e 's/\$releasever/<%= $fix->{version} %>/' /etc/yum.repos.d/<%= $fix->{repo} %> &&\
+    sed -i -e 's/\$releasever/<%= $fix->{version} %>/' /etc/yum.repos.d/<%= $fix->{repo} %> &&\\
+%     }
+%     if ($type =~ /^(?:fedora4[1-9]|rawhide)/) {
+%       if ($conf->{$repo}{disable}) {
+    <%= $conf->{installer} // 'yum' %> config-manager setopt <%= $conf->{$repo}{disable} %>.enabled=0 &&\\
+%       }
+%       if ($conf->{$repo}{enable}) {
+    <%= $conf->{installer} // 'yum' %> config-manager setopt <%= $conf->{$repo}{enable} %>.enabled=1 &&\\
+%       }
 %     }
     <%= $conf->{installer} // 'yum' %> -y <%= $conf->{nogpgcheck} ? '--nogpgcheck ' : '' %>--enablerepo=<%= $conf->{$repo}{enable} // $repo %><%= $conf->{$repo}{disable} ? ' --disablerepo='.$conf->{$repo}{disable} : '' %><%= $conf->{$repo}{no_weak_deps} ? ' --setopt=install_weak_deps=false' : '' %> install\\
 %   }
@@ -790,7 +798,9 @@ export MT_TEST_BACKEND=Pg
 % if ($type =~ /oracle/) {
 export MT_TEST_BACKEND=Oracle
 export NLS_LANG=Japanese_Japan.AL32UTF8
-export NLS_SORT=JAPANESE_M_CI
+export NLS_NCHAR=AL32UTF8
+export NLS_COMP=LINGUISTIC
+export NLS_SORT=JAPANESE_M
 % }
 
 exec "$@"

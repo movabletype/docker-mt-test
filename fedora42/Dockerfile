@@ -8,15 +8,17 @@ RUN dnf --setopt=ip_resolve=4 -y  install\
  distribution-gpg-keys glibc-langpack-en glibc-langpack-ja xz git make cmake gcc clang curl perl perl-core tar zip unzip\
   bzip2 which perl-Unix-Process postfix cyrus-sasl-devel cyrus-sasl-plain\
  vim nano\
- libomp-devel ImageMagick-perl perl-GD GraphicsMagick-perl netpbm-progs ImageMagick GraphicsMagick giflib-devel\
-  libpng-devel libjpeg-devel gd-devel libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
+ libomp-devel ImageMagick-perl perl-GD netpbm-progs ImageMagick giflib-devel libpng-devel libjpeg-devel gd-devel\
+  libwebp-devel icc-profiles-openicc libavif-devel libheif-devel\
  libxml2-devel expat-devel openssl-devel openssl gmp-devel\
  php php-mysqlnd php-gd php-mbstring php-pecl-memcache\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
-    dnf -y --enablerepo=mysql-innovation-community --disablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+ dnf -y install https://dev.mysql.com/get/mysql84-community-release-fc42-4.noarch.rpm &&\
+    dnf config-manager  setopt mysql-8.4-lts-community.enabled=0  &&\
+    dnf config-manager  setopt mysql-innovation-community.enabled=1  &&\
+    dnf -y --enablerepo=mysql-innovation-community --setopt=install_weak_deps=false install\
  mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
  && dnf clean --enablerepo=mysql-innovation-community all &&\
  dnf -y update --skip-unavailable &&\
@@ -46,7 +48,6 @@ RUN dnf --setopt=ip_resolve=4 -y  install\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
-      cd /root/patch/YAML-Syck-1.36 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \

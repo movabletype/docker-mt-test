@@ -97,7 +97,7 @@ SKIP: {
 }
 require GD::Image;
 for my $file (@image_files) {
-    my $gd = GD::Image->new($file);
+    my $gd = eval { GD::Image->new($file) };
     if (!$gd) {
         # bmp support is broken on all the known images
         local $TODO = 'GD does not support BMP?' if $file =~ /\.bmp$/ or ($file =~ /\.webp$/ && $image_name =~ /^(?:addons8|amazonlinux|centos|cloud7|fedora3[579]|fedora40|oracle|rockylinux)/);

@@ -20,6 +20,8 @@ RUN \
  apache2 vsftpd ftp memcached\
  && ln -s /usr/sbin/apache2 /usr/sbin/httpd &&\
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
+ mkdir src && cd src &&\
+ cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-11.phar > phpunit && chmod +x phpunit &&\
  mv phpunit /usr/local/bin/ &&\
  (curl -sL https://raw.githubusercontent.com/axllent/mailpit/develop/install.sh | bash) &&\
