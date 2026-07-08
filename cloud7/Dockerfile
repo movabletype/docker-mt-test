@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.6
+FROM rockylinux/rockylinux:9.8
 
 WORKDIR /root
 
@@ -55,7 +55,7 @@ RUN dnf -y --allowerasing install\
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.3.31.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.3.32.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
@@ -68,8 +68,8 @@ RUN dnf -y --allowerasing install\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- curl -LO https://imagemagick.org/archive/releases/ImageMagick-7.1.2-12.tar.xz &&\
- tar xf ImageMagick-7.1.2-12.tar.xz && cd ImageMagick-7.1.2-12 &&\
+ curl -LO https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-27/ImageMagick-7.1.2-27.tar.xz &&\
+ tar xf ImageMagick-7.1.2-27.tar.xz && cd ImageMagick-7.1.2-27 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
    --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
    --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
@@ -109,7 +109,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MS/MSTROUT/YAML-0.84.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/S/SM/SMUELLER/ExtUtils-ParseXS-3.30.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.633.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/D/DV/DVEEDEN/DBD-mysql-4.050.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/D/DV/DVEEDEN/DBD-mysql-4.051.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/A/AD/ADAMK/Crypt-DSA-1.17.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TO/TODDR/IPC-Run-0.94.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/C/CL/CLEISHMAN/Cache-2.04.tar.gz &&\
@@ -147,6 +147,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DR/DROLSKY/Devel-StackTrace-2.00.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MARKOV/MailTools-2.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MARKSTOS/CGI.pm-3.58.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Compile-0.15.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DA/DAGOLDEN/File-pushd-1.009.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/MIME-Base64-3.15.tar.gz &&\
@@ -154,7 +155,6 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DO/DOY/Try-Tiny-0.22.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/C/CO/CORION/parent-0.234.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/D/DM/DMUEY/File-Copy-Recursive-0.38.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/CGI-Emulate-PSGI-0.20.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/IO-String-1.08.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/G/GA/GAAS/HTTP-Message-6.06.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/S/SI/SIMBABQUE/URI-5.19.tar.gz &&\
@@ -193,7 +193,7 @@ RUN dnf -y --allowerasing install\
  cpanm -nfv https://cpan.metacpan.org/authors/id/T/TA/TADAM/Plack-Middleware-Access-0.4.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MA/MANU/Net-IP-1.26.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/M/MR/MRSAM/Net-CIDR-0.17.tar.gz &&\
- cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz &&\
+ cpanm -nfv https://cpan.metacpan.org/authors/id/M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.15.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/L/LW/LWP/Mozilla-CA-20240313.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/J/JH/JHI/BSD-Resource-1.2910.tar.gz &&\
  cpanm -nfv https://cpan.metacpan.org/authors/id/R/RG/RGARCIA/Linux-Pid-0.04.tar.gz &&\
