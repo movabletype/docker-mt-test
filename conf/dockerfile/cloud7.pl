@@ -42,7 +42,7 @@ return {
     phpunit => 12,
     make    => {
         perl           => '5.38.2',
-        ImageMagick    => '7.1.2-12',
+        ImageMagick    => '7.1.2-27',
         GraphicsMagick => '1.3.43',
     },
     repo => {
