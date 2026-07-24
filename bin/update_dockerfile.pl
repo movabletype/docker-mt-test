@@ -98,6 +98,7 @@ for my $name (@targets) {
                 my $guard = File::pushd::pushd("$name/patch");
                 print STDERR "Extracting $target.tar.gz\n";
                 system("tar xf $target.tar.gz") and die "Failed to extract $target";
+                system("chmod -R +w $target") and die "Failed to chmod";
                 chdir $target or die "Failed to chdir to $name/patch/$target";
                 for my $patch_file (@patch_files) {
                     print STDERR "Applying $patch_file\n";
