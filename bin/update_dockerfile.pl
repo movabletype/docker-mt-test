@@ -316,6 +316,7 @@ RUN \\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
@@ -566,6 +567,7 @@ RUN\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
