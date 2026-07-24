@@ -173,7 +173,7 @@ sub merge_conf {
             }
             {
                 my @versions = grep /^$im_version\b/, map { m!refs/tags/([0-9\.-]+)!; $1 } split /\n/, path('./tmp/imagemagick')->slurp;
-                my @identifiers = grep /^[0-9]$/, map {my ($v, $i) = split /\-/, $_; $i} @versions;
+                my @identifiers = grep /^[0-9]+$/, map {my ($v, $i) = split /\-/, $_; $i} @versions;
                 my ($biggest) = sort {$b <=> $a} @identifiers;
                 $conf{make}{ImageMagick} = "$im_version-$biggest";
             }
