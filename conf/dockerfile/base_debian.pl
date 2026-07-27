@@ -33,8 +33,8 @@ return {
         make_mt => [qw( JavaScript::Minifier CSS::Minifier )],
         temp    => [qw( Fluent::Logger )],
     },
-    # cf. https://github.com/Perl/perl5/issues/22353
-    patch => [qw(EV-4.36)],
+    # cf https://github.com/cfaerber/Net-IDN-Encode/pull/11
+    patch => [qw(IO-Socket-SSL-2.099 Test-MockTime-HiRes-0.08 Net-IDN-Encode-2.500)],
     gem   => {
         fluentd => [qw(fluentd:1.18.0)],
     },

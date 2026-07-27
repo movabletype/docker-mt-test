@@ -25,6 +25,7 @@ RUN dnf -y --nogpgcheck  install\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
+   sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  curl -sL https://phar.phpunit.de/phpunit-12.phar > phpunit && chmod +x phpunit &&\
@@ -44,7 +45,9 @@ RUN dnf -y --nogpgcheck  install\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\
-      cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/IO-Socket-SSL-2.099 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Test-MockTime-HiRes-0.08 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Net-IDN-Encode-2.500 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\

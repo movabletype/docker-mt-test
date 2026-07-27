@@ -58,7 +58,7 @@ RUN  microdnf -y install dnf &&\
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.2.31.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.2.32.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
@@ -82,7 +82,9 @@ RUN  microdnf -y install dnf &&\
  mv cpm /usr/local/bin/ &&\
  cpanm -n DBI Test::NoWarnings XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
-      cd /root/patch/EV-4.36 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/IO-Socket-SSL-2.099 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Test-MockTime-HiRes-0.08 && cpanm --installdeps . && cpanm . && cd /root &&\
+      cd /root/patch/Net-IDN-Encode-2.500 && cpanm --installdeps . && cpanm . && cd /root &&\
     rm -rf /root/patch &&\
  cpanm -v \
  AnyEvent::FTP::Server Class::Method::Modifiers Capture::Tiny Moo File::chdir Net::LDAP Linux::Pid Data::Section::Simple\

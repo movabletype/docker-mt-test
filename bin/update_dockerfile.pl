@@ -98,6 +98,7 @@ for my $name (@targets) {
                 my $guard = File::pushd::pushd("$name/patch");
                 print STDERR "Extracting $target.tar.gz\n";
                 system("tar xf $target.tar.gz") and die "Failed to extract $target";
+                system("chmod -R +w $target") and die "Failed to chmod";
                 chdir $target or die "Failed to chdir to $name/patch/$target";
                 for my $patch_file (@patch_files) {
                     print STDERR "Applying $patch_file\n";
@@ -173,7 +174,7 @@ sub merge_conf {
             }
             {
                 my @versions = grep /^$im_version\b/, map { m!refs/tags/([0-9\.-]+)!; $1 } split /\n/, path('./tmp/imagemagick')->slurp;
-                my @identifiers = grep /^[0-9]$/, map {my ($v, $i) = split /\-/, $_; $i} @versions;
+                my @identifiers = grep /^[0-9]+$/, map {my ($v, $i) = split /\-/, $_; $i} @versions;
                 my ($biggest) = sort {$b <=> $a} @identifiers;
                 $conf{make}{ImageMagick} = "$im_version-$biggest";
             }
@@ -315,6 +316,7 @@ RUN \\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {
@@ -565,6 +567,7 @@ RUN\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-opencl --disable-dependency-tracking --without-x \\
    --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps --without-fpx \\
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\\
+   sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\\
 %   }
 %   if ($conf->{make}{ImageMagick}) {

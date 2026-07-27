@@ -21,7 +21,7 @@ return {
     patch => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     plenv => '5.42.0',
     make  => {
-        ImageMagick    => '7.1.2-12',
+        ImageMagick    => '7.1.2',
         GraphicsMagick => '1.3.46',
     },
     php_build => {
