@@ -248,6 +248,25 @@ for my $line (@wanted_lines) {
     diag "$image_name: php: $got";
 }
 
+my ($has_php_fpm) = `php-fpm --version`;
+if ($has_php_fpm) {
+    my $daemonize_fpm;
+    for my $dir (qw(/etc /usr/etc)) {
+        my $conf_file = "$dir/php-fpm.conf";
+        if (-e $conf_file) {
+            open my $fh, '<', $conf_file;
+            while(<$fh>) {
+                if (/^daemonize = yes/) {
+                    $daemonize_fpm = 1;
+                    last;
+                }
+            }
+            last;
+        }
+    }
+    ok $daemonize_fpm, "$image_name: php-fpm is daemonized by default";
+}
+
 SKIP: {
     my ($phpunit) = (`phpunit --version` // '') =~ /PHPUnit (\d+\.\d+\.\d+)/;
     ok $phpunit, "$image_name: phpunit exists ($phpunit)";
