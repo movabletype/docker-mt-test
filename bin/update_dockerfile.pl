@@ -112,6 +112,10 @@ for my $name (@targets) {
         my $script = Mojo::Template->new->render($templates->{'make-dummy-cert'});
         path("$name/patch/make-dummy-cert")->spew($script);
     }
+    if ($conf->{php_build}) {
+        my $conf = Mojo::Template->new->render($templates->{'php.conf'});
+        path("$name/patch/php.conf")->spew($conf);
+    }
 }
 
 sub merge_conf {
@@ -302,6 +306,18 @@ RUN \\
   yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
 %   }
+% my $php_etc_dir = ($conf->{php_build}{version} < 8.1 or $conf->{php_build}{version} > 8.3)? '/usr/etc' : '/etc';
+  mv <%= $php_etc_dir %>/php-fpm.conf.default <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;pid/pid/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  mv <%= $php_etc_dir %>/php-fpm.d/www.conf.default <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/nobody/apache/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  cp /root/patch/php.conf /etc/apache2/conf-enabled/ &&\\
 % }
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\\
 % if ($conf->{make}) {
@@ -554,6 +570,18 @@ RUN\
   yes | pecl install memcache<%= $conf->{php_build}{version} < 8 ? '-4.0.5.2' : '' %> &&\\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\\
 %   }
+% my $php_etc_dir = ($conf->{php_build}{version} < 8.1 or $conf->{php_build}{version} > 8.3)? '/usr/etc' : '/etc';
+  mv <%= $php_etc_dir %>/php-fpm.conf.default <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;pid/pid/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' <%= $php_etc_dir %>/php-fpm.conf &&\\
+  mv <%= $php_etc_dir %>/php-fpm.d/www.conf.default <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/nobody/apache/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  cp /root/patch/php.conf /etc/httpd/conf.d/ &&\\
 % }
 % if ($conf->{make}) {
  mkdir src && cd src &&\\
@@ -850,3 +878,67 @@ for target in $@ ; do
         cat $PEM2 >> ${target}
         rm -f $PEM1 $PEM2
 done
+
+@@ php.conf
+#
+# The following lines prevent .user.ini files from being viewed by Web clients.
+#
+<Files ".user.ini">
+    Require all denied
+</Files>
+
+#
+# Allow php to handle Multiviews
+#
+AddType text/html .php
+
+#
+# Add index.php to the list of files that will be served as directory
+# indexes.
+#
+DirectoryIndex index.php
+
+#
+# Redirect to local php-fpm (no mod_php in default configuration)
+#
+<IfModule !mod_php.c>
+    # Enable http authorization headers
+    SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+
+    <FilesMatch \.(php|phar)$>
+        SetHandler "proxy:unix:/run/php-fpm/www.sock|fcgi://localhost"
+    </FilesMatch>
+</IfModule>
+
+#
+# mod_php is deprecated as FPM is now used by default with httpd in event mode
+# mod_php is only used when explicitly enabled or httpd switch to prefork mode
+#
+# mod_php options
+#
+<IfModule  mod_php.c>
+    #
+    # Cause the PHP interpreter to handle files with a .php extension.
+    #
+    <FilesMatch \.(php|phar)$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+
+    #
+    # Uncomment the following lines to allow PHP to pretty-print .phps
+    # files as PHP source code:
+    #
+    #<FilesMatch \.phps$>
+    #    SetHandler application/x-httpd-php-source
+    #</FilesMatch>
+
+    #
+    # Apache specific PHP configuration options
+    # those can be override in each configured vhost
+    #
+    php_value session.save_handler "files"
+    php_value session.save_path    "/var/lib/php/session"
+    php_value soap.wsdl_cache_dir  "/var/lib/php/wsdlcache"
+
+    #php_value opcache.file_cache   "/var/lib/php/opcache"
+</IfModule>

@@ -27,6 +27,7 @@ return {
         _replace  => {
             'Imager::File::AVIF' => '',    # test fails
         },
+        test => [qw( Test::Timer )],
     },
     patch           => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     make_dummy_cert => '/usr/bin',

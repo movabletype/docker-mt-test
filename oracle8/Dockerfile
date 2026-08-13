@@ -58,10 +58,21 @@ RUN  microdnf -y install dnf &&\
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.2.32.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.2.33.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
+  mv /etc/php-fpm.conf{.default,} &&\
+  sed -i -E 's/;pid/pid/' /etc/php-fpm.conf &&\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' /etc/php-fpm.conf &&\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' /etc/php-fpm.conf &&\
+  mv /etc/php-fpm.d/www.conf{.default,} &&\
+  sed -i -E 's/nobody/apache/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' /etc/php-fpm.d/www.conf &&\
+  cp /root/patch/php.conf /etc/httpd/conf.d/ &&\
  mkdir src && cd src &&\
  curl -LO https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz &&\
  tar xf ruby-3.1.6.tar.gz &&\

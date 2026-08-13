@@ -60,6 +60,17 @@ RUN  sed -i -e "s/^mirrorlist=http:\/\/mirrorlist.centos.org/#mirrorlist=http:\/
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache-4.0.5.2 &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
+  mv /usr/etc/php-fpm.conf{.default,} &&\
+  sed -i -E 's/;pid/pid/' /usr/etc/php-fpm.conf &&\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' /usr/etc/php-fpm.conf &&\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' /usr/etc/php-fpm.conf &&\
+  mv /usr/etc/php-fpm.d/www.conf{.default,} &&\
+  sed -i -E 's/nobody/apache/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  cp /root/patch/php.conf /etc/httpd/conf.d/ &&\
  mkdir src && cd src &&\
  curl -LO https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.gz &&\
  tar xf ruby-2.7.8.tar.gz &&\
