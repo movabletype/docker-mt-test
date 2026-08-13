@@ -57,6 +57,17 @@ RUN dnf -y --allowerasing install\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
+  mv /etc/php-fpm.conf{.default,} &&\
+  sed -i -E 's/;pid/pid/' /etc/php-fpm.conf &&\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' /etc/php-fpm.conf &&\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' /etc/php-fpm.conf &&\
+  mv /etc/php-fpm.d/www.conf{.default,} &&\
+  sed -i -E 's/nobody/apache/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' /etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' /etc/php-fpm.d/www.conf &&\
+  cp /root/patch/php.conf /etc/httpd/conf.d/ &&\
  mkdir src && cd src &&\
  cd .. && rm -rf src && ldconfig /usr/local/lib &&\
  setcap -r /usr/libexec/mysqld &&\

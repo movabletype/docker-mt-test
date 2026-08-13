@@ -54,10 +54,21 @@ RUN \
   echo "--with-jpeg" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-webp" >> /usr/local/share/php-build/default_configure_options &&\
   echo "--with-pear" >> /usr/local/share/php-build/default_configure_options &&\
-  echo 'install_package "https://www.php.net/distributions/php-8.4.23.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
+  echo 'install_package "https://www.php.net/distributions/php-8.4.24.tar.bz2"' > /usr/local/share/php-build/definitions/my_php &&\
   php-build --verbose my_php /usr &&\
   yes | pecl install memcache &&\
   echo "extension=memcache.so" >> /usr/etc/php.ini &&\
+  mv /usr/etc/php-fpm.conf.default /usr/etc/php-fpm.conf &&\
+  sed -i -E 's/;pid/pid/' /usr/etc/php-fpm.conf &&\
+  sed -i -E 's/;daemonize =.+/daemonize = yes/' /usr/etc/php-fpm.conf &&\
+  sed -i -E 's/;error_log = .+/error_log = \/var\/log\/php-fpm-error.log/' /usr/etc/php-fpm.conf &&\
+  mv /usr/etc/php-fpm.d/www.conf.default /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/nobody/apache/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(listen.allowed_clients)/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_value\[error_log\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  cp /root/patch/php.conf /etc/apache2/conf-enabled/ &&\
  apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* &&\
  mkdir src && cd src &&\
  curl -LO https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.46/GraphicsMagick-1.3.46.tar.xz &&\
@@ -67,8 +78,8 @@ RUN \
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
    sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- curl -LO https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-27/ImageMagick-7.1.2-27.tar.xz &&\
- tar xf ImageMagick-7.1.2-27.tar.xz && cd ImageMagick-7.1.2-27 &&\
+ curl -LO https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-29/ImageMagick-7.1.2-29.tar.xz &&\
+ tar xf ImageMagick-7.1.2-29.tar.xz && cd ImageMagick-7.1.2-29 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
    --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
    --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
