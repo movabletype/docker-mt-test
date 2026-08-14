@@ -65,7 +65,7 @@ RUN \
   mv /usr/etc/php-fpm.d/www.conf.default /usr/etc/php-fpm.d/www.conf &&\
   sed -i -E 's/nobody/apache/' /usr/etc/php-fpm.d/www.conf &&\
   sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' /usr/etc/php-fpm.d/www.conf &&\
-  sed -i -E 's/;(listen.allowed_clients)/\1/' /usr/etc/php-fpm.d/www.conf &&\
+  sed -i -E 's/;(listen.(owner|group|allowed_clients))/\1/' /usr/etc/php-fpm.d/www.conf &&\
   sed -i -E 's/;(php_admin_value\[error_log\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
   sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' /usr/etc/php-fpm.d/www.conf &&\
   cp /root/patch/php.conf /etc/apache2/conf-enabled/ &&\

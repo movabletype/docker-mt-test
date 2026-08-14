@@ -16,8 +16,8 @@ Dockerfile to test MT.
 |fedora40|fedora:40|*5.38.4*|*8.2.33*|*MariaDB 10.11.11*|3.2.4|-|
 |fedora41|fedora:41|5.40.3|8.3.27|8.4.7|3.2.6|-|
 |fedora42|fedora:42|*5.40.4*|*8.4.21*|*9.7.0*|3.2.6|-|
-|fedora43|fedora:43|*5.42.2*|8.4.23|*8.4.10*|3.5.7|-|
-|fedora44|fedora:44|5.42.2|*8.5.8*|*MariaDB 11.8.8*|3.5.7|-|
+|fedora43|fedora:43|*5.42.3*|8.4.24|*8.4.11*|3.5.7|-|
+|fedora44|fedora:44|5.42.3|*8.5.9*|*MariaDB 11.8.8*|3.5.7|-|
 |cloud7 (\*1)|rockylinux/rockylinux:9.8|*5.38.2*|*8.3.33*|MariaDB 10.5.29|3.5.5|-|
 
 \*1 This image is not used in the MT cloud, but the well-known modules should have the same versions (except for those used only in tests).
@@ -26,7 +26,7 @@ Dockerfile to test MT.
 
 |image name|base image|Perl|PHP|MySQL|OpenSSL|End of Life|
 |-|-|-|-|-|-|-|
-|noble|ubuntu:noble|5.38.2|8.3.6|8.4.10|3.0.13|-|
+|noble|ubuntu:noble|5.38.2|8.3.6|8.4.11|3.0.13|-|
 |plucky|ubuntu:plucky|5.40.1|8.4.5|8.4.7|3.4.1|-|
 |questing|ubuntu:questing|5.42.0|8.4.24|8.4.10|3.5.3|-|
 
@@ -37,9 +37,9 @@ Dockerfile to test MT.
 |buster (\*2)|debian:buster-slim|*5.28.1*|*7.3.31*|*MariaDB 10.3.39*|1.1.1n|2022-01|
 |centos6 (\*2)|centos:6|*5.10.1*|*5.3.3*|*5.1.73*|1.0.1e|2020-11|
 |fedora39 (\*2)|fedora:39|5.38.2|8.2.25|8.0.39|3.1.4|2024-11|
-|rawhide|fedora:rawhide|5.42.2|8.5.9|8.4.9|4.0.1|-|
+|rawhide|fedora:rawhide|5.44.0|8.5.10|8.4.9|4.0.1|-|
 |rockylinux|rockylinux/rockylinux:9.8|5.32.1|8.1.34|8.0.46|3.5.5|-|
-|bookworm|debian:bookworm-slim|5.36.0|8.2.32|MariaDB 10.11.18|3.0.20|2028-06|
+|bookworm|debian:bookworm-slim|5.36.0|8.2.33|MariaDB 10.11.18|3.0.20|2028-06|
 |sid|debian:sid|5.40.1|8.4.21|MariaDB 11.8.6|3.6.2|-|
 |amazonlinux2023|amazonlinux:2023|5.32.1|8.5.4|MariaDB 10.11.15|3.5.5|-|
 |postgresql|fedora:41|5.40.3|8.3.27|Postgres 16.11|3.2.6|-|
@@ -55,7 +55,7 @@ Dockerfile to test MT.
 |-|-|-|
 |addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.8b, pureftpd 1.0.50, slapd 2.6.8|
 |chromiumdriver|movabletype/test:bullseye|chromedriver 120.0.6099.224|
-|playwright|movabletype/test:bookworm|node 24.18.0, playwright 1.61.1|
+|playwright|movabletype/test:bookworm|node 24.19.0, playwright 1.62.1|
 
 ## How to update
 

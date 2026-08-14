@@ -314,7 +314,7 @@ RUN \\
   mv <%= $php_etc_dir %>/php-fpm.d/www.conf.default <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/nobody/apache/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
-  sed -i -E 's/;(listen.allowed_clients)/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(listen.(owner|group|allowed_clients))/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/;(php_admin_value\[error_log\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   cp /root/patch/php.conf /etc/apache2/conf-enabled/ &&\\
@@ -578,7 +578,7 @@ RUN\
   mv <%= $php_etc_dir %>/php-fpm.d/www.conf.default <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/nobody/apache/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/listen = .+/listen = \/run\/php-fpm\/www.sock/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
-  sed -i -E 's/;(listen.allowed_clients)/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
+  sed -i -E 's/;(listen.(owner|group|allowed_clients))/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/;(php_admin_value\[error_log\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   sed -i -E 's/;(php_admin_flag\[log_errors\])/\1/' <%= $php_etc_dir %>/php-fpm.d/www.conf &&\\
   cp /root/patch/php.conf /etc/httpd/conf.d/ &&\\

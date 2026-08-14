@@ -30,8 +30,8 @@ RUN dnf -y  install\
    --without-jpig --without-lcms2 --without-lzma --without-xml --with-quantum-depth=16 && make && make install &&\
    sed -i -E 's/(InitializeMagick\(PackageName\);)/\1 Perl_call_atexit(aTHX_ (ATEXIT_t)DestroyMagick, NULL);/' PerlMagick/Magick.xs &&\
    cd PerlMagick && perl Makefile.PL && make install && cd ../.. &&\
- curl -LO https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-27/ImageMagick-7.1.2-27.tar.xz &&\
- tar xf ImageMagick-7.1.2-27.tar.xz && cd ImageMagick-7.1.2-27 &&\
+ curl -LO https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-29/ImageMagick-7.1.2-29.tar.xz &&\
+ tar xf ImageMagick-7.1.2-29.tar.xz && cd ImageMagick-7.1.2-29 &&\
  ./configure --prefix=/usr --enable-shared --with-perl --disable-dependency-tracking --disable-cipher --disable-assert \
    --without-x --without-ttf --without-wmf --without-magick-plus-plus --without-bzlib --without-zlib --without-dps \
    --without-djvu --without-fftw --without-fpx --without-fontconfig --without-freetype --without-jbig --without-lcms \
