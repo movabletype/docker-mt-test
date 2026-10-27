@@ -14,7 +14,10 @@ RUN dnf install -y \
  ./configure --prefix=/usr/local --enable-dso --enable-openssl --with-pic --enable-nls --with-modules=mod_tls &&\
  make && make install && cd .. && rm -rf proftpd-* &&\
  curl -LO https://garagehq.deuxfleurs.fr/_releases/v2.1.0/`uname -m`-unknown-linux-musl/garage &&\
- chmod +x garage && mv garage /usr/local/bin
+ chmod +x garage && mv garage /usr/local/bin &&\
+ curl -LO https://github.com/drakkan/sftpgo/releases/download/v2.7.6/sftpgo_v2.7.6_linux_`uname -m`.tar.xz &&\
+ tar xf sftpgo_v2.7.6_linux_`uname -m`.tar.xz sftpgo &&\
+ chmod +x sftpgo && mv sftpgo /usr/local/bin
 
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
