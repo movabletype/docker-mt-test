@@ -375,6 +375,10 @@ if ($image_name =~ /addons/) {
 if ($image_name =~ /addons8/) {
     my ($slapd_version) = `/usr/sbin/slapd -V 2>&1` =~ /OpenLDAP: slapd (\d+\.\d+\.\d+)/s;
     ok $slapd_version, "$image_name: slapd exists ($slapd_version)";
+    my ($sftpgo_version) = `/usr/local/bin/sftpgo --version 2>&1` =~ /SFTPGo (\d+\.\d+\.\d+)/s;
+    ok $sftpgo_version, "$image_name: sftpgo exists ($sftpgo_version)";
+    my ($garage_version) = `/usr/local/bin/garage --version 2>&1` =~ /garage (v\d+\.\d+\.\d+)/s;
+    ok $garage_version, "$image_name: garage exists ($garage_version)";
 }
 
 # security
