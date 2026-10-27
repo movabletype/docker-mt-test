@@ -53,7 +53,7 @@ Dockerfile to test MT.
 
 |image name|base image|extra packages|
 |-|-|-|
-|addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.8b, pureftpd 1.0.50, slapd 2.6.8|
+|addons8|movabletype/test:cloud7|vsftpd 3.0.5, proftpd 1.3.9d, pureftpd 1.0.54, sftpgo 2.7.6, garage v2.1.0, slapd 2.6.8|
 |chromiumdriver|movabletype/test:bullseye|chromedriver 120.0.6099.224|
 |playwright|movabletype/test:bookworm|node 24.19.0, playwright 1.62.1|
 
