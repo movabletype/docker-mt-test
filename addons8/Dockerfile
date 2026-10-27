@@ -5,12 +5,12 @@ RUN dnf install -y \
  dnf install -y yum-utils &&\
  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo &&\
  dnf install -y docker-ce iptables-utils &&\
- curl -kLO https://github.com/jedisct1/pure-ftpd/releases/download/1.0.50/pure-ftpd-1.0.50.tar.gz &&\
- tar xf pure-ftpd-1.0.50.tar.gz && cd pure-ftpd-1.0.50 &&\
+ curl -LO https://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.54.tar.gz &&\
+ tar xf pure-ftpd-1.0.54.tar.gz && cd pure-ftpd-1.0.54 &&\
  ./configure --prefix=/usr/local --with-altlog --with-virtualhosts --with-nonroot --with-tls --with-puredb &&\
  make && make install && cd .. && rm -rf pure-ftpd-* &&\
- curl -kLO ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.8b.tar.gz &&\
- tar xf proftpd-1.3.8b.tar.gz && cd proftpd-1.3.8b &&\
+ curl -LO ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.9d.tar.gz &&\
+ tar xf proftpd-1.3.9d.tar.gz && cd proftpd-1.3.9d &&\
  ./configure --prefix=/usr/local --enable-dso --enable-openssl --with-pic --enable-nls --with-modules=mod_tls &&\
  make && make install && cd .. && rm -rf proftpd-* &&\
  curl -LO https://garagehq.deuxfleurs.fr/_releases/v2.1.0/`uname -m`-unknown-linux-musl/garage &&\
