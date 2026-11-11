@@ -32,7 +32,7 @@ jobs:
           - addons8
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@v7.0.1
       - name: log in to docker hub
         run: echo $DOCKER_PASSWORD | docker login --username "$DOCKER_USERNAME" --password-stdin
       - name: Log in to the Container registry
