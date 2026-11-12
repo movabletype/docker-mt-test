@@ -15,10 +15,11 @@ RUN dnf -y --nogpgcheck  install\
  ruby ruby-devel libyaml-devel libffi-devel\
  mod_ssl vsftpd ftp memcached\
  &&\
- dnf -y --nogpgcheck install https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm &&\
+ dnf -y --nogpgcheck install https://dev.mysql.com/get/mysql84-community-release-fc43-2.noarch.rpm &&\
     sed -i -e 's/\$releasever/42/' /etc/yum.repos.d/mysql-community.repo &&\
+    dnf config-manager setopt mysql-9.7-lts-community.enabled=0 &&\
     dnf config-manager setopt mysql-8.4-lts-community.enabled=1 &&\
-    dnf -y --nogpgcheck --enablerepo=mysql-8.4-lts-community --setopt=install_weak_deps=false install\
+    dnf -y --nogpgcheck --enablerepo=mysql-8.4-lts-community --disablerepo=mysql-9.7-lts-community --setopt=install_weak_deps=false install\
  mysql-community-server mysql-community-client mysql-community-libs-compat mysql-community-libs mysql-community-devel\
  && dnf clean --enablerepo=mysql-8.4-lts-community all &&\
  dnf -y --nogpgcheck update --skip-unavailable &&\
@@ -46,7 +47,8 @@ RUN dnf -y --nogpgcheck  install\
  curl -sL --compressed https://git.io/cpm > cpm &&\
  chmod +x cpm &&\
  mv cpm /usr/local/bin/ &&\
- cpanm -n App::Prove::Plugin::MySQLPool XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
+ cpanm -v Cookie::Baker@0.12 &&\
+ cpanm -n App::Prove::Plugin::MySQLPool Web::Query XMLRPC::Lite XML::Atom Net::Server Perl::Critic::Pulp Selenium::Remote::Driver &&\
  cpanm -v Archive::Zip@1.65 DBD::mysql@4.052 &&\
       cd /root/patch/Test-mysqld-1.0030 && cpanm --installdeps . && cpanm . && cd /root &&\
       cd /root/patch/Crypt-DES-2.07 && cpanm --installdeps . && cpanm . && cd /root &&\

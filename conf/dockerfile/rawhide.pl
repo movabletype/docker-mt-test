@@ -13,10 +13,11 @@ return {
         images => [qw( libomp-devel )],
     },
     cpan => {
-        no_test  => [qw( App::Prove::Plugin::MySQLPool )],
+        no_test  => [qw( App::Prove::Plugin::MySQLPool Web::Query )],
         _replace => {
             'Imager::File::AVIF' => '',    # test fails
         },
+        temporary => [qw(Cookie::Baker@0.12)],
     },
     patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     make_dummy_cert        => '/usr/bin',
@@ -30,8 +31,9 @@ return {
     },
     mysql84 => {
         # taken from https://dev.mysql.com/downloads/repo/yum/
-        rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc42-1.noarch.rpm',
+        rpm    => 'https://dev.mysql.com/get/mysql84-community-release-fc43-2.noarch.rpm',
         enable => 'mysql-8.4-lts-community',
+        disable => 'mysql-9.7-lts-community',
         # enable => 'mysql-innovation-community',
         no_weak_deps        => 1,
         fix_release_version => {

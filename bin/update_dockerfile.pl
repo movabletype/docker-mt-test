@@ -829,6 +829,12 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 memcached -d -u root
 
+% if ($type eq 'rawhide') {
+if [ ! -d '/var/spool/postfix' ]; then
+mkdir /var/spool/postfix
+fi
+% }
+
 if [ -f t/cpanfile ]; then
 % if ($conf->{remove_from_cpanfile}) {
     perl -i -nE 'print unless /(?:<%= join '|', @{$conf->{remove_from_cpanfile}} %>)/' t/cpanfile &&\\
