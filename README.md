@@ -38,7 +38,7 @@ Dockerfile to test MT.
 |buster (\*2)|debian:buster-slim|*5.28.1*|*7.3.31*|*MariaDB 10.3.39*|1.1.1n|2022-01|
 |centos6 (\*2)|centos:6|*5.10.1*|*5.3.3*|*5.1.73*|1.0.1e|2020-11|
 |fedora39 (\*2)|fedora:39|5.38.2|8.2.25|8.0.39|3.1.4|2024-11|
-|rawhide|fedora:rawhide|5.44.0|8.5.10|8.4.9|4.0.1|-|
+|rawhide|fedora:rawhide|5.44.0|8.5.13|8.4.9|4.0.3|-|
 |rockylinux|rockylinux/rockylinux:9.8|5.32.1|8.1.34|8.0.46|3.5.5|-|
 |bookworm|debian:bookworm-slim|5.36.0|8.2.33|MariaDB 10.11.18|3.0.20|2028-06|
 |sid|debian:sid|5.40.1|8.4.21|MariaDB 11.8.6|3.6.2|-|
