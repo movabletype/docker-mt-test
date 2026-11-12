@@ -717,7 +717,7 @@ source ~/.bash_profile
 % if ($type =~ /^(?:buster)$/) {
 chown -R mysql:mysql /var/lib/mysql
 % }
-% if ($conf->{repo}{mysql84} or $type =~ /^(?:questing|plucky)$/) {
+% if ($conf->{repo}{mysql84} or $type =~ /^(?:questing|plucky|resolute)$/) {
 bash -c "cd /usr; mysqld --datadir='/var/lib/mysql' --user=mysql &"
 
 sleep 1

@@ -29,6 +29,7 @@ Dockerfile to test MT.
 |noble|ubuntu:noble|5.38.2|8.3.6|8.4.11|3.0.13|-|
 |plucky|ubuntu:plucky|5.40.1|8.4.5|8.4.7|3.4.1|-|
 |questing|ubuntu:questing|5.42.0|8.4.24|8.4.10|3.5.3|-|
+|resolute|ubuntu:resolute|5.44.0|8.5.12|8.4.11|3.5.5|-|
 
 ## Environment list (only for manual testing)
 

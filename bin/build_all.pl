@@ -20,6 +20,7 @@ my %aliases = qw(
     perl-5.38 noble
     perl-5.40 plucky
     perl-5.42 questing
+    perl-5.44 resolute
 
     php-7.3 buster
     php-7.4 fedora32
@@ -32,7 +33,7 @@ my %aliases = qw(
 );
 my %aliases_rev;
 
-my %multi_platform = map { $_ => 1 } qw( noble plucky questing oracle );
+my %multi_platform = map { $_ => 1 } qw( noble plucky questing resolute oracle );
 
 while (my ($alias, $name) = each %aliases) {
     $aliases_rev{$name} ||= [];
