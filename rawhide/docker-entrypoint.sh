@@ -19,6 +19,10 @@ mysql -e "grant all privileges on mt_test.* to mt@localhost;"
 
 memcached -d -u root
 
+if [ ! -d '/var/spool/postfix' ]; then
+mkdir /var/spool/postfix
+fi
+
 if [ -f t/cpanfile ]; then
     cpanm --installdeps -n . --cpanfile=t/cpanfile
 fi
