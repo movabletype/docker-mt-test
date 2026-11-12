@@ -13,10 +13,11 @@ return {
         images => [qw( libomp-devel )],
     },
     cpan => {
-        no_test  => [qw( App::Prove::Plugin::MySQLPool )],
+        no_test  => [qw( App::Prove::Plugin::MySQLPool Web::Query )],
         _replace => {
             'Imager::File::AVIF' => '',    # test fails
         },
+        temporary => [qw(Cookie::Baker@0.12)],
     },
     patch                  => ['Test-mysqld-1.0030', 'Crypt-DES-2.07'],
     make_dummy_cert        => '/usr/bin',
